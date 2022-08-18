@@ -1,7 +1,7 @@
 import { Container, Nav, Navbar, NavDropdown, Offcanvas } from 'react-bootstrap';
 import UserAvatar from './user-avatar/UserAvatar';
 
-export default function NavMenu(): JSX.Element {
+const NavMenu = (): JSX.Element => {
   return (
     <Navbar bg="primary" variant="dark" expand="sm">
       <Container fluid>
@@ -28,4 +28,6 @@ export default function NavMenu(): JSX.Element {
       </Container>
     </Navbar>
   );
-}
+};
+
+export default NavMenu;

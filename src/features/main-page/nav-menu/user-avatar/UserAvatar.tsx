@@ -1,6 +1,6 @@
 import styles from './UserAvatar.module.scss';
 
-export default function UserAvatar(): JSX.Element {
+const UserAvatar = (): JSX.Element => {
   return (
     <div className={styles.userAvatar}>
       <svg
@@ -19,4 +19,6 @@ export default function UserAvatar(): JSX.Element {
       </svg>
     </div>
   );
-}
+};
+
+export default UserAvatar;

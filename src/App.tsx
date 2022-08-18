@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap';
 import styles from './App.module.scss';
 import NavMenu from './features/main-page/nav-menu/NavMenu';
 
-export default function App(): JSX.Element {
+const App = (): JSX.Element => {
   return (
     <div className={styles.appRoot}>
       <NavMenu />
@@ -11,4 +11,6 @@ export default function App(): JSX.Element {
       </Container>
     </div>
   );
-}
+};
+
+export default App;
