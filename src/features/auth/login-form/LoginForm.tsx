@@ -20,8 +20,13 @@ interface State {
   password: string;
   showPassword: boolean;
   isNewUser: boolean;
-  error: string;
-  test: string;
+  isValidName: boolean;
+  isValidEmail: boolean;
+  isValidePassword: boolean;
+  isFormValid: boolean;
+  errorUserName: string;
+  errorUserEmail: string;
+  errorPassword: string;
 }
 
 export default function LoginForm() {
@@ -31,8 +36,13 @@ export default function LoginForm() {
     password: '',
     showPassword: false,
     isNewUser: false,
-    error: '',
-    test: '',
+    isValidName: true,
+    isValidEmail: true,
+    isValidePassword: true,
+    isFormValid: false,
+    errorUserName: '',
+    errorPassword: '',
+    errorUserEmail: '',
   });
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,23 +73,21 @@ export default function LoginForm() {
   //   return true;
   // };
 
-  const checkPasswordLength = (password: string) => {
-    if (password.length < 8) {
-      setValues({
-        ...values,
-        error: 'Password must be 8 symbol minimum',
-      });
-      return false;
-    }
-    return true;
-  };
+  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const checkPassword = () => {
+  const checkPasswordLength = (password: string): boolean => password.length < 8;
+
+  const checkPassword = (): void => {
     const { password } = values;
     if (checkPasswordLength(password))
       setValues({
         ...values,
         password,
+      });
+    else
+      setValues({
+        ...values,
+        errorPassword: 'Password must be 8 symbol minimum',
       });
   };
 
@@ -115,6 +123,7 @@ export default function LoginForm() {
             id="user-email"
             sx={{ m: 2, width: '40ch' }}
             type="email"
+            error={values.isValidEmail}
             fullWidth
             autoFocus
             InputProps={{
@@ -134,6 +143,7 @@ export default function LoginForm() {
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
               onChange={handleChange('password')}
+              error={checkPasswordLength(values.password)}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
