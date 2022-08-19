@@ -5,8 +5,8 @@ import styles from './Footer.module.scss';
 
 function Footer(): JSX.Element {
   return (
-    <Navbar fixed="bottom" className={styles.main_footer}>
-      <Container>
+    <Navbar fixed="bottom" bg="primary" variant="dark" expand="sm">
+      <Container className="justify-content-between">
         <Nav>
           <Navbar.Brand href="#home">RSLang 2022 year</Navbar.Brand>
         </Nav>
@@ -15,7 +15,7 @@ function Footer(): JSX.Element {
             <Image className={styles.logo_rss} src={rssschool} />
           </Nav.Link>
         </Nav>
-        <Nav className="justify-content-end">
+        <Nav className="justify-content-end d-flex">
           <Image className={styles.logo} src={github} />
           <Nav.Link eventKey="link-1" href="https://github.com/malashonock">
             malashonock
@@ -33,3 +33,8 @@ function Footer(): JSX.Element {
 }
 
 export default Footer;
+
+/*
+<Navbar bg="primary" variant="dark" expand="sm">
+      <Container fluid className="d-flex"> {styles.main_footer}
+*/
