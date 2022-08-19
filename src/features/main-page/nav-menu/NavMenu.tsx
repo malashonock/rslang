@@ -1,4 +1,5 @@
 import { Container, Nav, Navbar, NavDropdown, Offcanvas } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import UserAvatar from './user-avatar/UserAvatar';
 
 const NavMenu = (): JSX.Element => {
@@ -6,19 +7,29 @@ const NavMenu = (): JSX.Element => {
     <Navbar bg="primary" variant="dark" expand="sm">
       <Container fluid>
         <Navbar.Toggle aria-controls="navbar-main" />
-        <Navbar.Brand href="/">RS Lang</Navbar.Brand>
+        <LinkContainer to="/">
+          <Navbar.Brand>RS Lang</Navbar.Brand>
+        </LinkContainer>
         <Navbar.Offcanvas id="navbar-main">
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>RS Lang</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="me-auto">
-              <Nav.Link href="/dictionary">Dictionary</Nav.Link>
+              <LinkContainer to="/dictionary">
+                <Nav.Link>Dictionary</Nav.Link>
+              </LinkContainer>
               <NavDropdown title="Mini-games" id="nav-dropdown-games">
-                <NavDropdown.Item href="/games/audio-challenge">Audio Challenge</NavDropdown.Item>
-                <NavDropdown.Item href="/games/sprint">Sprint</NavDropdown.Item>
+                <LinkContainer to="games/audio-challenge">
+                  <NavDropdown.Item>Audio Challenge</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="games/sprint">
+                  <NavDropdown.Item>Sprint</NavDropdown.Item>
+                </LinkContainer>
               </NavDropdown>
-              <Nav.Link href="/statistics">Statistics</Nav.Link>
+              <LinkContainer to="/statistics">
+                <Nav.Link>Statistics</Nav.Link>
+              </LinkContainer>
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
