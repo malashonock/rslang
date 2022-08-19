@@ -1,4 +1,6 @@
 import { Container, Navbar, Image, Nav } from 'react-bootstrap';
+import github from '../../../assets/github';
+// import github from '../../../assets/github.svg';
 // import CardHeader from 'react-bootstrap/esm/CardHeader';
 
 function Footer(): JSX.Element {
@@ -9,7 +11,7 @@ function Footer(): JSX.Element {
           <Navbar.Brand href="#home">RSLang 2022 year</Navbar.Brand>
         </Nav>
         <Nav className="justify-content-center">
-          <Image roundedCircle />
+          <Image roundedCircle src={github} />
         </Nav>
         <Nav className="justify-content-end">
           <Nav.Link eventKey="link-1">Author1</Nav.Link>
