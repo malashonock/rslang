@@ -11,24 +11,80 @@ import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonIcon from '@mui/icons-material/Person';
-import Divider from '@mui/material/Divider';
+import { Email } from '@mui/icons-material';
 import styles from './LoginForm.module.scss';
 
 interface State {
-  amount: string;
+  userName: string;
+  userEmail: string;
   password: string;
   showPassword: boolean;
+  isNewUser: boolean;
+  error: string;
+  test: string;
 }
 
 export default function LoginForm() {
   const [values, setValues] = React.useState<State>({
-    amount: '',
+    userName: '',
+    userEmail: '',
     password: '',
     showPassword: false,
+    isNewUser: false,
+    error: '',
+    test: '',
   });
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
+  };
+
+  // function isEmailValid(email: string) {
+  //   // eslint-disable-next-line prefer-regex-literals
+  //   const emailRegexp = new RegExp(
+  //     `/^[a-zA-Z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-zA-Z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-zA-Z0-9]@[a-zA-Z0-9][-\.]{0,1}([a-zA-Z][-\.]{0,1})*[a-zA-Z0-9]\.[a-zA-Z0-9]{1,}([\.\-]{0,1}[a-zA-Z]){0,}[a-zA-Z0-9]{0,}$/i`
+  //   );
+  //   return emailRegexp.test(email);
+  // }
+
+  // const getInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const email: string = event.target.value;
+  //   if (!isEmailValid(email)) {
+  //     setValues({
+  //       ...values,
+  //       error: 'Email is not valid',
+  //     });
+  //     return false;
+  //   }
+  //   setValues({
+  //     ...values,
+  //     error: 'Email is valid',
+  //   });
+  //   return true;
+  // };
+
+  const checkPasswordLength = (password: string) => {
+    if (password.length < 8) {
+      setValues({
+        ...values,
+        error: 'Password must be 8 symbol minimum',
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const checkPassword = () => {
+    const { password } = values;
+    if (checkPasswordLength(password))
+      setValues({
+        ...values,
+        password,
+      });
+  };
+
+  const onSubmite = () => {
+    checkPassword();
   };
 
   const handleClickShowPassword = () => {
@@ -38,60 +94,152 @@ export default function LoginForm() {
     });
   };
 
+  const handleClickShowRegisterForm = () => {
+    setValues({
+      ...values,
+      isNewUser: !values.isNewUser,
+    });
+  };
+
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
   return (
     <Box>
-      <div className={styles.form}>
-        <h3>WELCOME</h3>
-        <TextField
-          label="E-mail"
-          id="user-email"
-          sx={{ m: 2, width: '40ch' }}
-          type="email"
-          fullWidth
-          autoFocus
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <PersonIcon />
-              </InputAdornment>
-            ),
-          }}
-          variant="standard"
-        />
-        <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
-          <InputLabel htmlFor="user-password">Password</InputLabel>
-          <Input
-            id="user-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
+      <Box sx={{ display: !values.isNewUser ? 'block' : 'none' }}>
+        <div className={styles.form}>
+          <h3>WELCOME</h3>
+          <TextField
+            label="E-mail"
+            id="user-email"
+            sx={{ m: 2, width: '40ch' }}
+            type="email"
+            fullWidth
+            autoFocus
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Email />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+            onChange={handleChange('userEmail')}
           />
-        </FormControl>
-        <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button variant="contained" color="success">
-            Login
-          </Button>
-        </Stack>
-        <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
-          <Button href="#text-buttons">Forgot Password</Button>
-          <Button href="#text-buttons">Register</Button>
-        </Stack>
-      </div>
+          <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
+            <InputLabel htmlFor="user-password">Password</InputLabel>
+            <Input
+              id="user-password"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChange('password')}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ m: 2, width: '40ch' }}
+              onClick={onSubmite}
+            >
+              Login
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Button
+              href="#text-buttons"
+              onClick={handleClickShowRegisterForm}
+              sx={{ m: 2, width: '40ch' }}
+            >
+              Register
+            </Button>
+          </Stack>
+        </div>
+      </Box>
+      <Box sx={{ display: values.isNewUser ? 'block' : 'none' }}>
+        <div className={styles.form}>
+          <h3>REGISTER</h3>
+          <TextField
+            label="User Name"
+            id="user-name"
+            sx={{ m: 2, width: '40ch' }}
+            type="text"
+            fullWidth
+            autoFocus
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+            onChange={handleChange('userName')}
+          />
+          <TextField
+            label="E-mail"
+            id="user-email"
+            sx={{ m: 2, width: '40ch' }}
+            type="email"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Email />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+            onChange={handleChange('userEmail')}
+          />
+          <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
+            <InputLabel htmlFor="user-password">Password</InputLabel>
+            <Input
+              id="user-password"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChange('password')}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button variant="contained" color="success" sx={{ m: 2, width: '40ch' }}>
+              Register
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Button
+              href="#text-buttons"
+              onClick={handleClickShowRegisterForm}
+              sx={{ m: 2, width: '40ch' }}
+            >
+              Log in
+            </Button>
+          </Stack>
+        </div>
+      </Box>
     </Box>
   );
 }
