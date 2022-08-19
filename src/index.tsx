@@ -8,6 +8,7 @@ import AudioChallenge from './features/games/audio-challenge/AudioChallenge';
 import Dictionary from './features/dictionary/Dictionary';
 import Sprint from './features/games/sprint/Sprint';
 import Statistics from './features/statistics/Statistics';
+import MainPage from './features/main-page/MainPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -16,6 +17,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
+          <Route index element={<MainPage />} />
           <Route path="dictionary" element={<Dictionary />} />
           <Route path="games" element={<Games />}>
             <Route path="audio-challenge" element={<AudioChallenge />} />
