@@ -1,7 +1,7 @@
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import styles from './WordCard.module.scss';
 
-interface IWordData {
+interface Word {
   id: string;
   group: number;
   page: number;
@@ -18,19 +18,19 @@ interface IWordData {
   textExampleTranslate: string;
 }
 
-interface ICardData {
-  wordData: IWordData;
+interface WordCardProps {
+  word: Word;
   isAuthorized: boolean;
 }
 
-const renderHeader = (wordData: IWordData): JSX.Element => {
+const renderHeader = (word: Word): JSX.Element => {
   return (
     <Row className={styles.header}>
       <Col>
         <Card.Title>
-          {wordData.word} {wordData.transcription}
+          {word.word} {word.transcription}
         </Card.Title>
-        <Card.Subtitle>{wordData.wordTranslate}</Card.Subtitle>
+        <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
         <Button variant="primary">listen</Button>
@@ -39,19 +39,19 @@ const renderHeader = (wordData: IWordData): JSX.Element => {
   );
 };
 
-const renderDescription = (wordData: IWordData) => {
+const renderDescription = (word: Word) => {
   return (
     <>
       <Card.Text className={styles.infoTitle}>
         <b>Значение</b>
       </Card.Text>
-      <Card.Text className={styles.engInfo}>{wordData.textMeaning}</Card.Text>
-      <Card.Text className={styles.rusInfo}>{wordData.textMeaningTranslate}</Card.Text>
+      <Card.Text className={styles.engInfo}>{word.textMeaning}</Card.Text>
+      <Card.Text className={styles.rusInfo}>{word.textMeaningTranslate}</Card.Text>
       <Card.Text className={styles.infoTitle}>
         <b>Пример</b>
       </Card.Text>
-      <Card.Text className={styles.engInfo}>{wordData.textExample}</Card.Text>
-      <Card.Text className={styles.rusInfo}>{wordData.textExampleTranslate}</Card.Text>
+      <Card.Text className={styles.engInfo}>{word.textExample}</Card.Text>
+      <Card.Text className={styles.rusInfo}>{word.textExampleTranslate}</Card.Text>
     </>
   );
 };
@@ -73,13 +73,13 @@ const renderFooter = () => {
   );
 };
 
-const WordCard = ({ wordData, isAuthorized }: ICardData): JSX.Element => {
+const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
   return (
     <Card className={styles.card}>
       <Card.Body>
-        {renderHeader(wordData)}
-        <Card.Img className={styles.img} src={wordData.image} />
-        {renderDescription(wordData)}
+        {renderHeader(word)}
+        <Card.Img className={styles.img} src={word.image} />
+        {renderDescription(word)}
         {isAuthorized && renderFooter()}
       </Card.Body>
     </Card>
