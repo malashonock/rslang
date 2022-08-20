@@ -1,4 +1,4 @@
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Button, Row, Col, ToggleButton } from 'react-bootstrap';
 import { ReactComponent as ListenWordIcon } from '../../../assets/icons/listen-word-icon.svg';
 import styles from './WordCard.module.scss';
 import Word from './Word';
@@ -48,14 +48,28 @@ const renderFooter = () => {
   return (
     <Row>
       <Col>
-        <Button className={styles.controls} size="sm" variant="danger">
-          to difficult
-        </Button>
+        <ToggleButton
+          className={styles.controls}
+          size="sm"
+          variant="danger"
+          type="checkbox"
+          value="difficult"
+          id="difficult"
+        >
+          Mark as Difficult
+        </ToggleButton>
       </Col>
       <Col>
-        <Button className={styles.controls} size="sm" variant="warning">
-          studied
-        </Button>
+        <ToggleButton
+          className={styles.controls}
+          size="sm"
+          variant="warning"
+          type="checkbox"
+          value="learned"
+          id="learned"
+        >
+          Mark as Learned
+        </ToggleButton>
       </Col>
     </Row>
   );
