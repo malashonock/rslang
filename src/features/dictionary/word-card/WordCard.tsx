@@ -1,15 +1,16 @@
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import styles from './WordCard.module.scss';
+import img from './minsk.jpg';
 
 interface Word {
   id: string;
-  group: number;
-  page: number;
+  group?: number;
+  page?: number;
   word: string;
-  image: string;
-  audio: string;
-  audioMeaning: string;
-  audioExample: string;
+  image?: string;
+  audio?: string;
+  audioMeaning?: string;
+  audioExample?: string;
   textMeaning: string;
   textExample: string;
   transcription: string;
@@ -78,7 +79,7 @@ const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
     <Card className={styles.card}>
       <Card.Body>
         {renderHeader(word)}
-        <Card.Img className={styles.img} src={word.image} />
+        <Card.Img className={styles.img} src={img} />
         {renderDescription(word)}
         {isAuthorized && renderFooter()}
       </Card.Body>
