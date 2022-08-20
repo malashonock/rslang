@@ -1,5 +1,16 @@
+import { Container } from 'react-bootstrap';
 import styles from './App.module.scss';
+import NavMenu from './features/main-page/nav-menu/NavMenu';
 
-export default function App(): JSX.Element {
-  return <div className={styles.appRoot}>RS Lang App</div>;
-}
+const App = (): JSX.Element => {
+  return (
+    <div className={styles.appRoot}>
+      <NavMenu />
+      <Container>
+        <h1>Main page content</h1>
+      </Container>
+    </div>
+  );
+};
+
+export default App;
