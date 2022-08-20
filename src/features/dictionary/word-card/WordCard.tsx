@@ -26,7 +26,7 @@ interface ICardData extends IWordData {
   isAuthorized: boolean;
 }
 
-function Header({ cardData }: IWordData): JSX.Element {
+const Header = ({ cardData }: IWordData): JSX.Element => {
   return (
     <Row className={styles.header}>
       <Col>
@@ -40,9 +40,9 @@ function Header({ cardData }: IWordData): JSX.Element {
       </Col>
     </Row>
   );
-}
+};
 
-function Desc({ cardData }: IWordData) {
+const Desc = ({ cardData }: IWordData) => {
   return (
     <>
       <Card.Text className={styles.infoTitle}>
@@ -57,9 +57,9 @@ function Desc({ cardData }: IWordData) {
       <Card.Text className={styles.rusInfo}>{cardData.textExampleTranslate}</Card.Text>
     </>
   );
-}
+};
 
-function Controls() {
+const Controls = () => {
   return (
     <Row>
       <Col>
@@ -74,9 +74,9 @@ function Controls() {
       </Col>
     </Row>
   );
-}
+};
 
-function WordCard({ cardData, isAuthorized }: ICardData): JSX.Element {
+const WordCard = ({ cardData, isAuthorized }: ICardData): JSX.Element => {
   return (
     <Card className={styles.card}>
       <Card.Body>
@@ -87,6 +87,6 @@ function WordCard({ cardData, isAuthorized }: ICardData): JSX.Element {
       </Card.Body>
     </Card>
   );
-}
+};
 
 export default WordCard;
