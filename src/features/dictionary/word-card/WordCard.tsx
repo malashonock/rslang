@@ -1,4 +1,5 @@
 import { Card, Button, Row, Col } from 'react-bootstrap';
+import { ReactComponent as ListenWordIcon } from '../../../assets/icons/listen-word-icon.svg';
 import styles from './WordCard.module.scss';
 import Word from './Word';
 import img from './minsk.jpg';
@@ -18,7 +19,9 @@ const renderHeader = (word: Word): JSX.Element => {
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
-        <Button variant="primary">listen</Button>
+        <Button className={styles.listenWordButton} variant="primary" size="sm">
+          <ListenWordIcon />
+        </Button>
       </Col>
     </Row>
   );
