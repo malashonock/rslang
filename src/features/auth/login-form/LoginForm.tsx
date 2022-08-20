@@ -48,51 +48,40 @@ export default function LoginForm() {
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-
-  // function isEmailValid(email: string) {
-  //   // eslint-disable-next-line prefer-regex-literals
-  //   const emailRegexp = new RegExp(
-  //     `/^[a-zA-Z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-zA-Z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-zA-Z0-9]@[a-zA-Z0-9][-\.]{0,1}([a-zA-Z][-\.]{0,1})*[a-zA-Z0-9]\.[a-zA-Z0-9]{1,}([\.\-]{0,1}[a-zA-Z]){0,}[a-zA-Z0-9]{0,}$/i`
-  //   );
-  //   return emailRegexp.test(email);
-  // }
-
-  // const getInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const email: string = event.target.value;
-  //   if (!isEmailValid(email)) {
-  //     setValues({
-  //       ...values,
-  //       error: 'Email is not valid',
-  //     });
-  //     return false;
-  //   }
-  //   setValues({
-  //     ...values,
-  //     error: 'Email is valid',
-  //   });
-  //   return true;
-  // };
-
   // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const checkPasswordLength = (password: string): boolean => password.length < 8;
+  const checkPasswordMinLength = (password: string): boolean => password.length < 8;
 
   const checkPassword = (): void => {
     const { password } = values;
-    if (checkPasswordLength(password))
+    setValues({
+      ...values,
+      isValidePassword: !checkPasswordMinLength(password),
+    });
+  };
+
+  const checkEmail = (): void => {
+    const { userEmail } = values;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setValues({
+      ...values,
+      isValidEmail: emailPattern.test(userEmail),
+    });
+  };
+
+  const checkUserName = (): void => {
+    const { userName } = values;
+    if (!userName)
       setValues({
         ...values,
-        password,
-      });
-    else
-      setValues({
-        ...values,
-        errorPassword: 'Password must be 8 symbol minimum',
+        isValidName: false,
       });
   };
 
   const onSubmite = () => {
     checkPassword();
+    checkEmail();
+    if (values.isNewUser) checkUserName();
   };
 
   const handleClickShowPassword = () => {
@@ -115,17 +104,18 @@ export default function LoginForm() {
 
   return (
     <Box>
-      <Box sx={{ display: !values.isNewUser ? 'block' : 'none' }}>
+      <Box>
         <div className={styles.form}>
-          <h3>WELCOME</h3>
+          <h3>{values.isNewUser ? 'REGISTER' : 'WELCOME'}</h3>
           <TextField
             label="E-mail"
             id="user-email"
             sx={{ m: 2, width: '40ch' }}
             type="email"
-            error={values.isValidEmail}
+            error={!values.isValidEmail}
             fullWidth
             autoFocus
+            required
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -136,14 +126,32 @@ export default function LoginForm() {
             variant="standard"
             onChange={handleChange('userEmail')}
           />
+          <TextField
+            label="User Name"
+            id="user-name"
+            sx={{ m: 2, width: '40ch', display: values.isNewUser ? 'block' : 'none' }}
+            type="text"
+            fullWidth
+            error={!values.isValidName}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+            onChange={handleChange('userName')}
+          />
           <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
             <InputLabel htmlFor="user-password">Password</InputLabel>
             <Input
               id="user-password"
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
+              required
               onChange={handleChange('password')}
-              error={checkPasswordLength(values.password)}
+              error={!values.isValidName}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -164,7 +172,7 @@ export default function LoginForm() {
               sx={{ m: 2, width: '40ch' }}
               onClick={onSubmite}
             >
-              Login
+              {!values.isNewUser ? 'LOGIN' : 'REGISTER'}
             </Button>
           </Stack>
           <Stack direction="row" spacing={2}>
@@ -173,79 +181,7 @@ export default function LoginForm() {
               onClick={handleClickShowRegisterForm}
               sx={{ m: 2, width: '40ch' }}
             >
-              Register
-            </Button>
-          </Stack>
-        </div>
-      </Box>
-      <Box sx={{ display: values.isNewUser ? 'block' : 'none' }}>
-        <div className={styles.form}>
-          <h3>REGISTER</h3>
-          <TextField
-            label="User Name"
-            id="user-name"
-            sx={{ m: 2, width: '40ch' }}
-            type="text"
-            fullWidth
-            autoFocus
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-            onChange={handleChange('userName')}
-          />
-          <TextField
-            label="E-mail"
-            id="user-email"
-            sx={{ m: 2, width: '40ch' }}
-            type="email"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-            onChange={handleChange('userEmail')}
-          />
-          <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
-            <InputLabel htmlFor="user-password">Password</InputLabel>
-            <Input
-              id="user-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handleChange('password')}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button variant="contained" color="success" sx={{ m: 2, width: '40ch' }}>
-              Register
-            </Button>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Button
-              href="#text-buttons"
-              onClick={handleClickShowRegisterForm}
-              sx={{ m: 2, width: '40ch' }}
-            >
-              Log in
+              {!values.isNewUser ? 'REGISTER' : 'LOG IN'}
             </Button>
           </Stack>
         </div>
