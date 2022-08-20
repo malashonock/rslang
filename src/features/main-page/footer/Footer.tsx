@@ -3,7 +3,7 @@ import github from '../../../assets/github.png';
 import rsschool from '../../../assets/rs_school_js.svg';
 import styles from './Footer.module.scss';
 
-function Footer(): JSX.Element {
+const Footer = (): JSX.Element => {
   return (
     <Navbar bg="primary" variant="dark" expand="sm">
       <Container className="justify-content-between">
@@ -28,6 +28,6 @@ function Footer(): JSX.Element {
       </Container>
     </Navbar>
   );
-}
+};
 
 export default Footer;
