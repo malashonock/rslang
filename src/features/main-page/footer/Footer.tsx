@@ -7,13 +7,11 @@ function Footer(): JSX.Element {
   return (
     <Navbar bg="primary" variant="dark" expand="sm">
       <Container className="justify-content-between">
-        <Nav>
-          <Navbar.Brand href="#home">RSLang 2022 year</Navbar.Brand>
-        </Nav>
-        <Nav className="justify-content-center">
+        <Nav className="d-flex gap-2">
           <Nav.Link href="https://rollingscopes.com/">
             <Image className={styles.logoRss} src={rsschool} />
           </Nav.Link>
+          <Nav.Item className="text-light d-flex align-items-center">2022</Nav.Item>
         </Nav>
         <Nav className="d-flex align-items-center">
           <Image className={styles.logoGitHub} src={github} />

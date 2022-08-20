@@ -9,8 +9,8 @@ const App = (): JSX.Element => {
       <NavMenu />
       <Container>
         <h1>Main page content</h1>
-        <Footer />
       </Container>
+      <Footer />
     </div>
   );
 };
