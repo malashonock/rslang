@@ -44,12 +44,12 @@ const renderDescription = (word: Word) => {
   return (
     <>
       <Card.Text className={styles.infoTitle}>
-        <b>Значение</b>
+        <b>Meaning</b>
       </Card.Text>
       <Card.Text className={styles.engInfo}>{word.textMeaning}</Card.Text>
       <Card.Text className={styles.rusInfo}>{word.textMeaningTranslate}</Card.Text>
       <Card.Text className={styles.infoTitle}>
-        <b>Пример</b>
+        <b>Example</b>
       </Card.Text>
       <Card.Text className={styles.engInfo}>{word.textExample}</Card.Text>
       <Card.Text className={styles.rusInfo}>{word.textExampleTranslate}</Card.Text>
@@ -62,12 +62,12 @@ const renderFooter = () => {
     <Row>
       <Col>
         <Button className={styles.controls} size="sm" variant="danger">
-          в сложные слова
+          to difficult
         </Button>
       </Col>
       <Col>
         <Button className={styles.controls} size="sm" variant="warning">
-          изучено
+          studied
         </Button>
       </Col>
     </Row>
