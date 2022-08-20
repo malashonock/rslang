@@ -1,4 +1,5 @@
 import { Container } from 'react-bootstrap';
+import { Outlet } from 'react-router-dom';
 import styles from './App.module.scss';
 import Footer from './features/main-page/footer/Footer';
 import NavMenu from './features/main-page/nav-menu/NavMenu';
@@ -8,7 +9,7 @@ const App = (): JSX.Element => {
     <div className={styles.appRoot}>
       <NavMenu />
       <Container>
-        <h1>Main page content</h1>
+        <Outlet />
       </Container>
       <Footer />
     </div>
