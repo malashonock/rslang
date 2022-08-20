@@ -48,7 +48,6 @@ export default function LoginForm() {
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const checkPasswordMinLength = (password: string): boolean => password.length < 8;
 
