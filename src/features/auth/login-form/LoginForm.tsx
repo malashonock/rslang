@@ -12,9 +12,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonIcon from '@mui/icons-material/Person';
 import { Email } from '@mui/icons-material';
-import styles from './LoginForm.module.scss';
+// import styles from './LoginForm.module.scss';
 
-interface State {
+interface LoginFormState {
   userName: string;
   userEmail: string;
   password: string;
@@ -22,15 +22,15 @@ interface State {
   isNewUser: boolean;
   isValidName: boolean;
   isValidEmail: boolean;
-  isValidePassword: boolean;
-  isFormValid: boolean;
+  isValidPassword: boolean;
+  isValidForm: boolean;
   errorUserName: string;
   errorUserEmail: string;
   errorPassword: string;
 }
 
 export default function LoginForm() {
-  const [values, setValues] = React.useState<State>({
+  const [formState, setFormState] = React.useState<LoginFormState>({
     userName: '',
     userEmail: '',
     password: '',
@@ -38,41 +38,42 @@ export default function LoginForm() {
     isNewUser: false,
     isValidName: true,
     isValidEmail: true,
-    isValidePassword: true,
-    isFormValid: false,
+    isValidPassword: true,
+    isValidForm: false,
     errorUserName: '',
     errorPassword: '',
     errorUserEmail: '',
   });
 
-  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const handleChange =
+    (prop: keyof LoginFormState) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormState({ ...formState, [prop]: event.target.value });
+    };
 
-  const checkPasswordMinLength = (password: string): boolean => password.length < 8;
+  const checkPasswordMinLength = (password: string): boolean => password.length > 8;
 
   const checkPassword = (): void => {
-    const { password } = values;
-    setValues({
-      ...values,
-      isValidePassword: !checkPasswordMinLength(password),
+    const { password } = formState;
+    setFormState({
+      ...formState,
+      isValidPassword: checkPasswordMinLength(password),
     });
   };
 
   const checkEmail = (): void => {
-    const { userEmail } = values;
+    const { userEmail } = formState;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setValues({
-      ...values,
+    setFormState({
+      ...formState,
       isValidEmail: emailPattern.test(userEmail),
     });
   };
 
   const checkUserName = (): void => {
-    const { userName } = values;
+    const { userName } = formState;
     if (!userName)
-      setValues({
-        ...values,
+      setFormState({
+        ...formState,
         isValidName: false,
       });
   };
@@ -80,20 +81,20 @@ export default function LoginForm() {
   const onSubmite = () => {
     checkPassword();
     checkEmail();
-    if (values.isNewUser) checkUserName();
+    if (formState.isNewUser) checkUserName();
   };
 
   const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
+    setFormState({
+      ...formState,
+      showPassword: !formState.showPassword,
     });
   };
 
   const handleClickShowRegisterForm = () => {
-    setValues({
-      ...values,
-      isNewUser: !values.isNewUser,
+    setFormState({
+      ...formState,
+      isNewUser: !formState.isNewUser,
     });
   };
 
@@ -103,88 +104,94 @@ export default function LoginForm() {
 
   return (
     <Box>
-      <Box>
-        <div className={styles.form}>
-          <h3>{values.isNewUser ? 'REGISTER' : 'WELCOME'}</h3>
-          <TextField
-            label="E-mail"
-            id="user-email"
-            sx={{ m: 2, width: '40ch' }}
-            type="email"
-            error={!values.isValidEmail}
-            fullWidth
-            autoFocus
+      <div
+        style={{
+          display: 'flex',
+          msFlexDirection: 'column',
+          justifyItems: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <h3>{formState.isNewUser ? 'REGISTER' : 'WELCOME'}</h3>
+        <TextField
+          label="E-mail"
+          id="user-email"
+          sx={{ m: 2, width: '40ch' }}
+          type="email"
+          error={!formState.isValidEmail}
+          fullWidth
+          autoFocus
+          required
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Email />
+              </InputAdornment>
+            ),
+          }}
+          variant="standard"
+          onChange={handleChange('userEmail')}
+        />
+        <TextField
+          label="User Name"
+          id="user-name"
+          sx={{ m: 2, width: '40ch', display: formState.isNewUser ? 'block' : 'none' }}
+          type="text"
+          fullWidth
+          error={!formState.isValidName}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PersonIcon />
+              </InputAdornment>
+            ),
+          }}
+          variant="standard"
+          onChange={handleChange('userName')}
+        />
+        <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
+          <InputLabel htmlFor="user-password">Password</InputLabel>
+          <Input
+            id="user-password"
+            type={formState.showPassword ? 'text' : 'password'}
+            value={formState.password}
             required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-            onChange={handleChange('userEmail')}
+            onChange={handleChange('password')}
+            error={!formState.isValidName}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {formState.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
           />
-          <TextField
-            label="User Name"
-            id="user-name"
-            sx={{ m: 2, width: '40ch', display: values.isNewUser ? 'block' : 'none' }}
-            type="text"
-            fullWidth
-            error={!values.isValidName}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-            onChange={handleChange('userName')}
-          />
-          <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
-            <InputLabel htmlFor="user-password">Password</InputLabel>
-            <Input
-              id="user-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              required
-              onChange={handleChange('password')}
-              error={!values.isValidName}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ m: 2, width: '40ch' }}
-              onClick={onSubmite}
-            >
-              {!values.isNewUser ? 'LOGIN' : 'REGISTER'}
-            </Button>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Button
-              href="#text-buttons"
-              onClick={handleClickShowRegisterForm}
-              sx={{ m: 2, width: '40ch' }}
-            >
-              {!values.isNewUser ? 'REGISTER' : 'LOG IN'}
-            </Button>
-          </Stack>
-        </div>
-      </Box>
+        </FormControl>
+        <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ m: 2, width: '40ch' }}
+            onSubmit={onSubmite}
+          >
+            {!formState.isNewUser ? 'LOGIN' : 'REGISTER'}
+          </Button>
+        </Stack>
+        <Stack direction="row" spacing={2}>
+          <Button
+            href="#text-buttons"
+            onClick={handleClickShowRegisterForm}
+            sx={{ m: 2, width: '40ch' }}
+          >
+            {!formState.isNewUser ? 'REGISTER' : 'LOG IN'}
+          </Button>
+        </Stack>
+      </div>
     </Box>
   );
 }
