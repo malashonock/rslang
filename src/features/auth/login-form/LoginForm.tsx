@@ -12,7 +12,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonIcon from '@mui/icons-material/Person';
 import { Email } from '@mui/icons-material';
-// import styles from './LoginForm.module.scss';
 
 interface LoginFormState {
   userName: string;
@@ -104,15 +103,7 @@ export default function LoginForm() {
 
   return (
     <Box>
-      <div
-        style={{
-          display: 'flex',
-          msFlexDirection: 'column',
-          justifyItems: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <div className="d-flex flex-column align-items-center justify-content-center">
         <h3>{formState.isNewUser ? 'REGISTER' : 'WELCOME'}</h3>
         <TextField
           label="E-mail"
