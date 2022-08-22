@@ -1,0 +1,35 @@
+.section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  max-width: 22rem;
+  margin: auto;
+  padding: 1rem 0;
+}
+
+.img {
+  width: 12rem;
+}
+
+.slogan {
+  text-align: center;
+  margin: 0;
+}
+
+@media (min-width: 576px) {
+  .section {
+    flex-direction: row;
+
+    max-width: 40rem;
+  }
+
+  .img {
+    width: 16rem;
+  }
+
+  .slogan {
+    margin: 0;
+  }
+}
