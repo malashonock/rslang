@@ -1,13 +1,20 @@
-import { Navbar } from 'react-bootstrap';
+import Feature from './feature/Feature';
+import FeaturesData from './feature/Features.Data';
 
-type Orientation = 'left' | 'right';
-
-const Footer = (position: Orientation): JSX.Element => {
+const Features = (): JSX.Element => {
+  const featureComponents = FeaturesData.map((feature, index) => (
+    <Feature
+      imgPosition={index % 2 ? 'left' : 'right'}
+      imgURL={feature.imageURL}
+      title={feature.title}
+      description={feature.description}
+    />
+  ));
   return (
-    <Navbar bg="primary" variant="dark" expand="sm">
-      {position}
-    </Navbar>
+    <div className="d-flex align-items-center justify-content-center flex-column">
+      {featureComponents}
+    </div>
   );
 };
 
-export default Footer;
+export default Features;
