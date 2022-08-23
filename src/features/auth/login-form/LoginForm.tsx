@@ -52,14 +52,14 @@ const LoginForm = (): JSX.Element => {
   };
 
   const handleClickShowRegisterForm = (): void => {
-    setFormState({ ...formState, isNewUser: !formState.isNewUser });
+    setFormState((currentState) => ({ ...currentState, isNewUser: !currentState.isNewUser }));
   };
 
   const handleClickShowPassword = () => {
-    setFormState({
-      ...formState,
-      isShowPassword: !formState.isShowPassword,
-    });
+    setFormState((currentState) => ({
+      ...currentState,
+      isShowPassword: !currentState.isShowPassword,
+    }));
   };
 
   return (
