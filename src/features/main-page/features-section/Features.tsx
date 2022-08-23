@@ -10,11 +10,7 @@ const Features = (): JSX.Element => {
       description={feature.description}
     />
   ));
-  return (
-    <div className="d-flex align-items-center justify-content-center flex-column">
-      {featureComponents}
-    </div>
-  );
+  return <div className="d-flex align-items-lg-center flex-column">{featureComponents}</div>;
 };
 
 export default Features;
