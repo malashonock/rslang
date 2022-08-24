@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { CloseButton, Container } from 'react-bootstrap';
 import API_BASE_URL from '../../../api/constants';
 import Word from '../../../model/Word';
 import shuffle from '../../../utils/array';
@@ -31,7 +31,8 @@ const AudioChallengeTurn = ({
   };
 
   return (
-    <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-5">
+    <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-5 position-relative">
+      <CloseButton className="position-absolute top-0 end-0 m-2" />
       <div className="correct-word d-flex flex-column align-items-center gap-2">
         <WordPicture
           imageSrc={correctWordImageSrc}
