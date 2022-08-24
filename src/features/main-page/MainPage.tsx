@@ -1,5 +1,5 @@
 import TitleSection from './title-section/TitleSection';
-import Features from './features-section/Features';
+import Features from './features-section/FeaturesSection';
 
 const MainPage = (): JSX.Element => {
   return (

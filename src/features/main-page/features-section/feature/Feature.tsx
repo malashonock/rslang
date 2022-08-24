@@ -1,15 +1,15 @@
 import { Card } from 'react-bootstrap';
 
 type ImagePosition = 'left' | 'right';
-interface propFeatures {
+
+interface FeatureCardProps {
   imgPosition: ImagePosition;
   imgURL: string;
   title: string;
   description: string;
 }
 
-const Feature = (prop: propFeatures): JSX.Element => {
-  const { imgPosition, imgURL, title, description } = prop;
+const Feature = ({ imgPosition, imgURL, title, description }: FeatureCardProps): JSX.Element => {
   const align = imgPosition === 'left' ? 'start' : `end`;
   const divAlign = `d-flex justify-content-${align}`;
   let usingClassNames = 'd-flex border-0 justify-content-between';
