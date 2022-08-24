@@ -1,5 +1,7 @@
+import TitleSection from './title-section/TitleSection';
+
 const MainPage = (): JSX.Element => {
-  return <h1>Main Page</h1>;
+  return <TitleSection />;
 };
 
 export default MainPage;
