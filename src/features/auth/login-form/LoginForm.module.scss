@@ -1,0 +1,19 @@
+.loginForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+  .input{
+    width: 40ch;
+    margin: .8rem;
+  }
+
+  .btnArea {
+    display: flex;
+    justify-content: center; 
+  }
+  
+}
+
+

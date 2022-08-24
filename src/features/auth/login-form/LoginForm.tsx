@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
@@ -9,170 +10,123 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Avatar from '@mui/material/Avatar';
 import PersonIcon from '@mui/icons-material/Person';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Email } from '@mui/icons-material';
-import * as yup from 'yup';
-import { useFormik } from 'formik';
+import { FormikValues, useFormik } from 'formik';
 import { FormHelperText } from '@mui/material';
-
-const validationSchema = yup.object({
-  userName: yup.string(),
-  userEmail: yup.string().email('Enter a valid email').required('Email is required'),
-  userPassword: yup
-    .string()
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
-});
-
-interface LoginFormState {
-  isNewUser: boolean;
-  isShowPassword: boolean;
-}
+import Link from '@mui/material/Link';
+import {
+  validationSchemaRegisterForm,
+  validationSchemaLoginForm,
+} from '../../validateShema/LoginForm';
+import { INIT_PARAMETR_FORM } from './Constants';
+import styles from './LoginForm.module.scss';
 
 const LoginForm = (): JSX.Element => {
-  const [formState, setFormState] = React.useState<LoginFormState>({
-    isShowPassword: false,
-    isNewUser: false,
-  });
+  const [isShowPassword, setShowPassword] = useState<boolean>(false);
+  const [isNewUser, setShowRegisterForm] = useState<boolean>(false);
 
-  const formik = useFormik({
-    initialValues: {
-      userName: '',
-      userEmail: '',
-      userPassword: '',
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
-
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const submitLoginForm = (values: FormikValues): void => {
+    alert(JSON.stringify(values, null, 2));
   };
 
-  const handleClickShowRegisterForm = (): void => {
-    setFormState({ ...formState, isNewUser: !formState.isNewUser });
+  const { values, touched, handleSubmit, handleChange, errors } = useFormik({
+    initialValues: INIT_PARAMETR_FORM,
+    validationSchema: isNewUser ? validationSchemaRegisterForm : validationSchemaLoginForm,
+    onSubmit: submitLoginForm,
+  });
+
+  const showRegisterForm = () => {
+    setShowRegisterForm(!isNewUser);
   };
 
-  const handleClickShowPassword = () => {
-    setFormState({
-      ...formState,
-      isShowPassword: !formState.isShowPassword,
-    });
+  const showPassword = () => {
+    setShowPassword(!isShowPassword);
   };
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <Box className="d-flex flex-column align-items-center justify-content-center">
-        <h3>{formState.isNewUser ? 'REGISTER' : 'WELCOME'}</h3>
-        <FormControl
-          variant="standard"
-          sx={{ m: 2, width: '40ch', display: formState.isNewUser ? 'block' : 'none' }}
-        >
-          <InputLabel htmlFor="userName">User name</InputLabel>
+    <form onSubmit={handleSubmit}>
+      <Box className={styles.loginForm}>
+        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+          {isNewUser ? <LockOutlinedIcon /> : <AccountCircleIcon />}
+        </Avatar>
+        <h3>{isNewUser ? 'Sign up' : 'Sing in'}</h3>
+        {isNewUser && (
+          <FormControl className={styles.input} variant="standard">
+            <InputLabel>User name</InputLabel>
+            <Input
+              name="userName"
+              value={values.userName}
+              fullWidth
+              onChange={handleChange}
+              error={touched.userName && Boolean(errors.userName)}
+              endAdornment={
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              }
+            />
+            {errors.userName && <FormHelperText error>{errors.userName}</FormHelperText>}
+          </FormControl>
+        )}
+        <FormControl className={styles.input} variant="standard">
+          <InputLabel>E-mail</InputLabel>
           <Input
-            id="userName"
-            name="userName"
-            value={formik.values.userName}
-            required
-            fullWidth
-            onChange={formik.handleChange}
-            error={formik.touched.userName && Boolean(formik.errors.userName)}
-            endAdornment={
-              <InputAdornment position="start">
-                <PersonIcon />
-              </InputAdornment>
-            }
-          />
-          <FormHelperText
-            id="standard-helper-for-name"
-            error
-            className="invalid-feedback"
-            sx={{
-              display:
-                formik.touched.userName && Boolean(formik.errors.userName) ? 'block' : 'none',
-            }}
-          >
-            {formik.touched.userName && formik.errors.userName}
-          </FormHelperText>
-        </FormControl>
-        <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
-          <InputLabel htmlFor="user-email">E-mail</InputLabel>
-          <Input
-            id="user-email"
             name="userEmail"
-            value={formik.values.userEmail}
+            value={values.userEmail}
             required
-            onChange={formik.handleChange}
-            error={formik.touched.userEmail && Boolean(formik.errors.userEmail)}
+            onChange={handleChange}
+            error={touched.userEmail && Boolean(errors.userEmail)}
             endAdornment={
               <InputAdornment position="start">
                 <Email />
               </InputAdornment>
             }
           />
-          <FormHelperText
-            id="standard-helper-for-email"
-            error
-            className="invalid-feedback"
-            sx={{
-              display:
-                formik.touched.userEmail && Boolean(formik.errors.userEmail) ? 'block' : 'none',
-            }}
-          >
-            {formik.touched.userEmail && formik.errors.userEmail}
-          </FormHelperText>
+          {touched.userEmail && <FormHelperText error>{errors.userEmail}</FormHelperText>}
         </FormControl>
-        <FormControl sx={{ m: 2, width: '40ch' }} variant="standard">
-          <InputLabel htmlFor="user-password">Password</InputLabel>
+        <FormControl className={styles.input} variant="standard">
+          <InputLabel>Password</InputLabel>
           <Input
-            id="user-password"
-            type={formState.isShowPassword ? 'text' : 'password'}
+            type={isShowPassword ? 'text' : 'password'}
             name="userPassword"
-            value={formik.values.userPassword}
+            value={values.userPassword}
             required
-            onChange={formik.handleChange}
-            error={formik.touched.userPassword && Boolean(formik.errors.userPassword)}
+            onChange={handleChange}
+            error={touched.userPassword && Boolean(errors.userPassword)}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {formState.isShowPassword ? <VisibilityOff /> : <Visibility />}
+                <IconButton aria-label="toggle password visibility" onClick={showPassword}>
+                  {isShowPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
           />
-          <FormHelperText
-            id="standard-helper-for-password"
-            error
-            className="invalid-feedback"
-            sx={{
-              display:
-                formik.touched.userPassword && Boolean(formik.errors.userPassword)
-                  ? 'block'
-                  : 'none',
-            }}
-          >
-            {formik.touched.userPassword && formik.errors.userPassword}
-          </FormHelperText>
+          {touched.userPassword && <FormHelperText error>{errors.userPassword}</FormHelperText>}
         </FormControl>
-        <Stack direction="row" spacing={15} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button type="submit" variant="contained" color="success" sx={{ m: 2, width: '40ch' }}>
-            {formState.isNewUser ? 'REGISTER' : 'LOG IN'}
+        <Stack spacing={15} className={styles.btnArea}>
+          <Button
+            type="submit"
+            variant="contained"
+            className="btn btn-primary"
+            sx={{ m: 2, width: '40ch' }}
+          >
+            {isNewUser ? 'SING UP' : 'SING IN'}
           </Button>
         </Stack>
-        <Stack direction="row" spacing={2}>
-          <Button
-            href="#text-buttons"
-            sx={{ m: 2, width: '40ch' }}
-            onClick={handleClickShowRegisterForm}
+        <Stack spacing={15}>
+          <Link
+            component="button"
+            variant="body2"
+            underline="none"
+            href="#registration"
+            onClick={showRegisterForm}
           >
-            {formState.isNewUser ? 'LOG IN' : 'REGISTER'}
-          </Button>
+            {isNewUser ? `Already have an account? Sign in` : `Don't have an account? Sign up`}
+          </Link>
         </Stack>
       </Box>
     </form>
