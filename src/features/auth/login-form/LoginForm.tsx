@@ -17,8 +17,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
 import { FormHelperText } from '@mui/material';
-import { registerSchema, loginSchema } from '../../validateShema/LoginForm';
-import { INITIAL_VALUES_FORM } from './constants';
+import { registerSchema, loginSchema } from './validationSchemas';
+import { INITIAL_VALUES_FORM } from './сonstants';
 import styles from './LoginForm.module.scss';
 
 const LoginForm = (): JSX.Element => {

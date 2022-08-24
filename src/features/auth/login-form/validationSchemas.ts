@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH } from '../auth/login-form/constants';
+import { MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH } from './сonstants';
 
 const loginSchema = yup.object({
   userEmail: yup.string().email('Enter a valid email').required('Email is required'),
