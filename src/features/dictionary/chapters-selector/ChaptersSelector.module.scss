@@ -1,0 +1,26 @@
+.section {
+  width: 4.2rem;
+  padding: 1rem 0.5rem;
+
+  align-items: center;
+
+  box-shadow: 0px 0px 3px 1px rgba(34, 60, 80, 0.2);
+  border-radius: 3px;
+}
+
+.title {
+  color: #d63384;
+  font-weight: 600;
+  margin: 0;
+}
+
+.button {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+.currentButton {
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.4);
+}
