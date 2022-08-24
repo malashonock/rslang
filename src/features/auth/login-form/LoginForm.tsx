@@ -27,7 +27,7 @@ import styles from './LoginForm.module.scss';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
-  const [isNewUser, setShowRegisterForm] = useState<boolean>(false);
+  const [isRegisterForm, setRegisterForm] = useState<boolean>(false);
 
   const submitLoginForm = (values: FormikValues): void => {
     alert(JSON.stringify(values, null, 2));
@@ -35,15 +35,15 @@ const LoginForm = (): JSX.Element => {
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
     initialValues: INIT_PARAMETR_FORM,
-    validationSchema: isNewUser ? validationSchemaRegisterForm : validationSchemaLoginForm,
+    validationSchema: isRegisterForm ? validationSchemaRegisterForm : validationSchemaLoginForm,
     onSubmit: submitLoginForm,
   });
 
   const showRegisterForm = () => {
-    setShowRegisterForm(!isNewUser);
+    setRegisterForm(!isRegisterForm);
   };
 
-  const showPassword = () => {
+  const toggleVisibilityPassword = () => {
     setShowPassword(!isShowPassword);
   };
 
@@ -51,10 +51,10 @@ const LoginForm = (): JSX.Element => {
     <form onSubmit={handleSubmit}>
       <Box className={styles.loginForm}>
         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-          {isNewUser ? <LockOutlinedIcon /> : <AccountCircleIcon />}
+          {isRegisterForm ? <LockOutlinedIcon /> : <AccountCircleIcon />}
         </Avatar>
-        <h3>{isNewUser ? 'Sign up' : 'Sing in'}</h3>
-        {isNewUser && (
+        <h3>{isRegisterForm ? 'Sign up' : 'Sing in'}</h3>
+        {isRegisterForm && (
           <FormControl className={styles.input} variant="standard">
             <InputLabel>User name</InputLabel>
             <Input
@@ -99,7 +99,10 @@ const LoginForm = (): JSX.Element => {
             error={touched.userPassword && Boolean(errors.userPassword)}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton aria-label="toggle password visibility" onClick={showPassword}>
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={toggleVisibilityPassword}
+                >
                   {isShowPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -114,7 +117,7 @@ const LoginForm = (): JSX.Element => {
             className="btn btn-primary"
             sx={{ m: 2, width: '40ch' }}
           >
-            {isNewUser ? 'SING UP' : 'SING IN'}
+            {isRegisterForm ? 'SING UP' : 'SING IN'}
           </Button>
         </Stack>
         <Stack spacing={15}>
@@ -125,7 +128,7 @@ const LoginForm = (): JSX.Element => {
             href="#registration"
             onClick={showRegisterForm}
           >
-            {isNewUser ? `Already have an account? Sign in` : `Don't have an account? Sign up`}
+            {isRegisterForm ? `Already have an account? Sign in` : `Don't have an account? Sign up`}
           </Link>
         </Stack>
       </Box>
