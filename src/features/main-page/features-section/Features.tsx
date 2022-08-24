@@ -1,8 +1,8 @@
 import Feature from './feature/Feature';
-import FeaturesData from './feature/Features.Data';
+import featuresData from './featuresData';
 
 const Features = (): JSX.Element => {
-  const featureComponents = FeaturesData.map((feature, index) => (
+  const featureComponents = featuresData.map((feature, index) => (
     <Feature
       imgPosition={index % 2 ? 'left' : 'right'}
       imgURL={feature.imageURL}
