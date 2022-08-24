@@ -17,30 +17,26 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
 import { FormHelperText } from '@mui/material';
-import Link from '@mui/material/Link';
-import {
-  validationSchemaRegisterForm,
-  validationSchemaLoginForm,
-} from '../../validateShema/LoginForm';
-import { INIT_PARAMETR_FORM } from './Constants';
+import { registerSchema, loginSchema } from '../../validateShema/LoginForm';
+import { INITIAL_VALUES_FORM } from './constants';
 import styles from './LoginForm.module.scss';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
-  const [isRegisterForm, setRegisterForm] = useState<boolean>(false);
+  const [isRegisterForm, setIsRegisterForm] = useState<boolean>(false);
 
   const submitLoginForm = (values: FormikValues): void => {
     alert(JSON.stringify(values, null, 2));
   };
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
-    initialValues: INIT_PARAMETR_FORM,
-    validationSchema: isRegisterForm ? validationSchemaRegisterForm : validationSchemaLoginForm,
+    initialValues: INITIAL_VALUES_FORM,
+    validationSchema: isRegisterForm ? registerSchema : loginSchema,
     onSubmit: submitLoginForm,
   });
 
   const showRegisterForm = () => {
-    setRegisterForm(!isRegisterForm);
+    setIsRegisterForm(!isRegisterForm);
   };
 
   const toggleVisibilityPassword = () => {
@@ -50,10 +46,10 @@ const LoginForm = (): JSX.Element => {
   return (
     <form onSubmit={handleSubmit}>
       <Box className={styles.loginForm}>
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+        <Avatar className={styles.avatar}>
           {isRegisterForm ? <LockOutlinedIcon /> : <AccountCircleIcon />}
         </Avatar>
-        <h3>{isRegisterForm ? 'Sign up' : 'Sing in'}</h3>
+        <h3>{isRegisterForm ? 'Sign up' : 'Sign in'}</h3>
         {isRegisterForm && (
           <FormControl className={styles.input} variant="standard">
             <InputLabel>User name</InputLabel>
@@ -110,26 +106,15 @@ const LoginForm = (): JSX.Element => {
           />
           {touched.userPassword && <FormHelperText error>{errors.userPassword}</FormHelperText>}
         </FormControl>
-        <Stack spacing={15} className={styles.btnArea}>
-          <Button
-            type="submit"
-            variant="contained"
-            className="btn btn-primary"
-            sx={{ m: 2, width: '40ch' }}
-          >
-            {isRegisterForm ? 'SING UP' : 'SING IN'}
+        <Stack className={styles.btnArea}>
+          <Button type="submit" variant="contained" className={styles.input}>
+            {isRegisterForm ? 'SIGN UP' : 'SIGN IN'}
           </Button>
         </Stack>
-        <Stack spacing={15}>
-          <Link
-            component="button"
-            variant="body2"
-            underline="none"
-            href="#registration"
-            onClick={showRegisterForm}
-          >
+        <Stack>
+          <Button variant="text" onClick={showRegisterForm}>
             {isRegisterForm ? `Already have an account? Sign in` : `Don't have an account? Sign up`}
-          </Link>
+          </Button>
         </Stack>
       </Box>
     </form>

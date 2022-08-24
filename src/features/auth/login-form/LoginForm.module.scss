@@ -3,8 +3,13 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  
-  .input{
+  margin: 15px;
+
+  .avatar {
+    background-color: #1976d2;
+  }
+
+  .input {
     width: 40ch;
     margin: .8rem;
   }
@@ -12,6 +17,7 @@
   .btnArea {
     display: flex;
     justify-content: center; 
+    
   }
   
 }

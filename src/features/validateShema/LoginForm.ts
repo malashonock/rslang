@@ -1,7 +1,7 @@
 import * as yup from 'yup';
-import { MIN_PASSWORD_LENGTH, MIN_USER_NAME } from '../auth/login-form/Constants';
+import { MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH } from '../auth/login-form/constants';
 
-const validationSchemaLoginForm = yup.object({
+const loginSchema = yup.object({
   userEmail: yup.string().email('Enter a valid email').required('Email is required'),
   userPassword: yup
     .string()
@@ -12,8 +12,8 @@ const validationSchemaLoginForm = yup.object({
     .required('Password is required'),
 });
 
-const validationSchemaRegisterForm = validationSchemaLoginForm.shape({
-  userName: yup.string().required('User name is required').min(MIN_USER_NAME),
+const registerSchema = loginSchema.shape({
+  userName: yup.string().required('User name is required').min(MIN_USERNAME_LENGTH),
 });
 
-export { validationSchemaRegisterForm, validationSchemaLoginForm };
+export { registerSchema, loginSchema };
