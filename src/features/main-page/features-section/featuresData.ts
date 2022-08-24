@@ -17,7 +17,7 @@ const featuresData = [
   {
     imageURL: './assets/icons/ico-personal.svg',
     title: 'Statistic',
-    description: 'Detailed statistics of learned words, achievements and successes',
+    description: 'Detailed statistics of learned words, successes and achievements',
   },
 ];
 

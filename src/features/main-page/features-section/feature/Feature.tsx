@@ -1,25 +1,24 @@
 import { Card } from 'react-bootstrap';
+import styles from './Feature.module.scss';
 
-type ImagePosition = 'left' | 'right';
+type Position = 'left' | 'right';
 
 interface FeatureCardProps {
-  imgPosition: ImagePosition;
+  imgPosition: Position;
   imgURL: string;
   title: string;
   description: string;
 }
 
 const Feature = ({ imgPosition, imgURL, title, description }: FeatureCardProps): JSX.Element => {
-  const align = imgPosition === 'left' ? 'start' : `end`;
-  const divAlign = `d-flex justify-content-${align}`;
-  let usingClassNames = 'd-flex border-0 justify-content-between';
-  usingClassNames += imgPosition === 'left' ? ' flex-row' : ' flex-row-reverse';
+  const descriptionClassName = imgPosition === 'left' ? styles.featureRight : styles.featureLeft;
+  const usingClassNames = imgPosition === 'left' ? styles.featureCardLeft : styles.featureCardRight;
   return (
-    <div style={{ width: '50rem' }} className={divAlign}>
-      <Card style={{ width: '30rem' }} className={usingClassNames}>
-        <Card.Img variant="top" src={imgURL} style={{ width: '5rem' }} />
-        <Card.Body>
-          <Card.Title>{title}</Card.Title>
+    <div className={(styles.FeaturesSection, descriptionClassName)}>
+      <Card className={usingClassNames}>
+        <Card.Img variant="top" src={imgURL} className={styles.imageSize} />
+        <Card.Body className={styles.cardBody}>
+          <Card.Title style={{ textAlign: imgPosition }}>{title}</Card.Title>
           <Card.Text>{description}</Card.Text>
         </Card.Body>
       </Card>

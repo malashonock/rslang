@@ -1,0 +1,69 @@
+  .featureLeft {
+    display: flex;
+    width: 52rem;
+    justify-content: left;
+  }
+
+  .featureRight {
+    display: flex;
+    width: 52rem;
+    justify-content: right;
+  }
+
+  .featureCardLeft {
+    display: flex;
+    flex-direction: row;
+    border: 0px;
+    justify-content: space-between;
+    width: 28.5rem;
+  }
+
+  .featureCardRight {
+    display: flex;
+    flex-direction: row-reverse;
+    border: 0;
+    justify-content: space-between;
+    width: 28.5rem;
+  }
+
+  .imageSize {
+    width: 6rem;
+  }
+
+  .cardBodyLeft {
+    display: flex;
+    width: 23rem;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .cardBodyRight {
+    display: flex;
+    width: 23rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  @media (max-width: 1024px) and (min-width: 769px) {
+
+    .featureLeft, .featureRight {
+      width: 42rem;
+    }
+
+    .featureCardLeft, .featureCardRight{
+      width: 23.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+
+    .featureLeft, .featureRight {
+      width: 32rem;
+    }
+
+    .featureCardLeft, .featureCardRight{
+      width: 18.5rem;
+    }
+  }
