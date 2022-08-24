@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import Word from '../interfaces/Word';
+import Word from '../model/Word';
 import API_BASE_URL from './constants';
 
 const wordsEndpoint = `${API_BASE_URL}/words`;
