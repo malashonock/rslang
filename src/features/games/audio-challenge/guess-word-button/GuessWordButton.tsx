@@ -1,8 +1,11 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ToggleButton } from 'react-bootstrap';
 import { ReactComponent as CheckIcon } from '../../../../assets/icons/check-icon.svg';
 import { ReactComponent as XIcon } from '../../../../assets/icons/x-icon.svg';
+import dingSound from '../../../../assets/sounds/ding.mp3';
+import buzzerSound from '../../../../assets/sounds/buzzer.mp3';
 import styles from './GuessWordButton.module.scss';
+import playAudioAsync from '../../../../utils/sound';
 
 interface GuessWordButtonProps {
   word: string;
@@ -23,6 +26,14 @@ const GuessWordButton = ({
     setChecked(event.currentTarget.checked);
     onSelect(word);
   };
+
+  useEffect(() => {
+    if (checked) {
+      const sound = new Audio(isCorrect ? dingSound : buzzerSound);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      playAudioAsync(sound);
+    }
+  }, [checked, isCorrect]);
 
   return (
     <ToggleButton
