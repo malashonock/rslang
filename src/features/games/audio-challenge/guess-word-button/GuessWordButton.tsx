@@ -10,6 +10,7 @@ import playAudioAsync from '../../../../utils/sound';
 interface GuessWordButtonProps {
   word: string;
   isCorrect: boolean;
+  turn: number;
   disabled: boolean;
   onSelect: (word: string) => void;
 }
@@ -17,6 +18,7 @@ interface GuessWordButtonProps {
 const GuessWordButton = ({
   word,
   isCorrect,
+  turn,
   disabled,
   onSelect,
 }: GuessWordButtonProps): JSX.Element => {
@@ -26,6 +28,10 @@ const GuessWordButton = ({
     setChecked(event.currentTarget.checked);
     onSelect(word);
   };
+
+  useEffect(() => {
+    setChecked(false);
+  }, [turn]);
 
   useEffect(() => {
     if (checked) {
