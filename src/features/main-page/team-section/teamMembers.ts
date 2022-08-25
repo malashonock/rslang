@@ -1,9 +1,13 @@
+import author1 from '../../../assets/icons/author1.png';
+import author2 from '../../../assets/icons/author2.png';
+import author3 from '../../../assets/icons/author3.png';
+
 const teamMembers = [
   {
     id: 2,
     name: 'Vlad Kapitan',
     ghLink: 'https://github.com/qrvck',
-    imgSrc: './assets/icons/author1.svg',
+    imgSrc: author1,
     role: 'Front-End',
     work: 'Описание реализованных функций',
   },
@@ -11,7 +15,7 @@ const teamMembers = [
     id: 1,
     name: 'Yan Malashonak',
     ghLink: 'https://github.com/malashonock',
-    imgSrc: './assets/icons/author2.svg',
+    imgSrc: author2,
     role: 'Team Lead, Front-End',
     work: 'Описание реализованных функций',
   },
@@ -19,7 +23,7 @@ const teamMembers = [
     id: 3,
     name: 'Sergey Chelnakov',
     ghLink: 'https://github.com/stanlys',
-    imgSrc: './assets/icons/author3.svg',
+    imgSrc: author3,
     role: 'Front-End',
     work: 'Описание реализованных функций',
   },
