@@ -1,0 +1,30 @@
+.team {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.cardFooter{
+  display: flex;
+  justify-content: end;
+  align-items: flex-end;
+}
+
+.logoGitHub {
+  width: 2rem;
+  height: 2rem;
+  filter: invert(50%);
+
+  &:hover{
+    filter: invert(25%);
+  }
+}
+
+.cardElements {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
