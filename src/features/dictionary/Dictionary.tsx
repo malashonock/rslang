@@ -1,4 +1,5 @@
 import WordCard from './word-card/WordCard';
+import ChapterPagesSelector from './chapter-pages-selector/ChapterPagesSelector';
 
 const word = {
   id: '22',
@@ -16,6 +17,7 @@ const Dictionary = (): JSX.Element => {
     <>
       <h2>Dictionary</h2>
       <WordCard word={word} isAuthorized />
+      <ChapterPagesSelector currentPage={0} />
     </>
   );
 };
