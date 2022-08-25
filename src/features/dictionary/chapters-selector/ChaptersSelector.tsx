@@ -5,22 +5,24 @@ const currentGroup = 0;
 
 const createButtons = (): JSX.Element[] => {
   const data = [
-    { number: 1, variant: 'info' },
-    { number: 2, variant: 'primary' },
-    { number: 3, variant: 'secondary' },
-    { number: 4, variant: 'success' },
-    { number: 5, variant: 'warning' },
-    { number: 6, variant: 'danger' },
-    { number: 7, variant: 'dark' },
+    { name: 'Chapter 1', colorClass: 'violetButton' },
+    { name: 'Chapter 2', colorClass: 'blueButton' },
+    { name: 'Chapter 3', colorClass: 'lightBlueButton' },
+    { name: 'Chapter 4', colorClass: 'greenButton' },
+    { name: 'Chapter 5', colorClass: 'yellowButton' },
+    { name: 'Chapter 6', colorClass: 'orangeButton' },
+    { name: 'Chapter 7', colorClass: 'redButton' },
   ];
 
-  const items = data.map((item) => {
-    const color = currentGroup + 1 === item.number ? item.variant : `outline-${item.variant}`;
-    const currentButtonClass = currentGroup + 1 === item.number ? styles.currentButton : '';
+  const items = data.map((item, index) => {
+    const currentButtonClass = currentGroup === index ? `${item.colorClass}--current` : '';
 
     return (
-      <Button className={`${styles.button} ${currentButtonClass}`} variant={color} size="sm">
-        {item.number}
+      <Button
+        className={`${styles.button} ${styles[item.colorClass]} ${styles[currentButtonClass]}`}
+        size="sm"
+      >
+        {item.name}
       </Button>
     );
   });
@@ -30,7 +32,7 @@ const createButtons = (): JSX.Element[] => {
 
 const ChaptersSelector = (): JSX.Element => (
   <Stack className={styles.section} gap={3}>
-    <p className={styles.title}>Groups</p>
+    <p className={styles.title}>Chapters</p>
     {createButtons()}
   </Stack>
 );

@@ -1,6 +1,6 @@
 .section {
-  width: 4.2rem;
-  padding: 1rem 0.5rem;
+  width: 5.4rem;
+  padding: 1rem 0.1rem;
 
   align-items: center;
 
@@ -9,18 +9,137 @@
 }
 
 .title {
-  color: #d63384;
+  color: #d63333;
   font-weight: 600;
   margin: 0;
 }
 
 .button {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  font-weight: 600;
+  font-size: 0.8rem;
+  background-color: transparent;
+  color: black;
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:active:focus {
+    box-shadow: none;
+
+  }
 }
 
-.currentButton {
-  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.4);
+.violetButton {
+  border-color: #6610f2;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #6610f2;
+    background-color: #6610f2;
+  }
+
+  &--current {
+    background-color: #6610f2;
+  }
+}
+
+.blueButton {
+  border-color: #0d6efd;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #0d6efd;
+    background-color: #0d6efd;
+  }
+
+  &--current {
+    background-color: #0d6efd;
+  }
+}
+
+.lightBlueButton {
+  border-color: #0dcaf0;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #0dcaf0;
+    background-color: #0dcaf0;
+  }
+
+  &--current {
+    background-color: #0dcaf0;
+  }
+}
+
+.greenButton {
+  border-color: #20c997;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #20c997;
+    background-color: #20c997;
+  }
+
+  &--current {
+    background-color: #20c997;
+  }
+}
+
+.yellowButton {
+  border-color: #ffc107;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #ffc107;
+    background-color: #ffc107;
+  }
+
+  &--current {
+    background-color: #ffc107;
+  }
+}
+
+.orangeButton {
+  border-color: #fd7e14;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #fd7e14;
+    background-color: #fd7e14;
+  }
+
+  &--current {
+    background-color: #fd7e14;
+  }
+}
+
+.redButton {
+  border-color: #dc3545;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #dc3545;
+    background-color: #dc3545;
+  }
+
+  &--current {
+    background-color: #dc3545;
+  }
+}
+
+.violetButton--current,
+.blueButton--current,
+.lightBlueButton--current,
+.greenButton--current,
+.yellowButton--current,
+.orangeButton--current,
+.redButton--current {
+  color: white;
 }
