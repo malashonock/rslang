@@ -9,7 +9,7 @@ const TeamSection = (): JSX.Element => {
       <h2 className="team__title">RSSBand</h2>
       <section className={styles.team}>
         {teamMembers.map(({ ghLink, imgSrc, name, role, work }) => (
-          <Card style={{ width: '38rem' }}>
+          <Card className={styles.card}>
             <Card.Img variant="top" src={imgSrc} />
             <Card.Body className={styles.cardElements}>
               <Card.Title>{name}</Card.Title>
