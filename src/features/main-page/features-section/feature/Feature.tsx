@@ -21,7 +21,7 @@ const Feature = ({ imgPosition, imageURL, title, description }: FeatureCardProps
         <Card.Img variant="top" src={imageURL} className={styles.imageSize} />
         <Card.Body className={styles.cardBody}>
           <Card.Title style={{ textAlign: imgPosition }}>{title}</Card.Title>
-          <Card.Text>{description}</Card.Text>
+          <Card.Text style={{ textAlign: imgPosition }}>{description}</Card.Text>
         </Card.Body>
       </Card>
     </div>
