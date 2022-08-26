@@ -8,7 +8,7 @@ const App = (): JSX.Element => {
   return (
     <div className={styles.appRoot}>
       <NavMenu />
-      <Container>
+      <Container className="flex-grow-1 d-flex flex-column">
         <Outlet />
       </Container>
       <Footer />
