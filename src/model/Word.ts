@@ -1,12 +1,12 @@
-interface Word {
+export default interface Word {
   id: string;
-  group?: number;
-  page?: number;
+  group: number;
+  page: number;
   word: string;
-  image?: string;
-  audio?: string;
-  audioMeaning?: string;
-  audioExample?: string;
+  image: string;
+  audio: string;
+  audioMeaning: string;
+  audioExample: string;
   textMeaning: string;
   textExample: string;
   transcription: string;
@@ -14,5 +14,3 @@ interface Word {
   textMeaningTranslate: string;
   textExampleTranslate: string;
 }
-
-export default Word;
