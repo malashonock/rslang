@@ -1,12 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
 const Games = (): JSX.Element => {
-  return (
-    <>
-      <h2>Games:</h2>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 };
 
 export default Games;
