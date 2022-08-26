@@ -7,13 +7,13 @@
 
   .featurePositionLeft {
     display: flex;
-    width: 52rem;
+    width: 62rem;
     justify-content: left;
   }
 
   .featurePositionRight {
     display: flex;
-    width: 52rem;
+    width: 62rem;
     justify-content: right;
   }
 
@@ -22,7 +22,7 @@
     flex-direction: row;
     border: 0px;
     justify-content: space-between;
-    width: 28.5rem;
+    width: 34rem;
   }
 
   .featureCardRight {
@@ -30,7 +30,7 @@
     flex-direction: row-reverse;
     border: 0;
     justify-content: space-between;
-    width: 28.5rem;
+    width: 34rem;
   }
 
   .imageSize {
