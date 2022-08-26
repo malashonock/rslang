@@ -56,7 +56,15 @@
             }
         ],
         "react/require-default-props": "off",
-        "react/function-component-definition": "off"
+        "react/function-component-definition": "off",
+        "@typescript-eslint/no-misused-promises": [
+            "error",
+            {
+            "checksVoidReturn": false
+            }
+        ],
+        "no-nested-ternary": "off",
+        "no-unused-vars": "warn"
     },
     "settings": {
         "import/resolver": {

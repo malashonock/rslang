@@ -1,7 +1,7 @@
 import { Card, Button, Row, Col, ToggleButton } from 'react-bootstrap';
 import { ReactComponent as ListenWordIcon } from '../../../assets/icons/listen-word-icon.svg';
 import styles from './WordCard.module.scss';
-import Word from './Word';
+import Word from '../../../model/Word';
 import img from './minsk.jpg';
 
 interface WordCardProps {
