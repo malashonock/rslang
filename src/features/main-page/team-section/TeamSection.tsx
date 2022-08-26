@@ -8,8 +8,8 @@ const TeamSection = (): JSX.Element => {
     <section>
       <h2 className={styles.teamTitle}>RSSBand</h2>
       <section className={styles.team}>
-        {teamMembers.map(({ ghLink, imgSrc, name, role, work }) => (
-          <Card className={styles.card}>
+        {teamMembers.map(({ id, ghLink, imgSrc, name, role, work }) => (
+          <Card className={styles.card} key={id}>
             <Card.Img src={imgSrc} alt={`${role}-${name}`} />
             <Card.Body className={styles.cardElements}>
               <Card.Title>{name}</Card.Title>
