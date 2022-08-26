@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
@@ -47,7 +47,7 @@ const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps
     setCorrectWords(correctWords.filter(({ id }) => id !== correctWord?.id));
   };
 
-  const selectIncorrectWords = useCallback((): Word[] => {
+  const incorrectWords = useMemo((): Word[] => {
     const source = availableWords.filter((word) => word.id !== correctWord?.id);
     const selection: Word[] = [];
 
@@ -98,7 +98,7 @@ const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps
     return (
       <AudioChallengeTurn
         correctWord={correctWord}
-        incorrectWords={selectIncorrectWords()}
+        incorrectWords={incorrectWords}
         turn={turn}
         isLastTurn={isLastTurn()}
         onNextTurn={handleNextTurn}
