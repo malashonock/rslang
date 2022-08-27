@@ -4,14 +4,14 @@ import { LinkContainer } from 'react-router-bootstrap';
 import styles from './ChaptersSelector.module.scss';
 
 const ChaptersSelector = (): JSX.Element => {
-  const BUTTONS_DATA = [
-    { name: 'Chapter 1', colorClass: 'violetButton', path: 'chapter1' },
-    { name: 'Chapter 2', colorClass: 'blueButton', path: 'chapter2' },
-    { name: 'Chapter 3', colorClass: 'lightBlueButton', path: 'chapter3' },
-    { name: 'Chapter 4', colorClass: 'greenButton', path: 'chapter4' },
-    { name: 'Chapter 5', colorClass: 'yellowButton', path: 'chapter5' },
-    { name: 'Chapter 6', colorClass: 'orangeButton', path: 'chapter6' },
-    { name: 'Chapter 7', colorClass: 'redButton', path: 'chapter7' },
+  const BUTTON_COLOR_CLASSES = [
+    { colorClass: 'violetButton' },
+    { colorClass: 'blueButton' },
+    { colorClass: 'lightBlueButton' },
+    { colorClass: 'greenButton' },
+    { colorClass: 'yellowButton' },
+    { colorClass: 'orangeButton' },
+    { colorClass: 'redButton' },
   ];
 
   const [currentButton, updateCurrentButton] = useState(0);
@@ -20,18 +20,19 @@ const ChaptersSelector = (): JSX.Element => {
     <Stack className={styles.section} gap={3}>
       <p className={styles.title}>Chapters</p>
 
-      {BUTTONS_DATA.map((item, index) => {
-        const currentButtonClass = currentButton === index + 1 ? `${item.colorClass}--current` : '';
+      {BUTTON_COLOR_CLASSES.map((item, index) => {
+        const { colorClass } = item;
+        const currentButtonClass = currentButton === index + 1 ? `${colorClass}--current` : '';
 
         return (
-          <LinkContainer to={item.path} key={item.name}>
+          <LinkContainer to={`/chapters/${index + 1}/pages/1`} key={colorClass}>
             <Button
-              className={`${styles.button} ${styles[item.colorClass]} 
+              className={`${styles.button} ${styles[colorClass]} 
               ${styles[currentButtonClass]}`}
               size="sm"
               onClick={() => updateCurrentButton(index + 1)}
             >
-              {item.name}
+              {`Chapter ${index + 1}`}
             </Button>
           </LinkContainer>
         );
