@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -14,19 +13,42 @@ import Avatar from '@mui/material/Avatar';
 import PersonIcon from '@mui/icons-material/Person';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ErrorIcon from '@mui/icons-material/Error';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
 import { FormHelperText } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
+import createUser from '../../../api/users';
 import styles from './LoginForm.module.scss';
+import { User } from '../../../model/User';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
   const [isRegisterForm, setIsRegisterForm] = useState<boolean>(false);
+  const [isServerError, setIsServerError] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const redirectToMainPage = () => navigate('/');
 
-  const submitLoginForm = (values: FormikValues): void => {
-    alert(JSON.stringify(values, null, 2));
+  const submitLoginForm = async (values: FormikValues): Promise<void> => {
+    setIsServerError(false);
+    if (isRegisterForm) {
+      const user: User = {
+        name: values.userName as string,
+        password: values.userPassword as string,
+        email: values.userEmail as string,
+      };
+      try {
+        const newUser = await createUser(user);
+        localStorage.setItem('UserId', newUser.id);
+        localStorage.setItem('UserName', newUser.name);
+        localStorage.setItem('UserEmail', newUser.email);
+        redirectToMainPage();
+      } catch {
+        setIsServerError(true);
+      }
+    }
   };
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
@@ -46,6 +68,14 @@ const LoginForm = (): JSX.Element => {
   return (
     <form onSubmit={handleSubmit}>
       <Box className={styles.loginForm}>
+        {isServerError && (
+          <>
+            <Avatar className={styles.error}>{isServerError && <ErrorIcon />}</Avatar>
+            <FormHelperText error>
+              <span>Error in Server response</span>
+            </FormHelperText>
+          </>
+        )}
         <Avatar className={styles.avatar}>
           {isRegisterForm ? <LockOutlinedIcon /> : <AccountCircleIcon />}
         </Avatar>

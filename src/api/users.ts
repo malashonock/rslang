@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { User, UserResponce } from '../interfaces/User';
+import { User, UserResponce } from '../model/User';
 import API_BASE_URL from './constants';
 
 const usersEndpoint = `${API_BASE_URL}/users`;
