@@ -1,40 +1,44 @@
+import { useState } from 'react';
 import { Stack, Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import styles from './ChaptersSelector.module.scss';
 
-const currentGroup = 0;
-
-const createButtons = (): JSX.Element[] => {
-  const data = [
-    { name: 'Chapter 1', colorClass: 'violetButton' },
-    { name: 'Chapter 2', colorClass: 'blueButton' },
-    { name: 'Chapter 3', colorClass: 'lightBlueButton' },
-    { name: 'Chapter 4', colorClass: 'greenButton' },
-    { name: 'Chapter 5', colorClass: 'yellowButton' },
-    { name: 'Chapter 6', colorClass: 'orangeButton' },
-    { name: 'Chapter 7', colorClass: 'redButton' },
+const ChaptersSelector = (): JSX.Element => {
+  const BUTTON_COLOR_CLASSES = [
+    { colorClass: 'violetButton' },
+    { colorClass: 'blueButton' },
+    { colorClass: 'lightBlueButton' },
+    { colorClass: 'greenButton' },
+    { colorClass: 'yellowButton' },
+    { colorClass: 'orangeButton' },
+    { colorClass: 'redButton' },
   ];
 
-  const items = data.map((item, index) => {
-    const currentButtonClass = currentGroup === index ? `${item.colorClass}--current` : '';
+  const [currentButton, updateCurrentButton] = useState(0);
 
-    return (
-      <Button
-        className={`${styles.button} ${styles[item.colorClass]} ${styles[currentButtonClass]}`}
-        size="sm"
-      >
-        {item.name}
-      </Button>
-    );
-  });
+  return (
+    <Stack className={styles.section} gap={3}>
+      <p className={styles.title}>Chapters</p>
 
-  return items;
+      {BUTTON_COLOR_CLASSES.map((item, index) => {
+        const { colorClass } = item;
+        const currentButtonClass = currentButton === index + 1 ? `${colorClass}--current` : '';
+
+        return (
+          <LinkContainer to={`/chapters/${index + 1}/pages/1`} key={colorClass}>
+            <Button
+              className={`${styles.button} ${styles[colorClass]} 
+              ${styles[currentButtonClass]}`}
+              size="sm"
+              onClick={() => updateCurrentButton(index + 1)}
+            >
+              {`Chapter ${index + 1}`}
+            </Button>
+          </LinkContainer>
+        );
+      })}
+    </Stack>
+  );
 };
-
-const ChaptersSelector = (): JSX.Element => (
-  <Stack className={styles.section} gap={3}>
-    <p className={styles.title}>Chapters</p>
-    {createButtons()}
-  </Stack>
-);
 
 export default ChaptersSelector;

@@ -1,0 +1,96 @@
+@import '../../../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import "../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../node_modules/bootstrap/scss/variables";
+@import "../../../../../node_modules/bootstrap/scss/maps";
+@import "../../../../../node_modules/bootstrap/scss/mixins";
+@import "../../../../../node_modules/bootstrap/scss/utilities";
+
+  .featurePositionLeft {
+    display: flex;
+    width: 62rem;
+    justify-content: left;
+  }
+
+  .featurePositionRight {
+    display: flex;
+    width: 62rem;
+    justify-content: right;
+  }
+
+  .featureCardLeft {
+    display: flex;
+    flex-direction: row;
+    border: 0px;
+    justify-content: space-between;
+    width: 34rem;
+  }
+
+  .featureCardRight {
+    display: flex;
+    flex-direction: row-reverse;
+    border: 0;
+    justify-content: space-between;
+    width: 34rem;
+  }
+
+  .imageSize {
+    width: 6rem;
+  }
+
+  .cardBodyLeft {
+    display: flex;
+    width: 23rem;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .cardBodyRight {
+    display: flex;
+    width: 23rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  @include media-breakpoint-down(xl){
+    .featurePositionLeft, .featurePositionRight {
+      width: 42rem;
+    }
+
+    .featureCardLeft, .featureCardRight{
+      width: 23.5rem;
+    }
+  }
+
+  @include media-breakpoint-down(md){
+    .featurePositionLeft, .featurePositionRight {
+      width: 36rem;
+    }
+
+    .featureCardLeft, .featureCardRight{
+      width: 20.5rem;
+    }
+  }
+
+  @include media-breakpoint-down(sm){
+    .featurePositionLeft, .featurePositionRight {
+      width: 32rem;
+    }
+
+    .featureCardLeft, .featureCardRight{
+      width: 18.5rem;
+    }
+  }
+
+
+  // @media (max-width: 768px) {
+
+  //   .featureLeft, .featureRight {
+  //     width: 32rem;
+  //   }
+
+  //   .featureCardLeft, .featureCardRight{
+  //     width: 18.5rem;
+  //   }
+  // }

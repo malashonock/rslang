@@ -1,3 +1,6 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
 .section {
   width: 5.4rem;
   padding: 1rem 0.1rem;
@@ -30,107 +33,107 @@
 }
 
 .violetButton {
-  border-color: #6610f2;
+  border-color: $indigo;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #6610f2;
-    background-color: #6610f2;
+    border-color: $indigo;
+    background-color: $indigo;
   }
 
   &--current {
-    background-color: #6610f2;
+    background-color: $indigo;
   }
 }
 
 .blueButton {
-  border-color: #0d6efd;
+  border-color: $blue;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #0d6efd;
-    background-color: #0d6efd;
+    border-color: $blue;
+    background-color: $blue;
   }
 
   &--current {
-    background-color: #0d6efd;
+    background-color: $blue;
   }
 }
 
 .lightBlueButton {
-  border-color: #0dcaf0;
+  border-color: $cyan;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #0dcaf0;
-    background-color: #0dcaf0;
+    border-color: $cyan;
+    background-color: $cyan;
   }
 
   &--current {
-    background-color: #0dcaf0;
+    background-color: $cyan;
   }
 }
 
 .greenButton {
-  border-color: #20c997;
+  border-color: $teal;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #20c997;
-    background-color: #20c997;
+    border-color: $teal;
+    background-color: $teal;
   }
 
   &--current {
-    background-color: #20c997;
+    background-color: $teal;
   }
 }
 
 .yellowButton {
-  border-color: #ffc107;
+  border-color: $yellow;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #ffc107;
-    background-color: #ffc107;
+    border-color: $yellow;
+    background-color: $yellow;
   }
 
   &--current {
-    background-color: #ffc107;
+    background-color: $yellow;
   }
 }
 
 .orangeButton {
-  border-color: #fd7e14;
+  border-color: $orange;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #fd7e14;
-    background-color: #fd7e14;
+    border-color: $orange;
+    background-color: $orange;
   }
 
   &--current {
-    background-color: #fd7e14;
+    background-color: $orange;
   }
 }
 
 .redButton {
-  border-color: #dc3545;
+  border-color: $red;
 
   &:hover,
   &:active,
   &:focus {
-    border-color: #dc3545;
-    background-color: #dc3545;
+    border-color: $red;
+    background-color: $red;
   }
 
   &--current {
-    background-color: #dc3545;
+    background-color: $red;
   }
 }
 
