@@ -1,5 +1,7 @@
+import { Route, Routes } from 'react-router-dom';
+import DictionaryLayout from './dictionary-layout/DictionaryLayout';
 import WordCard from './word-card/WordCard';
-import ChaptersSelector from './chapters-selector/ChaptersSelector';
+import ChapterLayout from './chapter-layout/ChapterLayout';
 
 const word = {
   id: '5e9f5ee35eb9e72bc21af4a7',
@@ -20,11 +22,40 @@ const word = {
 
 const Dictionary = (): JSX.Element => {
   return (
-    <>
-      <h2>Dictionary</h2>
-      <WordCard word={word} isAuthorized />
-      <ChaptersSelector />
-    </>
+    <Routes>
+      <Route path="/" element={<DictionaryLayout />}>
+        <Route
+          index
+          element={
+            <h3>
+              Select chapter. 1 is the easiest. 6 is the most difficult. 7 - words that you marked
+              as difficult
+            </h3>
+          }
+        />
+        <Route path="chapters/1" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+        <Route path="chapters/2" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+        <Route path="chapters/3" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+        <Route path="chapters/4" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+        <Route path="chapters/5" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+        <Route path="chapters/6" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+        <Route path="chapters/7" element={<ChapterLayout />}>
+          <Route path="pages/1" element={<WordCard word={word} isAuthorized />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 };
 

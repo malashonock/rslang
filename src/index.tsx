@@ -19,7 +19,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<MainPage />} />
-          <Route path="dictionary" element={<Dictionary />} />
+          <Route path="dictionary/*" element={<Dictionary />} />
           <Route path="games" element={<Games />}>
             <Route index element={<GamesList />} />
             <Route path="audio-challenge" element={<AudioChallengeRound />} />
