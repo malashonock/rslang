@@ -1,0 +1,12 @@
+.dictionaryWrapper {
+  padding: 2rem 0;
+}
+
+.outlet {
+  display: flex;
+
+  & h3 {
+    align-self: center;
+    text-align: center;
+  }
+}
