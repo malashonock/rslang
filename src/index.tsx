@@ -10,6 +10,8 @@ import Sprint from './features/games/sprint/Sprint';
 import Statistics from './features/statistics/Statistics';
 import MainPage from './features/main-page/MainPage';
 import GamesList from './features/games/GamesList';
+import ChapterLayout from './features/dictionary/chapter-layout/ChapterLayout';
+import ChapterPageLayout from './features/dictionary/chapter-page-layout/ChapterPageLayout';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -19,7 +21,12 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<MainPage />} />
-          <Route path="dictionary/*" element={<Dictionary />} />
+          <Route path="dictionary" element={<Dictionary />}>
+            <Route index element={<h3>choose chapter</h3>} />
+            <Route path="chapters/:chapter" element={<ChapterLayout />}>
+              <Route path="pages/:page" element={<ChapterPageLayout />} />
+            </Route>
+          </Route>
           <Route path="games" element={<Games />}>
             <Route index element={<GamesList />} />
             <Route path="audio-challenge" element={<AudioChallengeRound />} />
