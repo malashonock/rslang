@@ -1,8 +1,10 @@
+/* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
+import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import AudioChallengeTurn from './AudioChallengeTurn';
 
 const AudioChallengeRound = (): JSX.Element => {
@@ -27,6 +29,7 @@ const AudioChallengeRound = (): JSX.Element => {
 
   const [turn, setTurn] = useState(1);
   const [score, setScore] = useState(0);
+  const [ready, setReady] = useState(false);
   const [finish, setFinish] = useState(false);
 
   // Initialize available words
@@ -94,16 +97,20 @@ const AudioChallengeRound = (): JSX.Element => {
     setFinish(true);
   };
 
-  // eslint-disable-next-line consistent-return
+  const renderDifficultySelect = (): JSX.Element | undefined => {
+    if (!ready) {
+      return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
+    }
+  };
+
   const renderScore = (): JSX.Element | undefined => {
     if (finish) {
       return <h3>Your score: {score}</h3>;
     }
   };
 
-  // eslint-disable-next-line consistent-return
   const renderGameRound = (): JSX.Element | undefined => {
-    if (correctWord && !finish) {
+    if (ready && correctWord && !finish) {
       return (
         <AudioChallengeTurn
           correctWord={correctWord}
@@ -117,7 +124,6 @@ const AudioChallengeRound = (): JSX.Element => {
     }
   };
 
-  // eslint-disable-next-line consistent-return
   const renderLoadingSpinner = (): JSX.Element | undefined => {
     if (!finish && !correctWord) {
       return (
@@ -133,6 +139,7 @@ const AudioChallengeRound = (): JSX.Element => {
 
   return (
     <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+      {renderDifficultySelect()}
       {renderLoadingSpinner()}
       {renderGameRound()}
       {renderScore()}
