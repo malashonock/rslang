@@ -25,7 +25,7 @@ const ChaptersSelector = (): JSX.Element => {
         const currentButtonClass = currentButton === index + 1 ? `${colorClass}--current` : '';
 
         return (
-          <LinkContainer to={`/chapters/${index + 1}/pages/1`} key={colorClass}>
+          <LinkContainer to={`chapters/${index + 1}/pages/1`} key={colorClass}>
             <Button
               className={`${styles.button} ${styles[colorClass]} 
               ${styles[currentButtonClass]}`}
