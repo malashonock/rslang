@@ -1,15 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
 import AudioChallengeTurn from './AudioChallengeTurn';
 
-interface AudioChallengeRoundProps {
-  chapter?: number;
-  page?: number;
-}
+const AudioChallengeRound = (): JSX.Element => {
+  const [searchParams] = useSearchParams();
 
-const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps): JSX.Element => {
+  const chapter = useMemo(() => {
+    const chapterStr = searchParams.get('group');
+    return chapterStr ? Number(chapterStr) : undefined;
+  }, [searchParams]);
+
+  const page = useMemo(() => {
+    const pageStr = searchParams.get('page');
+    return pageStr ? Number(pageStr) : undefined;
+  }, [searchParams]);
+
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
@@ -86,31 +94,49 @@ const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps
     setFinish(true);
   };
 
-  if (finish) {
-    return (
-      <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-        <h3>Your score: {score}</h3>
-      </div>
-    );
-  }
+  // eslint-disable-next-line consistent-return
+  const renderScore = (): JSX.Element | undefined => {
+    if (finish) {
+      return <h3>Your score: {score}</h3>;
+    }
+  };
 
-  if (correctWord) {
-    return (
-      <AudioChallengeTurn
-        correctWord={correctWord}
-        incorrectWords={incorrectWords}
-        turn={turn}
-        isLastTurn={isLastTurn()}
-        onNextTurn={handleNextTurn}
-        onQuit={handleQuit}
-      />
-    );
-  }
+  // eslint-disable-next-line consistent-return
+  const renderGameRound = (): JSX.Element | undefined => {
+    if (correctWord && !finish) {
+      return (
+        <AudioChallengeTurn
+          correctWord={correctWord}
+          incorrectWords={incorrectWords}
+          turn={turn}
+          isLastTurn={isLastTurn()}
+          onNextTurn={handleNextTurn}
+          onQuit={handleQuit}
+        />
+      );
+    }
+  };
+
+  // eslint-disable-next-line consistent-return
+  const renderLoadingSpinner = (): JSX.Element | undefined => {
+    if (!finish && !correctWord) {
+      return (
+        <div className="d-flex flex-column align-items-center gap-2">
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <h5>Loading words...</h5>
+        </div>
+      );
+    }
+  };
 
   return (
-    <Spinner animation="border" variant="primary" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
+    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+      {renderLoadingSpinner()}
+      {renderGameRound()}
+      {renderScore()}
+    </div>
   );
 };
 
