@@ -14,15 +14,17 @@ import PersonIcon from '@mui/icons-material/Person';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useDispatch } from 'react-redux';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
 import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
-import createUser from '../../../api/users';
+import { createUser, getUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
-import { User } from '../../../model/User';
+import { AuthResponse, User, UserResponce } from '../../../model/User';
+import { userRegisterSuccess } from '../../../reducers/auth.slice';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -30,17 +32,19 @@ const LoginForm = (): JSX.Element => {
   const [isServerError, setIsServerError] = useState<boolean>(false);
   const navigate = useNavigate();
   const redirectToMainPage = () => navigate('/');
+  const dispatch = useDispatch();
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
     setIsServerError(false);
+    const user: User = {
+      name: values.userName as string,
+      password: values.userPassword as string,
+      email: values.userEmail as string,
+    };
     if (isRegisterForm) {
-      const user: User = {
-        name: values.userName as string,
-        password: values.userPassword as string,
-        email: values.userEmail as string,
-      };
       try {
-        const newUser = await createUser(user);
+        const newUser: UserResponce = await createUser(user);
+        dispatch(userRegisterSuccess(newUser.name));
         localStorage.setItem('UserId', newUser.id);
         localStorage.setItem('UserName', newUser.name);
         localStorage.setItem('UserEmail', newUser.email);
@@ -48,7 +52,24 @@ const LoginForm = (): JSX.Element => {
       } catch {
         setIsServerError(true);
       }
+    } else {
+      try {
+        const existUser: AuthResponse = await signIn(user);
+        alert('Answer here....');
+        localStorage.setItem('UserId', existUser.userId);
+        localStorage.setItem('UserMessage', existUser.message);
+        localStorage.setItem('UserToken', existUser.token);
+      } catch {
+        setIsServerError(true);
+      }
     }
+  };
+
+  const testAuth = () => {
+    const id = localStorage.getItem('UserId') || '123';
+    const token = localStorage.getItem('UserToken') as string;
+    const query = getUser(id, token);
+    alert(JSON.stringify(query));
   };
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
@@ -144,6 +165,11 @@ const LoginForm = (): JSX.Element => {
         <Stack>
           <Button variant="text" onClick={showRegisterForm}>
             {isRegisterForm ? `Already have an account? Sign in` : `Don't have an account? Sign up`}
+          </Button>
+        </Stack>
+        <Stack>
+          <Button variant="text" onClick={testAuth}>
+            <span> TEST</span>
           </Button>
         </Stack>
       </Box>
