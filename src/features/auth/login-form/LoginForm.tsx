@@ -16,7 +16,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
-import { FormHelperText } from '@mui/material';
+import { Alert, AlertTitle, FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
@@ -28,6 +28,7 @@ const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
   const [isRegisterForm, setIsRegisterForm] = useState<boolean>(false);
   const [isServerError, setIsServerError] = useState<boolean>(false);
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const redirectToMainPage = () => navigate('/');
@@ -43,17 +44,19 @@ const LoginForm = (): JSX.Element => {
     if (isRegisterForm) {
       try {
         const newUser = await createUser(userIn);
-        redirectToMainPage();
+        setIsRegisterSuccess(true);
+        const existUser: AuthResponse = await signIn(userIn);
       } catch {
         setIsServerError(true);
       }
     } else {
       try {
         const existUser: AuthResponse = await signIn(userIn);
-        redirectToStatisticPage();
+        setIsRegisterSuccess(true);
       } catch {
         setIsServerError(true);
       }
+      setTimeout(redirectToMainPage, 5000);
     }
   };
 
@@ -81,6 +84,12 @@ const LoginForm = (): JSX.Element => {
               <span>Error in Server response</span>
             </FormHelperText>
           </>
+        )}
+        {isRegisterSuccess && (
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            You will be redirected to the main page in 5 seconds
+          </Alert>
         )}
         <Avatar className={styles.avatar}>
           {isRegisterForm ? <LockOutlinedIcon /> : <AccountCircleIcon />}
