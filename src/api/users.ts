@@ -32,37 +32,16 @@ export const signIn = async (creatingUser: User): Promise<AuthResponse> => {
 
 export const getUser = async (userId: string, token: string): Promise<UserResponce> => {
   const response: AxiosResponse<UserResponce, undefined> = await authUser(token).get(`/${userId}`);
-  // const response: AxiosResponse<UserResponce, undefined> = await axios.get(
-  //   `${usersEndpoint}/${userId}`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }
-  // );
   return response.data;
 };
 
 export const updateUser = async (userId: string, token: string): Promise<User> => {
   const response: AxiosResponse<User, undefined> = await authUser(token).put(`/${userId}`);
-  // const response: AxiosResponse<User, undefined> = await axios.put(`${usersEndpoint}/${userId}`, {
-  //   headers: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // });
   return response.data;
 };
 
 export const deleteUser = async (userId: string, token: string): Promise<number> => {
   const response: AxiosResponse<number, undefined> = await authUser(token).delete(`/${userId}`);
-  // const response: AxiosResponse<number, undefined> = await axios.delete(
-  //   `${usersEndpoint}/${userId}`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }
-  // );
   return response.status;
 };
 
@@ -70,17 +49,5 @@ export const getNewUserToken = async (userId: string, token: string): Promise<Au
   const response: AxiosResponse<AuthResponse, undefined> = await authUser(token).get(
     `/${userId}/tokens`
   );
-  // const response: AxiosResponse<AuthResponse, undefined> = await axios.get(
-  //   `${usersEndpoint}/${userId}/tokens`,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }
-  // );
   return response.data;
-};
-
-export const userLogout = (): void => {
-  localStorage.removeItem('userId');
 };
