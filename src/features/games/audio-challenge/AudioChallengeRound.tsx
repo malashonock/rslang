@@ -1,15 +1,25 @@
+/* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
+import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import AudioChallengeTurn from './AudioChallengeTurn';
 
-interface AudioChallengeRoundProps {
-  chapter?: number;
-  page?: number;
-}
+const AudioChallengeRound = (): JSX.Element => {
+  const [searchParams] = useSearchParams();
 
-const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps): JSX.Element => {
+  const chapter = useMemo(() => {
+    const chapterStr = searchParams.get('group');
+    return chapterStr ? Number(chapterStr) : undefined;
+  }, [searchParams]);
+
+  const page = useMemo(() => {
+    const pageStr = searchParams.get('page');
+    return pageStr ? Number(pageStr) : undefined;
+  }, [searchParams]);
+
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
@@ -19,6 +29,7 @@ const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps
 
   const [turn, setTurn] = useState(1);
   const [score, setScore] = useState(0);
+  const [ready, setReady] = useState(false);
   const [finish, setFinish] = useState(false);
 
   // Initialize available words
@@ -86,31 +97,53 @@ const AudioChallengeRound = ({ chapter = 0, page = 0 }: AudioChallengeRoundProps
     setFinish(true);
   };
 
-  if (finish) {
-    return (
-      <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-        <h3>Your score: {score}</h3>
-      </div>
-    );
-  }
+  const renderDifficultySelect = (): JSX.Element | undefined => {
+    if (!ready) {
+      return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
+    }
+  };
 
-  if (correctWord) {
-    return (
-      <AudioChallengeTurn
-        correctWord={correctWord}
-        incorrectWords={incorrectWords}
-        turn={turn}
-        isLastTurn={isLastTurn()}
-        onNextTurn={handleNextTurn}
-        onQuit={handleQuit}
-      />
-    );
-  }
+  const renderScore = (): JSX.Element | undefined => {
+    if (finish) {
+      return <h3>Your score: {score}</h3>;
+    }
+  };
+
+  const renderGameRound = (): JSX.Element | undefined => {
+    if (ready && correctWord && !finish) {
+      return (
+        <AudioChallengeTurn
+          correctWord={correctWord}
+          incorrectWords={incorrectWords}
+          turn={turn}
+          isLastTurn={isLastTurn()}
+          onNextTurn={handleNextTurn}
+          onQuit={handleQuit}
+        />
+      );
+    }
+  };
+
+  const renderLoadingSpinner = (): JSX.Element | undefined => {
+    if (!finish && !correctWord) {
+      return (
+        <div className="d-flex flex-column align-items-center gap-2">
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <h5>Loading words...</h5>
+        </div>
+      );
+    }
+  };
 
   return (
-    <Spinner animation="border" variant="primary" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
+    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+      {renderDifficultySelect()}
+      {renderLoadingSpinner()}
+      {renderGameRound()}
+      {renderScore()}
+    </div>
   );
 };
 
