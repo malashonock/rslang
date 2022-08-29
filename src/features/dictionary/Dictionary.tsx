@@ -1,4 +1,5 @@
 import WordCard from './word-card/WordCard';
+import ChaptersSelector from './chapters-selector/ChaptersSelector';
 
 const word = {
   id: '5e9f5ee35eb9e72bc21af4a7',
@@ -22,6 +23,7 @@ const Dictionary = (): JSX.Element => {
     <>
       <h2>Dictionary</h2>
       <WordCard word={word} isAuthorized />
+      <ChaptersSelector />
     </>
   );
 };
