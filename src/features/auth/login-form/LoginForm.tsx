@@ -20,31 +20,45 @@ import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
-import createUser from '../../../api/users';
+import { createUser, signInUser } from '../../../api/users';
 import styles from './LoginForm.module.scss';
-import { User } from '../../../model/User';
+import { User, Auth } from '../../../model/User';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
   const [isRegisterForm, setIsRegisterForm] = useState<boolean>(false);
   const [isServerError, setIsServerError] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const redirectToMainPage = () => navigate('/');
+  const redirectToStatisticPage = () => navigate('/statistics');
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
     setIsServerError(false);
+    const userIn: User = {
+      name: values.userName as string,
+      password: values.userPassword as string,
+      email: values.userEmail as string,
+    };
     if (isRegisterForm) {
-      const user: User = {
-        name: values.userName as string,
-        password: values.userPassword as string,
-        email: values.userEmail as string,
-      };
       try {
-        const newUser = await createUser(user);
+        const newUser = await createUser(userIn);
         localStorage.setItem('UserId', newUser.id);
         localStorage.setItem('UserName', newUser.name);
         localStorage.setItem('UserEmail', newUser.email);
         redirectToMainPage();
+      } catch {
+        setIsServerError(true);
+      }
+    } else {
+      try {
+        const existUser: Auth = await signInUser(userIn);
+        localStorage.setItem('UserToken', existUser.token);
+        localStorage.setItem('UserRefreshToken', existUser.refreshToken);
+        localStorage.setItem('UserMessage', existUser.message);
+        localStorage.setItem('UserId', existUser.userId);
+        localStorage.setItem('UserName', existUser.name);
+        redirectToStatisticPage();
       } catch {
         setIsServerError(true);
       }
