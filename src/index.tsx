@@ -12,7 +12,7 @@ import Statistics from './features/statistics/Statistics';
 import MainPage from './features/main-page/MainPage';
 import GamesList from './features/games/GamesList';
 import Auth from './features/auth/Auth';
-import store from './store';
+import store from './store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 

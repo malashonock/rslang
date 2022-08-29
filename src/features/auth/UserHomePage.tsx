@@ -1,6 +1,6 @@
-import { useAppSelector } from '../../hooks';
+import { useAppSelector } from '../../store/hooks';
 
-const UserUpdater = (): JSX.Element => {
+const UserHomePage = (): JSX.Element => {
   const { name } = useAppSelector((state) => state.authorization);
   return (
     <>
@@ -10,4 +10,4 @@ const UserUpdater = (): JSX.Element => {
   );
 };
 
-export default UserUpdater;
+export default UserHomePage;

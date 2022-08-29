@@ -1,10 +1,10 @@
-import { useAppSelector } from '../../hooks';
+import { useAppSelector } from '../../store/hooks';
 import LoginForm from './login-form/LoginForm';
-import UserUpdater from './UserUpdater';
+import UserHomePage from './UserHomePage';
 
 const Auth = (): JSX.Element => {
   const { authorizeStatus } = useAppSelector((state) => state.authorization);
-  return <div>{authorizeStatus ? <UserUpdater /> : <LoginForm />}</div>;
+  return <div>{authorizeStatus ? <UserHomePage /> : <LoginForm />}</div>;
 };
 
 export default Auth;

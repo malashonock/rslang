@@ -1,4 +1,4 @@
-import { AuthorizationState } from '../model/store';
+import { AuthorizationState } from '../model/AuthorizationState';
 
 export const saveToLocalStorage = (auth: AuthorizationState): void => {
   const { id, name, token, email, message, refreshToken, authorizeStatus } = auth;

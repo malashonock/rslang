@@ -21,11 +21,11 @@ import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
-import { createUser, getUser, signIn } from '../../../api/users';
+import { createUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
 import { AuthResponse, User, UserResponce } from '../../../model/User';
 import { setAuthorizeUser, setUserData } from '../../../reducers/auth.slice';
-import { AuthorizationState } from '../../../model/store';
+import { AuthorizationState } from '../../../model/AuthorizationState';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -76,13 +76,6 @@ const LoginForm = (): JSX.Element => {
         setIsServerError(true);
       }
     }
-  };
-
-  const testAuth = () => {
-    const id = localStorage.getItem('UserId') || '123';
-    const token = localStorage.getItem('UserToken') as string;
-    const query = getUser(id, token);
-    alert(JSON.stringify(query));
   };
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
@@ -178,11 +171,6 @@ const LoginForm = (): JSX.Element => {
         <Stack>
           <Button variant="text" onClick={showRegisterForm}>
             {isRegisterForm ? `Already have an account? Sign in` : `Don't have an account? Sign up`}
-          </Button>
-        </Stack>
-        <Stack>
-          <Button variant="text" onClick={testAuth}>
-            <span> TEST</span>
           </Button>
         </Stack>
       </Box>

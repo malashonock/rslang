@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AuthorizationState } from '../model/store';
+import { AuthorizationState } from '../model/AuthorizationState';
 import { clearLocalStorage, saveToLocalStorage } from '../utils/localStorage';
 /* eslint-disable no-param-reassign */
 export type updatedUserInfo = {
