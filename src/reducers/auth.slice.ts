@@ -1,27 +1,58 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../model/User';
-
-const initialState: User = {
-  name: localStorage.getItem('userName') ?? '',
-  email: localStorage.getItem('userEmail') ?? '',
-  password: localStorage.getItem('userPassword') ?? '',
+import { AuthorizationState } from '../model/store';
+import { clearLocalStorage, saveToLocalStorage } from '../utils/localStorage';
+/* eslint-disable no-param-reassign */
+export type updatedUserInfo = {
+  name: string;
+  email: string;
 };
 
-const registerSlice = createSlice({
-  name: 'Register',
-  initialState,
+const initialAuthorizationState: AuthorizationState = {
+  id: '',
+  name: '',
+  email: '',
+  token: '',
+  message: '',
+  refreshToken: '',
+  authorizeStatus: false,
+};
+
+const userSlice = createSlice({
+  name: 'authorization',
+  initialState: initialAuthorizationState,
   reducers: {
-    userRegisterSuccess(state: User, action: PayloadAction<string>) {
-      alert('fdfff');
-      localStorage.setItem('RegisterSuccess', JSON.stringify(state));
+    setUserData: (state, { payload }: PayloadAction<AuthorizationState>) => {
+      state.authorizeStatus = payload.authorizeStatus;
+      state.id = payload.id;
+      state.name = payload.name;
+      state.email = payload.email;
+      saveToLocalStorage(payload);
     },
-    userRegisterFail(state, action: PayloadAction<string>) {
-      localStorage.setItem('RegisterSuccess', `R_FAIL`);
+    setAuthorizeUser: (state, { payload }: PayloadAction<AuthorizationState>) => {
+      state.id = payload.id;
+      state.name = payload.name;
+      state.message = payload.message;
+      state.token = payload.token;
+      state.refreshToken = payload.refreshToken;
+      state.authorizeStatus = true;
+      saveToLocalStorage(payload);
+    },
+    deleteUserData: (state, { payload }: PayloadAction<AuthorizationState>) => {
+      state.authorizeStatus = false;
+      state.id = payload.id;
+      state.name = '';
+      state.email = '';
+      state.token = '';
+      state.message = '';
+      state.refreshToken = '';
+      clearLocalStorage();
+    },
+    updateUserData: (state, { payload }: PayloadAction<updatedUserInfo>) => {
+      state.name = payload.name;
+      state.email = payload.email;
     },
   },
 });
 
-export const { userRegisterSuccess, userRegisterFail } = registerSlice.actions;
-export const registerReducer = registerSlice.reducer;
-
-export default registerSlice;
+export default userSlice;
+export const { setUserData, deleteUserData, updateUserData, setAuthorizeUser } = userSlice.actions;

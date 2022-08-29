@@ -24,7 +24,8 @@ import { INITIAL_VALUES_FORM } from './сonstants';
 import { createUser, getUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
 import { AuthResponse, User, UserResponce } from '../../../model/User';
-import { userRegisterSuccess } from '../../../reducers/auth.slice';
+import { setAuthorizeUser, setUserData } from '../../../reducers/auth.slice';
+import { AuthorizationState } from '../../../model/store';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -44,10 +45,16 @@ const LoginForm = (): JSX.Element => {
     if (isRegisterForm) {
       try {
         const newUser: UserResponce = await createUser(user);
-        dispatch(userRegisterSuccess(newUser.name));
-        localStorage.setItem('UserId', newUser.id);
-        localStorage.setItem('UserName', newUser.name);
-        localStorage.setItem('UserEmail', newUser.email);
+        const test: AuthorizationState = {
+          authorizeStatus: true,
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          message: '',
+          token: '',
+          refreshToken: '',
+        };
+        dispatch(setUserData(test));
         redirectToMainPage();
       } catch {
         setIsServerError(true);
@@ -55,10 +62,16 @@ const LoginForm = (): JSX.Element => {
     } else {
       try {
         const existUser: AuthResponse = await signIn(user);
-        alert('Answer here....');
-        localStorage.setItem('UserId', existUser.userId);
-        localStorage.setItem('UserMessage', existUser.message);
-        localStorage.setItem('UserToken', existUser.token);
+        const test: AuthorizationState = {
+          authorizeStatus: true,
+          email: '',
+          id: existUser.userId,
+          name: existUser.name,
+          message: existUser.message,
+          token: existUser.token,
+          refreshToken: existUser.refreshToken,
+        };
+        dispatch(setAuthorizeUser(test));
       } catch {
         setIsServerError(true);
       }
