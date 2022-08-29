@@ -22,7 +22,15 @@ root.render(
         <Route path="/" element={<App />}>
           <Route index element={<MainPage />} />
           <Route path="dictionary" element={<Dictionary />}>
-            <Route index element={<h3>choose chapter</h3>} />
+            <Route
+              index
+              element={
+                <h3>
+                  Select chapter. 1 is the easiest. 6 is the most difficult. 7 - words that you
+                  marked as difficult
+                </h3>
+              }
+            />
             <Route path="chapters/:chapter" element={<ChapterLayout />}>
               <Route path="pages/:page" element={<ChapterPageLayout />} />
             </Route>

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getWords } from '../../../api/words';
 import WordCard from '../word-card/WordCard';
 import Word from '../../../model/Word';
+import styles from './ChapterPageLayout.module.scss';
 
 const ChapterPageLayout = () => {
   const { chapter, page } = useParams();
@@ -21,7 +22,7 @@ const ChapterPageLayout = () => {
   }, [chapter, page]);
 
   return (
-    <div>
+    <div className={styles.cards}>
       {displayedWords.map((word) => (
         <WordCard key={word.id} word={word} isAuthorized />
       ))}
