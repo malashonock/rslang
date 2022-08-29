@@ -2,17 +2,17 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getWords } from '../../../api/words';
 import WordCard from '../word-card/WordCard';
+import Word from '../../../model/Word';
 
 const ChapterPageLayout = () => {
   const { chapter, page } = useParams();
-  const [wordCards, updateWordCards] = useState<JSX.Element[]>([]);
+  const [displayedWords, updateDisplayedWords] = useState<Word[]>([]);
 
   useEffect(() => {
     const loadWords = async () => {
       if (chapter && page) {
-        const words = await getWords(+chapter - 1, +page - 1);
-        const cards = words.map((word) => <WordCard word={word} isAuthorized={false} />);
-        updateWordCards(cards);
+        const newWords = await getWords(+chapter - 1, +page - 1);
+        updateDisplayedWords(newWords);
       }
     };
 
@@ -20,7 +20,13 @@ const ChapterPageLayout = () => {
     loadWords();
   }, [chapter, page]);
 
-  return <div>{wordCards}</div>;
+  return (
+    <div>
+      {displayedWords.map((word) => (
+        <WordCard key={word.id} word={word} isAuthorized />
+      ))}
+    </div>
+  );
 };
 
 export default ChapterPageLayout;
