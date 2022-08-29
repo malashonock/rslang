@@ -18,7 +18,7 @@ const ChapterPageLayout = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  });
+  }, [chapter, page]);
 
   return <div>{wordCards}</div>;
 };
