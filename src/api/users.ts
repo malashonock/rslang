@@ -51,7 +51,3 @@ export const getNewUserToken = async (userId: string, token: string): Promise<Au
   );
   return response.data;
 };
-
-export const userLogout = (): void => {
-  localStorage.removeItem('userId');
-};

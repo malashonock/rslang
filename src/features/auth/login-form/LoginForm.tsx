@@ -20,9 +20,9 @@ import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
-import { createUser, signInUser } from '../../../api/users';
+import { createUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
-import { User, Auth } from '../../../model/User';
+import { User, AuthResponse } from '../../../model/User';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -43,21 +43,13 @@ const LoginForm = (): JSX.Element => {
     if (isRegisterForm) {
       try {
         const newUser = await createUser(userIn);
-        localStorage.setItem('UserId', newUser.id);
-        localStorage.setItem('UserName', newUser.name);
-        localStorage.setItem('UserEmail', newUser.email);
         redirectToMainPage();
       } catch {
         setIsServerError(true);
       }
     } else {
       try {
-        const existUser: Auth = await signInUser(userIn);
-        localStorage.setItem('UserToken', existUser.token);
-        localStorage.setItem('UserRefreshToken', existUser.refreshToken);
-        localStorage.setItem('UserMessage', existUser.message);
-        localStorage.setItem('UserId', existUser.userId);
-        localStorage.setItem('UserName', existUser.name);
+        const existUser: AuthResponse = await signIn(userIn);
         redirectToStatisticPage();
       } catch {
         setIsServerError(true);

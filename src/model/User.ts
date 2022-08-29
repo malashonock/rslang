@@ -10,7 +10,7 @@ export interface UserResponce {
   email: string;
 }
 
-export interface Auth {
+export interface AuthResponse {
   message: string;
   token: string;
   refreshToken: string;
