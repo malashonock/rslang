@@ -13,6 +13,7 @@ interface SprintTurnProps {
   translation: string;
   onAnswer: (isCorrect: boolean) => void;
   onQuit: () => void;
+  level: number;
   levelRules: LevelRules;
   winsSinceLevelStart: number;
 }
@@ -22,6 +23,7 @@ const SprintTurn = ({
   translation,
   onAnswer,
   onQuit,
+  level,
   levelRules,
   winsSinceLevelStart,
 }: SprintTurnProps): JSX.Element => {
@@ -41,8 +43,8 @@ const SprintTurn = ({
       <Card>
         <Card.Body className={styles.sprintCard}>
           <Stack gap={4}>
+            <LevelIndicator level={level} />
             <WordsProgress levelRules={levelRules} winsSinceLevelStart={winsSinceLevelStart} />
-            <LevelIndicator />
             <div className="d-flex flex-column align-items-center gap-2">
               <div className="d-flex align-items-center gap-2">
                 <SoundButton soundSrc={correctWordSoundSrc} diameter="2rem" variant="warning" />

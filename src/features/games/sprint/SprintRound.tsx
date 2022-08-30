@@ -153,6 +153,7 @@ const SprintRound = (): JSX.Element => {
           translation={translation}
           onAnswer={handleNextTurn}
           onQuit={handleQuit}
+          level={level}
           levelRules={LevelsConfig[level]}
           winsSinceLevelStart={winsSinceLevelStart}
         />
