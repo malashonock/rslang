@@ -111,7 +111,7 @@ const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
         <WordPicture
           className={styles.img}
           imageSrc={`${API_BASE_URL}/${word.image}`}
-          diameter="10rem"
+          diameter="9rem"
         />
         {renderDescription(word)}
         {isAuthorized && renderFooter()}
