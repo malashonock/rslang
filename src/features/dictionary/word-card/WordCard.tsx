@@ -1,8 +1,9 @@
-import { Card, Button, Row, Col, ToggleButton } from 'react-bootstrap';
-import { ReactComponent as ListenWordIcon } from '../../../assets/icons/listen-word-icon.svg';
+import { Card, Row, Col, ToggleButton } from 'react-bootstrap';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
 import img from './minsk.jpg';
+import SoundButton from '../../shared/sound-button/SoundButton';
+import API_BASE_URL from '../../../api/constants';
 
 interface WordCardProps {
   word: Word;
@@ -19,9 +20,7 @@ const renderHeader = (word: Word): JSX.Element => {
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
-        <Button className={styles.listenWordButton} variant="primary" size="sm">
-          <ListenWordIcon />
-        </Button>
+        <SoundButton soundSrc={`${API_BASE_URL}/${word.audio}`} />
       </Col>
     </Row>
   );
