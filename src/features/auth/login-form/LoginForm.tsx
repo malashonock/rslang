@@ -24,8 +24,8 @@ import { INITIAL_VALUES_FORM } from './сonstants';
 import { createUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
 import { AuthResponse, User, UserResponce } from '../../../model/User';
-import { setAuthorizeUser, setUserData } from '../../../reducers/auth.slice';
-import { AuthorizationState } from '../../../model/AuthorizationState';
+import { setAuthorizeUser, createUserData } from '../authSlice';
+import { AuthState } from '../../../model/AuthState';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -45,7 +45,7 @@ const LoginForm = (): JSX.Element => {
     if (isRegisterForm) {
       try {
         const newUser: UserResponce = await createUser(user);
-        const test: AuthorizationState = {
+        const test: AuthState = {
           authorizeStatus: true,
           id: newUser.id,
           name: newUser.name,
@@ -54,7 +54,7 @@ const LoginForm = (): JSX.Element => {
           token: '',
           refreshToken: '',
         };
-        dispatch(setUserData(test));
+        dispatch(createUserData(test));
         redirectToMainPage();
       } catch {
         setIsServerError(true);
@@ -62,7 +62,7 @@ const LoginForm = (): JSX.Element => {
     } else {
       try {
         const existUser: AuthResponse = await signIn(user);
-        const test: AuthorizationState = {
+        const test: AuthState = {
           authorizeStatus: true,
           email: '',
           id: existUser.userId,

@@ -1,6 +1,6 @@
 import store from '../store/store';
 
-export interface AuthorizationState {
+export interface AuthState {
   id: string;
   name: string;
   email: string;

@@ -4,8 +4,9 @@ import styles from './UserAvatar.module.scss';
 import { ReactComponent as AnonymousUserAvatar } from '../../../../assets/icons/anonymous-user-avatar.svg';
 import { ReactComponent as LogoutIcon } from '../../../../assets/icons/logout.svg';
 import { useAppSelector } from '../../../../store/hooks';
-import { deleteUserData } from '../../../../reducers/auth.slice';
+import { deleteUser } from '../../../auth/authSlice';
 import { getUserFromLocalStorage } from '../../../../utils/localStorage';
+import { AuthState } from '../../../../model/AuthState';
 
 const UserAvatar = (): JSX.Element => {
   const { name } = useAppSelector((state) => state.authorization) || 'GUEST';
@@ -13,14 +14,14 @@ const UserAvatar = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const logOut = () => {
-    const existUser = getUserFromLocalStorage();
-    dispatch(deleteUserData(existUser));
+    const loggedUser = getUserFromLocalStorage<AuthState>('Auth');
+    dispatch(deleteUser(loggedUser));
   };
 
   return (
     <div className={styles.userAvatar}>
       <Nav.Link>{name} </Nav.Link>
-      <AnonymousUserAvatar />
+      {!name && <AnonymousUserAvatar />}
       {name && <LogoutIcon onClick={logOut} />}
     </div>
   );
