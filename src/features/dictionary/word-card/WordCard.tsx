@@ -63,7 +63,7 @@ const renderDescription = (word: Word) => {
   return (
     <>
       <div className={styles.description}>{description}</div>
-      <OverlayTrigger trigger="hover" placement="top" overlay={popover}>
+      <OverlayTrigger placement="top" overlay={popover}>
         <Button className={styles.showAllButton} variant="outline-secondary" size="sm">
           show all
         </Button>
