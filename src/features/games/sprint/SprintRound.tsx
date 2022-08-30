@@ -156,6 +156,7 @@ const SprintRound = (): JSX.Element => {
           level={level}
           levelRules={LevelsConfig[level]}
           winsSinceLevelStart={winsSinceLevelStart}
+          score={score}
         />
       );
     }

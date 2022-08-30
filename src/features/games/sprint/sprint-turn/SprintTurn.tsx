@@ -16,6 +16,7 @@ interface SprintTurnProps {
   level: number;
   levelRules: LevelRules;
   winsSinceLevelStart: number;
+  score: number;
 }
 
 const SprintTurn = ({
@@ -26,6 +27,7 @@ const SprintTurn = ({
   level,
   levelRules,
   winsSinceLevelStart,
+  score,
 }: SprintTurnProps): JSX.Element => {
   const correctWordSoundSrc = `${API_BASE_URL}/${correctWord.audio}`;
 
@@ -41,6 +43,9 @@ const SprintTurn = ({
     <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-5 position-relative">
       <CloseButton className="position-absolute top-0 end-0 m-3" onClick={handleQuit} />
       <Card>
+        <Card.Header className="text-center fw-semibold text-bg-primary">
+          Current score: {score}
+        </Card.Header>
         <Card.Body className={styles.sprintCard}>
           <Stack gap={4}>
             <LevelIndicator level={level} />
