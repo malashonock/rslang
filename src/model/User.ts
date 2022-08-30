@@ -17,3 +17,8 @@ export interface AuthResponse {
   userId: string;
   name: string;
 }
+
+export interface deletedUser {
+  id: string;
+  status: number;
+}

@@ -5,8 +5,6 @@ import { ReactComponent as AnonymousUserAvatar } from '../../../../assets/icons/
 import { ReactComponent as LogoutIcon } from '../../../../assets/icons/logout.svg';
 import { useAppSelector } from '../../../../store/hooks';
 import { deleteUser } from '../../../auth/authSlice';
-import { getUserFromLocalStorage } from '../../../../utils/localStorage';
-import { AuthState } from '../../../../model/AuthState';
 
 const UserAvatar = (): JSX.Element => {
   const { name } = useAppSelector((state) => state.authorization) || 'GUEST';
@@ -14,8 +12,7 @@ const UserAvatar = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const logOut = () => {
-    const loggedUser = getUserFromLocalStorage<AuthState>('Auth');
-    dispatch(deleteUser(loggedUser));
+    dispatch(deleteUser());
   };
 
   return (

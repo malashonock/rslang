@@ -8,6 +8,6 @@ export const getUserFromLocalStorage = <T>(keyLS: string): T => {
   return <T>JSON.parse(authInformation);
 };
 
-export const clearLocalStorage = (keyLS: string) => {
+export const removeItemFromLocalStorage = (keyLS: string) => {
   localStorage.removeItem(keyLS);
 };
