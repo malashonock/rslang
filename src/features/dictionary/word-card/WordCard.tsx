@@ -32,13 +32,25 @@ const renderDescription = (word: Word) => {
       <Card.Text className={styles.infoTitle}>
         <b>Meaning</b>
       </Card.Text>
-      <Card.Text className={styles.engInfo}>{word.textMeaning}</Card.Text>
-      <Card.Text className={styles.rusInfo}>{word.textMeaningTranslate}</Card.Text>
+      <Card.Text
+        className={styles.engInfo}
+        dangerouslySetInnerHTML={{ __html: word.textMeaning }}
+      />
+      <Card.Text
+        className={styles.rusInfo}
+        dangerouslySetInnerHTML={{ __html: word.textMeaningTranslate }}
+      />
       <Card.Text className={styles.infoTitle}>
         <b>Example</b>
       </Card.Text>
-      <Card.Text className={styles.engInfo}>{word.textExample}</Card.Text>
-      <Card.Text className={styles.rusInfo}>{word.textExampleTranslate}</Card.Text>
+      <Card.Text
+        className={styles.engInfo}
+        dangerouslySetInnerHTML={{ __html: word.textExample }}
+      />
+      <Card.Text
+        className={styles.rusInfo}
+        dangerouslySetInnerHTML={{ __html: word.textExampleTranslate }}
+      />
     </>
   );
 };
