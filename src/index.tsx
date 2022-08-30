@@ -12,6 +12,7 @@ import MainPage from './features/main-page/MainPage';
 import GamesList from './features/games/GamesList';
 import ChapterLayout from './features/dictionary/chapter-layout/ChapterLayout';
 import ChapterPageLayout from './features/dictionary/chapter-page-layout/ChapterPageLayout';
+import ChaptersHint from './features/dictionary/chapters-hint/ChaptersHint';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -22,15 +23,7 @@ root.render(
         <Route path="/" element={<App />}>
           <Route index element={<MainPage />} />
           <Route path="dictionary" element={<Dictionary />}>
-            <Route
-              index
-              element={
-                <h3>
-                  Select chapter. 1 is the easiest. 6 is the most difficult. 7 - words that you
-                  marked as difficult
-                </h3>
-              }
-            />
+            <Route index element={<ChaptersHint />} />
             <Route path="chapters/:chapter" element={<ChapterLayout />}>
               <Route path="pages/:page" element={<ChapterPageLayout />} />
             </Route>
