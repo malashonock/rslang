@@ -12,7 +12,11 @@
   border-radius: 50%;
 }
 
-.img,
+.img {
+  display: block;
+  margin: auto;
+}
+
 .infoTitle {
   margin-bottom: 0.3rem;
 }

@@ -1,7 +1,7 @@
 import { Card, Row, Col, ToggleButton } from 'react-bootstrap';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
-import img from './minsk.jpg';
+import WordPicture from '../../shared/word-picture/WordPicture';
 import SoundButton from '../../shared/sound-button/SoundButton';
 import API_BASE_URL from '../../../api/constants';
 
@@ -79,7 +79,11 @@ const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
     <Card className={styles.card}>
       <Card.Body>
         {renderHeader(word)}
-        <Card.Img className={styles.img} src={img} />
+        <WordPicture
+          className={styles.img}
+          imageSrc={`${API_BASE_URL}/${word.image}`}
+          diameter="10rem"
+        />
         {renderDescription(word)}
         {isAuthorized && renderFooter()}
       </Card.Body>
