@@ -20,9 +20,10 @@ import { Alert, AlertTitle, FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
-import { createUser, signIn } from '../../../api/users';
+import { newUserData, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
-import { User, AuthResponse } from '../../../model/User';
+import { User } from '../../../model/User';
+import Auth from '../../../model/Auth';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -32,26 +33,27 @@ const LoginForm = (): JSX.Element => {
 
   const navigate = useNavigate();
   const redirectToMainPage = () => navigate('/');
-  const redirectToStatisticPage = () => navigate('/statistics');
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
     setIsServerError(false);
-    const userIn: User = {
+
+    const loginData: User = {
       name: values.userName as string,
       password: values.userPassword as string,
       email: values.userEmail as string,
     };
+
     if (isRegisterForm) {
       try {
-        const newUser = await createUser(userIn);
+        const newUser = await newUserData(loginData);
         setIsRegisterSuccess(true);
-        const existUser: AuthResponse = await signIn(userIn);
+        const existUser: Auth = await signIn(loginData);
       } catch {
         setIsServerError(true);
       }
     } else {
       try {
-        const existUser: AuthResponse = await signIn(userIn);
+        const existUser: Auth = await signIn(loginData);
         setIsRegisterSuccess(true);
       } catch {
         setIsServerError(true);
