@@ -75,13 +75,13 @@ const AudioChallengeRound = (): JSX.Element => {
     return turn === TURNS_COUNT;
   };
 
-  const updateScore = (turnResult: boolean) => {
+  const updateScore = (turnResult: boolean): void => {
     if (turnResult) {
       setScore(score + 1);
     }
   };
 
-  const handleNextTurn = (turnResult: boolean) => {
+  const handleNextTurn = (turnResult: boolean): void => {
     updateScore(turnResult);
 
     if (turn < TURNS_COUNT) {
@@ -92,12 +92,12 @@ const AudioChallengeRound = (): JSX.Element => {
     }
   };
 
-  const handleQuit = (turnResult: boolean) => {
+  const handleQuit = (turnResult: boolean): void => {
     updateScore(turnResult);
     setFinish(true);
   };
 
-  const renderDifficultySelect = (): JSX.Element | undefined => {
+  const renderDifficultySelector = (): JSX.Element | undefined => {
     if (!ready) {
       return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
     }
@@ -139,7 +139,7 @@ const AudioChallengeRound = (): JSX.Element => {
 
   return (
     <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-      {renderDifficultySelect()}
+      {renderDifficultySelector()}
       {renderLoadingSpinner()}
       {renderGameRound()}
       {renderScore()}
