@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
-import { number } from 'yup/lib/locale';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
@@ -11,15 +10,15 @@ import SprintTurn from './sprint-turn/SprintTurn';
 type Seconds = number;
 const ROUND_DURATION: Seconds = 60;
 
-interface LevelRules {
+export interface LevelRules {
   scorePerWin: number;
   winsToLevelUp?: number;
 }
 
 const LevelsConfig: { [level: number]: LevelRules } = {
-  1: { scorePerWin: 10, winsToLevelUp: 3 },
-  2: { scorePerWin: 20, winsToLevelUp: 3 },
-  3: { scorePerWin: 40, winsToLevelUp: 3 },
+  1: { scorePerWin: 10, winsToLevelUp: 4 },
+  2: { scorePerWin: 20, winsToLevelUp: 4 },
+  3: { scorePerWin: 40, winsToLevelUp: 4 },
   4: { scorePerWin: 80 },
 };
 
@@ -85,7 +84,7 @@ const SprintRound = (): JSX.Element => {
     return isTranslationCorrect
       ? correctWord?.wordTranslate || ''
       : randomWord?.wordTranslate || '';
-  }, [availableWords, correctWord?.id]);
+  }, [availableWords, correctWord?.id, correctWord?.wordTranslate]);
 
   const isTimeUp = (): boolean => {
     return timeLeft <= 0;
@@ -113,6 +112,9 @@ const SprintRound = (): JSX.Element => {
       } else {
         setWinsSinceLevelStart(updatedWinsSinceLevelStart);
       }
+    } else {
+      setLevel(1);
+      setWinsSinceLevelStart(0);
     }
   };
 
@@ -151,6 +153,8 @@ const SprintRound = (): JSX.Element => {
           translation={translation}
           onAnswer={handleNextTurn}
           onQuit={handleQuit}
+          levelRules={LevelsConfig[level]}
+          winsSinceLevelStart={winsSinceLevelStart}
         />
       );
     }

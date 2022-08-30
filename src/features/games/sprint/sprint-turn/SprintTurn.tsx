@@ -4,6 +4,7 @@ import Word from '../../../../model/Word';
 import SoundButton from '../../../shared/sound-button/SoundButton';
 import GuessTranslationButton from '../GuessTranslationButton';
 import LevelIndicator from '../level-indicator/LevelIndicator';
+import { LevelRules } from '../SprintRound';
 import WordsProgress from '../words-progress/WordsProgress';
 import styles from './SprintTurn.module.scss';
 
@@ -12,6 +13,8 @@ interface SprintTurnProps {
   translation: string;
   onAnswer: (isCorrect: boolean) => void;
   onQuit: () => void;
+  levelRules: LevelRules;
+  winsSinceLevelStart: number;
 }
 
 const SprintTurn = ({
@@ -19,6 +22,8 @@ const SprintTurn = ({
   translation,
   onAnswer,
   onQuit,
+  levelRules,
+  winsSinceLevelStart,
 }: SprintTurnProps): JSX.Element => {
   const correctWordSoundSrc = `${API_BASE_URL}/${correctWord.audio}`;
 
@@ -36,7 +41,7 @@ const SprintTurn = ({
       <Card>
         <Card.Body className={styles.sprintCard}>
           <Stack gap={4}>
-            <WordsProgress />
+            <WordsProgress levelRules={levelRules} winsSinceLevelStart={winsSinceLevelStart} />
             <LevelIndicator />
             <div className="d-flex flex-column align-items-center gap-2">
               <div className="d-flex align-items-center gap-2">
