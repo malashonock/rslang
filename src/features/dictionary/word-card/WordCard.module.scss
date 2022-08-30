@@ -17,6 +17,30 @@
   margin: auto;
 }
 
+.description {
+  height: 5rem;
+  overflow: hidden;
+  position: relative;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1rem;
+    background: linear-gradient(180deg, transparent, white 50%);
+  }
+}
+
+.showAllButton {
+  position: relative;
+  display: block;
+  margin: 0.1rem auto 0.9rem;
+  padding: 0 0.2rem;
+  font-size: 0.7rem;
+}
+
 .infoTitle {
   margin-bottom: 0.3rem;
 }

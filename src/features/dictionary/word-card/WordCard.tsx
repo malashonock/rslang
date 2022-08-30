@@ -1,4 +1,4 @@
-import { Card, Row, Col, ToggleButton } from 'react-bootstrap';
+import { Card, Row, Col, ToggleButton, Popover, OverlayTrigger, Button } from 'react-bootstrap';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
 import WordPicture from '../../shared/word-picture/WordPicture';
@@ -14,9 +14,8 @@ const renderHeader = (word: Word): JSX.Element => {
   return (
     <Row className={styles.header}>
       <Col>
-        <Card.Title>
-          {word.word} {word.transcription}
-        </Card.Title>
+        <Card.Title>{word.word}</Card.Title>
+        <Card.Subtitle>{word.transcription}</Card.Subtitle>
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
@@ -27,7 +26,7 @@ const renderHeader = (word: Word): JSX.Element => {
 };
 
 const renderDescription = (word: Word) => {
-  return (
+  const description = (
     <>
       <Card.Text className={styles.infoTitle}>
         <b>Meaning</b>
@@ -51,6 +50,24 @@ const renderDescription = (word: Word) => {
         className={styles.rusInfo}
         dangerouslySetInnerHTML={{ __html: word.textExampleTranslate }}
       />
+    </>
+  );
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">{word.word}</Popover.Header>
+      <Popover.Body>{description}</Popover.Body>
+    </Popover>
+  );
+
+  return (
+    <>
+      <div className={styles.description}>{description}</div>
+      <OverlayTrigger trigger="hover" placement="top" overlay={popover}>
+        <Button className={styles.showAllButton} variant="outline-secondary" size="sm">
+          show all
+        </Button>
+      </OverlayTrigger>
     </>
   );
 };
