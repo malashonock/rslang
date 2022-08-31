@@ -1,8 +1,9 @@
-import { Card, Button, Row, Col, ToggleButton } from 'react-bootstrap';
-import { ReactComponent as ListenWordIcon } from '../../../assets/icons/listen-word-icon.svg';
+import { Card, Row, Col, ToggleButton, Popover, OverlayTrigger, Button } from 'react-bootstrap';
 import styles from './WordCard.module.scss';
-import Word from './Word';
-import img from './minsk.jpg';
+import Word from '../../../model/Word';
+import WordPicture from '../../shared/word-picture/WordPicture';
+import SoundButton from '../../shared/sound-button/SoundButton';
+import API_BASE_URL from '../../../api/constants';
 
 interface WordCardProps {
   word: Word;
@@ -13,33 +14,60 @@ const renderHeader = (word: Word): JSX.Element => {
   return (
     <Row className={styles.header}>
       <Col>
-        <Card.Title>
-          {word.word} {word.transcription}
-        </Card.Title>
+        <Card.Title>{word.word}</Card.Title>
+        <Card.Subtitle>{word.transcription}</Card.Subtitle>
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
-        <Button className={styles.listenWordButton} variant="primary" size="sm">
-          <ListenWordIcon />
-        </Button>
+        <SoundButton soundSrc={`${API_BASE_URL}/${word.audio}`} />
       </Col>
     </Row>
   );
 };
 
 const renderDescription = (word: Word) => {
-  return (
+  const description = (
     <>
       <Card.Text className={styles.infoTitle}>
         <b>Meaning</b>
       </Card.Text>
-      <Card.Text className={styles.engInfo}>{word.textMeaning}</Card.Text>
-      <Card.Text className={styles.rusInfo}>{word.textMeaningTranslate}</Card.Text>
+      <Card.Text
+        className={styles.engInfo}
+        dangerouslySetInnerHTML={{ __html: word.textMeaning }}
+      />
+      <Card.Text
+        className={styles.rusInfo}
+        dangerouslySetInnerHTML={{ __html: word.textMeaningTranslate }}
+      />
       <Card.Text className={styles.infoTitle}>
         <b>Example</b>
       </Card.Text>
-      <Card.Text className={styles.engInfo}>{word.textExample}</Card.Text>
-      <Card.Text className={styles.rusInfo}>{word.textExampleTranslate}</Card.Text>
+      <Card.Text
+        className={styles.engInfo}
+        dangerouslySetInnerHTML={{ __html: word.textExample }}
+      />
+      <Card.Text
+        className={styles.rusInfo}
+        dangerouslySetInnerHTML={{ __html: word.textExampleTranslate }}
+      />
+    </>
+  );
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">{word.word}</Popover.Header>
+      <Popover.Body>{description}</Popover.Body>
+    </Popover>
+  );
+
+  return (
+    <>
+      <div className={styles.description}>{description}</div>
+      <OverlayTrigger placement="top" overlay={popover}>
+        <Button className={styles.showAllButton} variant="outline-secondary" size="sm">
+          show all
+        </Button>
+      </OverlayTrigger>
     </>
   );
 };
@@ -80,7 +108,11 @@ const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
     <Card className={styles.card}>
       <Card.Body>
         {renderHeader(word)}
-        <Card.Img className={styles.img} src={img} />
+        <WordPicture
+          className={styles.img}
+          imageSrc={`${API_BASE_URL}/${word.image}`}
+          diameter="9rem"
+        />
         {renderDescription(word)}
         {isAuthorized && renderFooter()}
       </Card.Body>
