@@ -5,6 +5,7 @@ export interface AuthState {
   name: string;
   email: string;
   message: string;
+  password: string;
   token: string;
   refreshToken: string;
   authorizeStatus: boolean;

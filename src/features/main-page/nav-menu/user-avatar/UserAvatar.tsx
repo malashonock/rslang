@@ -17,7 +17,7 @@ const UserAvatar = (): JSX.Element => {
 
   return (
     <div className={styles.userAvatar}>
-      <Nav.Link>{name} </Nav.Link>
+      <Nav.Link href="/auth">{name} </Nav.Link>
       {!name && <AnonymousUserAvatar />}
       {name && <LogoutIcon onClick={logOut} />}
     </div>

@@ -45,16 +45,17 @@ const LoginForm = (): JSX.Element => {
     if (isRegisterForm) {
       try {
         const newUser: UserResponce = await createUser(user);
-        const test: AuthState = {
+        const userData: AuthState = {
           authorizeStatus: true,
           id: newUser.id,
           name: newUser.name,
+          password: user.password,
           email: newUser.email,
           message: '',
           token: '',
           refreshToken: '',
         };
-        dispatch(createUserData(test));
+        dispatch(createUserData(userData));
         redirectToMainPage();
       } catch {
         setIsServerError(true);
@@ -62,16 +63,17 @@ const LoginForm = (): JSX.Element => {
     } else {
       try {
         const existUser: AuthResponse = await signIn(user);
-        const test: AuthState = {
+        const userData: AuthState = {
           authorizeStatus: true,
-          email: '',
+          email: user.email,
           id: existUser.userId,
           name: existUser.name,
+          password: user.password,
           message: existUser.message,
           token: existUser.token,
           refreshToken: existUser.refreshToken,
         };
-        dispatch(setAuthorizeUser(test));
+        dispatch(setAuthorizeUser(userData));
       } catch {
         setIsServerError(true);
       }

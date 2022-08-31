@@ -10,9 +10,16 @@ const instanceAxios = axios.create({
 });
 
 instanceAxios.interceptors.request.use((config) => {
-  const loggedUser = getUserFromLocalStorage<AuthState>('Auth');
-  // eslint-disable-next-line no-param-reassign
-  if (config.headers) config.headers.Authorization = `Bearer ${loggedUser.token}`;
+  try {
+    if (localStorage.getItem('Auth') !== null) {
+      const loggedUser = getUserFromLocalStorage<AuthState>('Auth') || '';
+      if (config.headers) {
+        // eslint-disable-next-line no-param-reassign
+        config.headers.Authorization = `Bearer ${loggedUser.token}`;
+      }
+    }
+    // eslint-disable-next-line no-empty
+  } catch {}
   return config;
 });
 

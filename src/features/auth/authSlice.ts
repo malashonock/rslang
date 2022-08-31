@@ -13,6 +13,7 @@ const initialAuth: AuthState = {
   email: '',
   token: '',
   message: '',
+  password: '',
   refreshToken: '',
   authorizeStatus: false,
 };

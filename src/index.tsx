@@ -37,3 +37,6 @@ root.render(
     </React.StrictMode>
   </Provider>
 );
+
+// document.addEventListener('DOMContentLoaded', () => {
+// });
