@@ -55,7 +55,7 @@ const SprintTurn = ({
                 <SoundButton soundSrc={correctWordSoundSrc} diameter="2rem" variant="warning" />
                 <span className="fs-5">{correctWord.word}</span>
               </div>
-              <div className="fs-5 fw-semibold text-wrap">{translation}?</div>
+              <div className="fs-5 fw-semibold text-wrap text-center">{translation}?</div>
             </div>
             <div className="d-flex gap-2 justify-content-center">
               <GuessTranslationButton

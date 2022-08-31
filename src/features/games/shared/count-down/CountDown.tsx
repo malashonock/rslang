@@ -8,7 +8,7 @@ import styles from './CountDown.module.scss';
 interface CountDownProps extends HTMLAttributes<HTMLDivElement> {
   totalTime: Seconds;
   tickFrequency: Seconds;
-  onTick: (timeLeft: Seconds) => void;
+  onFinished: () => void;
 }
 
 const WARNING_THRESHOLD: Seconds = 10;
@@ -23,7 +23,7 @@ enum Colors {
 const CountDown = ({
   totalTime,
   tickFrequency,
-  onTick,
+  onFinished,
   ...divAttributes
 }: CountDownProps): JSX.Element => {
   const [timeLeft, setTimeLeft] = useState(totalTime);
@@ -34,14 +34,16 @@ const CountDown = ({
   }, tickFrequency * 1000);
 
   useEffect(() => {
-    onTick(timeLeft);
-  }, [onTick, timeLeft]);
-
-  useEffect(() => {
     if (timeLeft <= WARNING_THRESHOLD) {
       setFinishing(true);
     }
   }, [timeLeft, setFinishing]);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onFinished();
+    }
+  }, [onFinished, timeLeft]);
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading

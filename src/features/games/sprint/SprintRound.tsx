@@ -42,8 +42,6 @@ const SprintRound = (): JSX.Element => {
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
 
-  const [timeLeft, setTimeLeft] = useState(ROUND_DURATION);
-
   const [level, setLevel] = useState(1);
   const [turn, setTurn] = useState(1);
   const [winsSinceLevelStart, setWinsSinceLevelStart] = useState(0);
@@ -120,19 +118,11 @@ const SprintRound = (): JSX.Element => {
   const handleNextTurn = (turnResult: boolean): void => {
     updateScore(turnResult);
 
-    if (timeLeft > 0) {
+    if (!finish) {
       setTurn(turn + 1);
       updateCorrectWords();
-    } else {
-      setFinish(true);
     }
   };
-
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      setFinish(true);
-    }
-  }, [timeLeft, setFinish]);
 
   const handleQuit = (): void => {
     setFinish(true);
@@ -181,12 +171,12 @@ const SprintRound = (): JSX.Element => {
   };
 
   const renderCountDown = (): JSX.Element | undefined => {
-    if (ready && !finish && timeLeft > 0) {
+    if (ready && !finish) {
       return (
         <CountDown
           totalTime={ROUND_DURATION}
           tickFrequency={TICK_FREQUENCY}
-          onTick={setTimeLeft}
+          onFinished={() => setFinish(true)}
           className="position-absolute top-0 start-0 m-3"
         />
       );
