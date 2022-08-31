@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Stack, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import styles from './ChaptersSelector.module.scss';
@@ -18,7 +18,8 @@ const ChaptersSelector = ({ className }: ChaptersSelectorProps): JSX.Element => 
     { colorClass: 'redButton' },
   ];
 
-  const [currentButton, updateCurrentButton] = useState(0);
+  const { chapter } = useParams();
+  const currentButtonIndex = chapter ? +chapter : 0;
 
   return (
     <Stack className={`${styles.section} ${className || ''}`} gap={3}>
@@ -26,7 +27,7 @@ const ChaptersSelector = ({ className }: ChaptersSelectorProps): JSX.Element => 
 
       {BUTTON_COLOR_CLASSES.map((item, index) => {
         const { colorClass } = item;
-        const currentButtonClass = currentButton === index + 1 ? `${colorClass}--current` : '';
+        const currentButtonClass = currentButtonIndex === index + 1 ? `${colorClass}--current` : '';
 
         return (
           <LinkContainer to={`chapters/${index + 1}/pages/1`} key={colorClass}>
@@ -34,7 +35,6 @@ const ChaptersSelector = ({ className }: ChaptersSelectorProps): JSX.Element => 
               className={`${styles.button} ${styles[colorClass]} 
               ${styles[currentButtonClass]}`}
               size="sm"
-              onClick={() => updateCurrentButton(index + 1)}
             >
               {`Chapter ${index + 1}`}
             </Button>

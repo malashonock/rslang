@@ -1,10 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import styles from './ChapterLayout.module.scss';
+import ChapterPagesSelector from '../chapter-pages-selector/ChapterPagesSelector';
 
 const ChapterLayout = () => {
   return (
     <>
-      <p className={styles.switchChapterPages}>buttons to switch chapter pages</p>
+      <ChapterPagesSelector className={styles.switchChapterPages} />
       <div className={styles.wordCardsWrapper}>
         <Outlet />
       </div>
