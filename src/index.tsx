@@ -10,6 +10,7 @@ import Sprint from './features/games/sprint/Sprint';
 import Statistics from './features/statistics/Statistics';
 import MainPage from './features/main-page/MainPage';
 import GamesList from './features/games/GamesList';
+import Auth from './features/auth/Auth';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -26,6 +27,7 @@ root.render(
             <Route path="sprint" element={<Sprint />} />
           </Route>
           <Route path="statistics" element={<Statistics />} />
+          <Route path="auth" element={<Auth />} />
         </Route>
       </Routes>
     </BrowserRouter>
