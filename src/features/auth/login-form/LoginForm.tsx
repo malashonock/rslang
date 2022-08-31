@@ -80,23 +80,7 @@ const LoginForm = (): JSX.Element => {
       } catch {
         setIsServerError(true);
       }
-
-      // if (isRegisterForm) {
-      //   try {
-      //     const newUser = await newUserData(loginData);
-      //     setIsRegisterSuccess(true);
-      //     const existUser: Auth = await signIn(loginData);
-      //   } catch {
-      //     setIsServerError(true);
-      //   }
-      // } else {
-      //   try {
-      //     const existUser: Auth = await signIn(loginData);
-      //     setIsRegisterSuccess(true);
-      //   } catch {
-      //     setIsServerError(true);
-      //   }
-      setTimeout(redirectToMainPage, 5000);
+      if (!isServerError) setTimeout(redirectToMainPage, 5000);
     }
   };
 

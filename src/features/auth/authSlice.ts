@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState } from '../../model/AuthState';
 import { removeItemFromLocalStorage, saveToLocalStorage } from '../../utils/localStorage';
+
 /* eslint-disable no-param-reassign */
 export type UpdatedUserInfo = {
-  name: string;
+  password: string;
   email: string;
 };
 
@@ -30,16 +31,17 @@ const authSlice = createSlice({
       saveToLocalStorage(payload, 'Auth');
       return payload;
     },
-    deleteUser: (state) => {
+    deleteUserData: (state) => {
       removeItemFromLocalStorage('Auth');
       return initialAuth;
     },
     updateUserData: (state, { payload }: PayloadAction<UpdatedUserInfo>) => {
-      state.name = payload.name;
+      state.password = payload.password;
       state.email = payload.email;
     },
   },
 });
 
 export default authSlice;
-export const { createUserData, deleteUser, updateUserData, setAuthorizeUser } = authSlice.actions;
+export const { createUserData, deleteUserData, updateUserData, setAuthorizeUser } =
+  authSlice.actions;
