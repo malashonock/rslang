@@ -4,11 +4,14 @@ import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
+
+import { Seconds } from '../../../utils/types';
+import CountDown from '../shared/count-down/CountDown';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import SprintTurn from './sprint-turn/SprintTurn';
 
-type Seconds = number;
-const ROUND_DURATION: Seconds = 60;
+const ROUND_DURATION: Seconds = 10;
+const TICK_FREQUENCY: Seconds = 1;
 
 export interface LevelRules {
   scorePerWin: number;
@@ -86,10 +89,6 @@ const SprintRound = (): JSX.Element => {
       : randomWord?.wordTranslate || '';
   }, [availableWords, correctWord?.id, correctWord?.wordTranslate]);
 
-  const isTimeUp = (): boolean => {
-    return timeLeft <= 0;
-  };
-
   const levelUp = (): void => {
     const maxLevel = Math.max(...Object.keys(LevelsConfig).map((key) => +key));
 
@@ -128,6 +127,12 @@ const SprintRound = (): JSX.Element => {
       setFinish(true);
     }
   };
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      setFinish(true);
+    }
+  }, [timeLeft, setFinish]);
 
   const handleQuit = (): void => {
     setFinish(true);
@@ -175,10 +180,24 @@ const SprintRound = (): JSX.Element => {
     }
   };
 
+  const renderCountDown = (): JSX.Element | undefined => {
+    if (ready && !finish && timeLeft > 0) {
+      return (
+        <CountDown
+          totalTime={ROUND_DURATION}
+          tickFrequency={TICK_FREQUENCY}
+          onTick={setTimeLeft}
+          className="position-absolute top-0 start-0 m-3"
+        />
+      );
+    }
+  };
+
   return (
-    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center position-relative">
       {renderDifficultySelector()}
       {renderLoadingSpinner()}
+      {renderCountDown()}
       {renderGameRound()}
       {renderScore()}
     </div>
