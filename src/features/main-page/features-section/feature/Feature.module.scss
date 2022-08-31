@@ -1,9 +1,9 @@
-@import '../../../../../node_modules/bootstrap/scss/bootstrap.scss';
-@import "../../../../../node_modules/bootstrap/scss/functions";
-@import "../../../../../node_modules/bootstrap/scss/variables";
-@import "../../../../../node_modules/bootstrap/scss/maps";
-@import "../../../../../node_modules/bootstrap/scss/mixins";
-@import "../../../../../node_modules/bootstrap/scss/utilities";
+@import '~bootstrap/scss/bootstrap.scss';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/maps";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
 
   .featurePositionLeft {
     display: flex;
@@ -82,15 +82,3 @@
       width: 18.5rem;
     }
   }
-
-
-  // @media (max-width: 768px) {
-
-  //   .featureLeft, .featureRight {
-  //     width: 32rem;
-  //   }
-
-  //   .featureCardLeft, .featureCardRight{
-  //     width: 18.5rem;
-  //   }
-  // }

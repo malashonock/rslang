@@ -1,24 +1,26 @@
-import { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import { Nav } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import styles from './UserAvatar.module.scss';
 import { ReactComponent as AnonymousUserAvatar } from '../../../../assets/icons/anonymous-user-avatar.svg';
-import LoginForm from '../../../auth/login-form/LoginForm';
+import { ReactComponent as LogoutIcon } from '../../../../assets/icons/logout.svg';
+import { useAppSelector } from '../../../../store/hooks';
+import { deleteUser } from '../../../auth/authSlice';
 
 const UserAvatar = (): JSX.Element => {
-  const [show, setShow] = useState(false);
+  const { name } = useAppSelector((state) => state.authorization) || 'GUEST';
 
-  const modalClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const dispatch = useDispatch();
+
+  const logOut = () => {
+    dispatch(deleteUser());
+  };
 
   return (
-    <>
-      <div className={styles.userAvatar}>
-        <AnonymousUserAvatar onClick={handleShow} />
-      </div>
-      <Modal show={show} onHide={modalClose}>
-        <LoginForm />
-      </Modal>
-    </>
+    <div className={styles.userAvatar}>
+      <Nav.Link href="/auth">{name} </Nav.Link>
+      {!name && <AnonymousUserAvatar />}
+      {name && <LogoutIcon onClick={logOut} />}
+    </div>
   );
 };
 
