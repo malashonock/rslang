@@ -10,7 +10,7 @@ import CountDown from '../shared/count-down/CountDown';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import SprintTurn from './sprint-turn/SprintTurn';
 
-const ROUND_DURATION: Seconds = 10;
+const ROUND_DURATION: Seconds = 60;
 const TICK_FREQUENCY: Seconds = 1;
 
 export interface LevelRules {
