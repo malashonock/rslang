@@ -14,16 +14,18 @@ import PersonIcon from '@mui/icons-material/Person';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useDispatch } from 'react-redux';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
 import { Alert, AlertTitle, FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
-import { newUserData, signIn } from '../../../api/users';
+import { createUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
 import { User } from '../../../model/User';
-import Auth from '../../../model/Auth';
+import { setAuthorizeUser, createUserData } from '../authSlice';
+import { AuthState } from '../../../model/AuthState';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -33,31 +35,67 @@ const LoginForm = (): JSX.Element => {
 
   const navigate = useNavigate();
   const redirectToMainPage = () => navigate('/');
+  const dispatch = useDispatch();
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
     setIsServerError(false);
-
     const loginData: User = {
       name: values.userName as string,
       password: values.userPassword as string,
       email: values.userEmail as string,
     };
-
     if (isRegisterForm) {
       try {
-        const newUser = await newUserData(loginData);
-        setIsRegisterSuccess(true);
-        const existUser: Auth = await signIn(loginData);
+        const newUser = await createUser(loginData);
+        const userData: AuthState = {
+          authorizeStatus: true,
+          id: newUser.id,
+          name: newUser.name,
+          password: loginData.password,
+          email: newUser.email,
+          message: '',
+          token: '',
+          refreshToken: '',
+        };
+        dispatch(createUserData(userData));
+        redirectToMainPage();
       } catch {
+        setIsRegisterSuccess(false);
         setIsServerError(true);
       }
     } else {
       try {
-        const existUser: Auth = await signIn(loginData);
-        setIsRegisterSuccess(true);
+        const existUser = await signIn(loginData);
+        const userData: AuthState = {
+          authorizeStatus: true,
+          email: loginData.email,
+          id: existUser.userId,
+          name: existUser.name,
+          password: loginData.password,
+          message: existUser.message,
+          token: existUser.token,
+          refreshToken: existUser.refreshToken,
+        };
+        dispatch(setAuthorizeUser(userData));
       } catch {
         setIsServerError(true);
       }
+
+      // if (isRegisterForm) {
+      //   try {
+      //     const newUser = await newUserData(loginData);
+      //     setIsRegisterSuccess(true);
+      //     const existUser: Auth = await signIn(loginData);
+      //   } catch {
+      //     setIsServerError(true);
+      //   }
+      // } else {
+      //   try {
+      //     const existUser: Auth = await signIn(loginData);
+      //     setIsRegisterSuccess(true);
+      //   } catch {
+      //     setIsServerError(true);
+      //   }
       setTimeout(redirectToMainPage, 5000);
     }
   };

@@ -1,54 +1,44 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { User, UserDeleted, UserResponse } from '../model/User';
+import { AxiosResponse } from 'axios';
 import Auth from '../model/Auth';
-import API_BASE_URL from './constants';
+import { User, UserResponse, UserDeleted } from '../model/User';
+import instanceAxios from './httpConfig';
 
-const usersEndpoint = `${API_BASE_URL}/users`;
-const signInEndpoint = `${API_BASE_URL}/signin`;
-
-const authUser = (token: string): AxiosInstance => {
-  return axios.create({
-    baseURL: signInEndpoint,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
-
-export const newUserData = async (creatingUser: User): Promise<UserResponse> => {
-  const response: AxiosResponse<UserResponse, undefined> = await axios.post(
-    `${usersEndpoint}`,
+export const createUser = async (creatingUser: User): Promise<UserResponse> => {
+  const response: AxiosResponse<UserResponse, undefined> = await instanceAxios.post(
+    `/users`,
     creatingUser
   );
   return response.data;
 };
 
 export const signIn = async (creatingUser: User): Promise<Auth> => {
-  const response: AxiosResponse<Auth, undefined> = await axios.post(
-    `${signInEndpoint}`,
+  const response: AxiosResponse<Auth, undefined> = await instanceAxios.post(
+    `/signin`,
     creatingUser
   );
   return response.data;
 };
 
-export const getUser = async (userId: string, token: string): Promise<UserResponse> => {
-  const response: AxiosResponse<UserResponse, undefined> = await authUser(token).get(`/${userId}`);
-  return response.data;
-};
-
-export const updateUser = async (userId: string, token: string): Promise<User> => {
-  const response: AxiosResponse<User, undefined> = await authUser(token).put(`/${userId}`);
-  return response.data;
-};
-
-export const deleteUser = async (userId: string, token: string): Promise<UserDeleted> => {
-  const response: AxiosResponse<UserDeleted, undefined> = await authUser(token).delete(
-    `/${userId}`
+export const getUser = async (userId: string): Promise<UserResponse> => {
+  const response: AxiosResponse<UserResponse, undefined> = await instanceAxios.get(
+    `/users/${userId}`
   );
+  return response.data;
+};
+
+export const updateUser = async (userId: string): Promise<User> => {
+  const response: AxiosResponse<User, undefined> = await instanceAxios.put(`/users/${userId}`);
+  return response.data;
+};
+
+export const deleteUser = async (userId: string): Promise<UserDeleted> => {
+  const response: AxiosResponse<number, undefined> = await instanceAxios.delete(`/users/${userId}`);
   return { id: userId, responseStatus: response.status };
 };
 
-export const getNewUserToken = async (userId: string, token: string): Promise<Auth> => {
-  const response: AxiosResponse<Auth, undefined> = await authUser(token).get(`/${userId}/tokens`);
+export const getNewUserToken = async (userId: string): Promise<UserResponse> => {
+  const response: AxiosResponse<UserResponse, undefined> = await instanceAxios.get(
+    `/users/${userId}/tokens`
+  );
   return response.data;
 };
