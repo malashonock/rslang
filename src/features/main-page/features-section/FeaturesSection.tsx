@@ -7,7 +7,7 @@ const FeaturesSection = (): JSX.Element => {
     <div className={styles.featuresSection}>
       {featuresData.map((feature, index) => (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <Feature imgPosition={index % 2 ? 'right' : 'left'} {...feature} />
+        <Feature key={feature.id} imgPosition={index % 2 ? 'right' : 'left'} {...feature} />
       ))}
     </div>
   );
