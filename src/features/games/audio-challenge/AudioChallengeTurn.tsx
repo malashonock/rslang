@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CloseButton, Container } from 'react-bootstrap';
 import API_BASE_URL from '../../../api/constants';
 import Word from '../../../model/Word';
-import shuffle from '../../../utils/array';
+import { shuffle } from '../../../utils/array';
 import SoundButton from '../../shared/sound-button/SoundButton';
 import WordPicture from '../../shared/word-picture/WordPicture';
 import GuessWordButton from './guess-word-button/GuessWordButton';

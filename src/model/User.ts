@@ -1,24 +1,13 @@
-export interface User {
+interface UserCommon {
+  id: string;
   name: string;
   email: string;
   password: string;
+  responseStatus: number;
 }
 
-export interface UserResponce {
-  id: string;
-  name: string;
-  email: string;
-}
+export type User = Omit<UserCommon, 'id' | 'responseStatus'>;
 
-export interface AuthResponse {
-  message: string;
-  token: string;
-  refreshToken: string;
-  userId: string;
-  name: string;
-}
+export type UserResponse = Omit<UserCommon, 'password' | 'responseStatus'>;
 
-export interface deletedUser {
-  id: string;
-  status: number;
-}
+export type UserDeleted = Pick<UserCommon, 'id' | 'responseStatus'>;

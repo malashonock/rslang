@@ -17,13 +17,13 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { useDispatch } from 'react-redux';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
-import { FormHelperText } from '@mui/material';
+import { Alert, AlertTitle, FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
 import { createUser, signIn } from '../../../api/users';
 import styles from './LoginForm.module.scss';
-import { AuthResponse, User, UserResponce } from '../../../model/User';
+import { User } from '../../../model/User';
 import { setAuthorizeUser, createUserData } from '../authSlice';
 import { AuthState } from '../../../model/AuthState';
 
@@ -31,25 +31,27 @@ const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
   const [isRegisterForm, setIsRegisterForm] = useState<boolean>(false);
   const [isServerError, setIsServerError] = useState<boolean>(false);
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const redirectToMainPage = () => navigate('/');
   const dispatch = useDispatch();
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
     setIsServerError(false);
-    const user: User = {
+    const loginData: User = {
       name: values.userName as string,
       password: values.userPassword as string,
       email: values.userEmail as string,
     };
     if (isRegisterForm) {
       try {
-        const newUser: UserResponce = await createUser(user);
+        const newUser = await createUser(loginData);
         const userData: AuthState = {
           authorizeStatus: true,
           id: newUser.id,
           name: newUser.name,
-          password: user.password,
+          password: loginData.password,
           email: newUser.email,
           message: '',
           token: '',
@@ -58,17 +60,18 @@ const LoginForm = (): JSX.Element => {
         dispatch(createUserData(userData));
         redirectToMainPage();
       } catch {
+        setIsRegisterSuccess(false);
         setIsServerError(true);
       }
     } else {
       try {
-        const existUser: AuthResponse = await signIn(user);
+        const existUser = await signIn(loginData);
         const userData: AuthState = {
           authorizeStatus: true,
-          email: user.email,
+          email: loginData.email,
           id: existUser.userId,
           name: existUser.name,
-          password: user.password,
+          password: loginData.password,
           message: existUser.message,
           token: existUser.token,
           refreshToken: existUser.refreshToken,
@@ -77,6 +80,23 @@ const LoginForm = (): JSX.Element => {
       } catch {
         setIsServerError(true);
       }
+
+      // if (isRegisterForm) {
+      //   try {
+      //     const newUser = await newUserData(loginData);
+      //     setIsRegisterSuccess(true);
+      //     const existUser: Auth = await signIn(loginData);
+      //   } catch {
+      //     setIsServerError(true);
+      //   }
+      // } else {
+      //   try {
+      //     const existUser: Auth = await signIn(loginData);
+      //     setIsRegisterSuccess(true);
+      //   } catch {
+      //     setIsServerError(true);
+      //   }
+      setTimeout(redirectToMainPage, 5000);
     }
   };
 
@@ -104,6 +124,12 @@ const LoginForm = (): JSX.Element => {
               <span>Error in Server response</span>
             </FormHelperText>
           </>
+        )}
+        {isRegisterSuccess && (
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            You will be redirected to the main page in 5 seconds
+          </Alert>
         )}
         <Avatar className={styles.avatar}>
           {isRegisterForm ? <LockOutlinedIcon /> : <AccountCircleIcon />}
