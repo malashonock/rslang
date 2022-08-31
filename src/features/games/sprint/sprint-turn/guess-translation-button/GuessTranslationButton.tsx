@@ -1,7 +1,8 @@
 import { Button } from 'react-bootstrap';
-import dingSound from '../../../assets/sounds/ding.mp3';
-import buzzerSound from '../../../assets/sounds/buzzer.mp3';
-import playAudioAsync from '../../../utils/sound';
+import dingSound from '../../../../../assets/sounds/ding.mp3';
+import buzzerSound from '../../../../../assets/sounds/buzzer.mp3';
+import playAudioAsync from '../../../../../utils/sound';
+import styles from './GuessTranslationButton.module.scss';
 
 interface GuessTranslationButtonProps {
   variant: 'correct' | 'incorrect';
@@ -23,7 +24,11 @@ const GuessTranslationButton = ({
   };
 
   return (
-    <Button variant={variant === 'correct' ? 'success' : 'danger'} onClick={handleClick}>
+    <Button
+      variant={variant === 'correct' ? 'success' : 'danger'}
+      onClick={handleClick}
+      className={styles.guessButton}
+    >
       {variant === 'correct' ? 'Correct →' : '← Incorrect'}
     </Button>
   );

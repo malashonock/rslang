@@ -2,7 +2,7 @@ import { Card, CloseButton, Container, Stack } from 'react-bootstrap';
 import API_BASE_URL from '../../../../api/constants';
 import Word from '../../../../model/Word';
 import SoundButton from '../../../shared/sound-button/SoundButton';
-import GuessTranslationButton from '../GuessTranslationButton';
+import GuessTranslationButton from './guess-translation-button/GuessTranslationButton';
 import LevelIndicator from '../level-indicator/LevelIndicator';
 import { LevelRules } from '../SprintRound';
 import WordsProgress from '../words-progress/WordsProgress';
@@ -55,9 +55,9 @@ const SprintTurn = ({
                 <SoundButton soundSrc={correctWordSoundSrc} diameter="2rem" variant="warning" />
                 <span className="fs-5">{correctWord.word}</span>
               </div>
-              <div className="fs-5 fw-semibold">{translation}?</div>
+              <div className="fs-5 fw-semibold text-wrap">{translation}?</div>
             </div>
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 justify-content-center">
               <GuessTranslationButton
                 variant="incorrect"
                 isCorrect={correctWord.wordTranslate !== translation}
