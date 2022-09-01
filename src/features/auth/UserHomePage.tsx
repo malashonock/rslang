@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
@@ -30,9 +30,8 @@ const UserHomePage = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const deleteLoggedUser = async (): Promise<void> => {
-    const deleteStatus = await deleteUser(id);
+    await deleteUser(id);
     dispatch(deleteUserData());
-    alert(JSON.stringify(deleteStatus));
   };
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
@@ -42,7 +41,6 @@ const UserHomePage = (): JSX.Element => {
     };
     await updateUser(id, updatedUserData);
     dispatch(updateUserData(updatedUserData));
-    alert('Update user information');
   };
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
@@ -58,14 +56,14 @@ const UserHomePage = (): JSX.Element => {
   return (
     <>
       <Paper elevation={3} style={{ margin: '2rem', padding: '2rem' }}>
-        <form>
+        <form onSubmit={handleSubmit}>
           <Box className={styles.loginForm}>
             <Avatar className={styles.avatar}>
               <AccountCircleIcon />
             </Avatar>
             <h2>Update {name} information</h2>
             <FormControl className={styles.input} variant="standard">
-              <Button variant="contained" component="label">
+              <Button variant="contained" component="label" disabled>
                 Upload
                 <input hidden accept="image/*" type="file" />
                 <IconButton color="default" aria-label="upload picture" component="label">
@@ -113,7 +111,7 @@ const UserHomePage = (): JSX.Element => {
               {touched.userPassword && <FormHelperText error>{errors.userPassword}</FormHelperText>}
             </FormControl>
             <Stack className={styles.btnArea}>
-              <Button type="submit" variant="contained" className={styles.input}>
+              <Button variant="contained" className={styles.input} type="submit">
                 UPDATE
               </Button>
             </Stack>

@@ -38,6 +38,7 @@ const authSlice = createSlice({
     updateUserData: (state, { payload }: PayloadAction<UpdatedUserInfo>) => {
       state.password = payload.password;
       state.email = payload.email;
+      saveToLocalStorage(state, 'Auth');
     },
   },
 });
