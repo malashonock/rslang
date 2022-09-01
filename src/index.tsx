@@ -7,7 +7,7 @@ import App from './App';
 import Games from './features/games/Games';
 import AudioChallengeRound from './features/games/audio-challenge/AudioChallengeRound';
 import Dictionary from './features/dictionary/Dictionary';
-import Sprint from './features/games/sprint/Sprint';
+import SprintRound from './features/games/sprint/SprintRound';
 import Statistics from './features/statistics/Statistics';
 import MainPage from './features/main-page/MainPage';
 import GamesList from './features/games/GamesList';
@@ -35,7 +35,7 @@ root.render(
             <Route path="games" element={<Games />}>
               <Route index element={<GamesList />} />
               <Route path="audio-challenge" element={<AudioChallengeRound />} />
-              <Route path="sprint" element={<Sprint />} />
+              <Route path="sprint" element={<SprintRound />} />
             </Route>
             <Route path="statistics" element={<Statistics />} />
             <Route path="auth" element={<Auth />} />

@@ -4,10 +4,28 @@ import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import Word from '../../../model/Word';
-import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
-import AudioChallengeTurn from './AudioChallengeTurn';
 
-const AudioChallengeRound = (): JSX.Element => {
+import { Seconds } from '../../../utils/types';
+import CountDown from '../shared/count-down/CountDown';
+import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
+import SprintTurn from './sprint-turn/SprintTurn';
+
+const ROUND_DURATION: Seconds = 60;
+const TICK_FREQUENCY: Seconds = 1;
+
+export interface LevelRules {
+  scorePerWin: number;
+  winsToLevelUp?: number;
+}
+
+const LevelsConfig: { [level: number]: LevelRules } = {
+  1: { scorePerWin: 10, winsToLevelUp: 4 },
+  2: { scorePerWin: 20, winsToLevelUp: 4 },
+  3: { scorePerWin: 40, winsToLevelUp: 4 },
+  4: { scorePerWin: 80 },
+};
+
+const SprintRound = (): JSX.Element => {
   const [searchParams] = useSearchParams();
 
   const chapter = useMemo(() => {
@@ -24,10 +42,9 @@ const AudioChallengeRound = (): JSX.Element => {
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
 
-  const TURNS_COUNT = 20;
-  const WORDS_PER_TURN = 5;
-
+  const [level, setLevel] = useState(1);
   const [turn, setTurn] = useState(1);
+  const [winsSinceLevelStart, setWinsSinceLevelStart] = useState(0);
   const [score, setScore] = useState(0);
   const [ready, setReady] = useState(false);
   const [finish, setFinish] = useState(false);
@@ -58,42 +75,56 @@ const AudioChallengeRound = (): JSX.Element => {
     setCorrectWords(correctWords.filter(({ id }) => id !== correctWord?.id));
   };
 
-  const incorrectWords = useMemo((): Word[] => {
+  const translation = useMemo((): string => {
     const source = availableWords.filter((word) => word.id !== correctWord?.id);
-    const selection: Word[] = [];
+    const randomIndex = Math.floor(Math.random() * (source.length - 1));
+    const randomWord = source[randomIndex];
 
-    for (let i = 1; i < WORDS_PER_TURN; i += 1) {
-      const randomIndex = Math.floor(Math.random() * (source.length - 1));
-      selection.push(source[randomIndex]);
-      source.splice(randomIndex, 1);
+    const isTranslationCorrect = Boolean(Math.round(Math.random()));
+
+    return isTranslationCorrect
+      ? correctWord?.wordTranslate || ''
+      : randomWord?.wordTranslate || '';
+  }, [availableWords, correctWord?.id, correctWord?.wordTranslate]);
+
+  const levelUp = (): void => {
+    const maxLevel = Math.max(...Object.keys(LevelsConfig).map((key) => +key));
+
+    if (level + 1 <= maxLevel) {
+      setLevel(level + 1);
+      setWinsSinceLevelStart(0);
     }
-
-    return selection;
-  }, [availableWords, correctWord?.id]);
-
-  const isLastTurn = (): boolean => {
-    return turn === TURNS_COUNT;
   };
 
   const updateScore = (turnResult: boolean): void => {
     if (turnResult) {
-      setScore(score + 1);
+      const { scorePerWin, winsToLevelUp } = LevelsConfig[level];
+
+      setScore(score + scorePerWin);
+
+      const updatedWinsSinceLevelStart = winsSinceLevelStart + 1;
+
+      if (winsToLevelUp && updatedWinsSinceLevelStart >= winsToLevelUp) {
+        levelUp();
+      } else {
+        setWinsSinceLevelStart(updatedWinsSinceLevelStart);
+      }
+    } else {
+      setLevel(1);
+      setWinsSinceLevelStart(0);
     }
   };
 
   const handleNextTurn = (turnResult: boolean): void => {
     updateScore(turnResult);
 
-    if (turn < TURNS_COUNT) {
+    if (!finish) {
       setTurn(turn + 1);
       updateCorrectWords();
-    } else {
-      setFinish(true);
     }
   };
 
-  const handleQuit = (turnResult: boolean): void => {
-    updateScore(turnResult);
+  const handleQuit = (): void => {
     setFinish(true);
   };
 
@@ -112,13 +143,15 @@ const AudioChallengeRound = (): JSX.Element => {
   const renderGameRound = (): JSX.Element | undefined => {
     if (ready && correctWord && !finish) {
       return (
-        <AudioChallengeTurn
+        <SprintTurn
           correctWord={correctWord}
-          incorrectWords={incorrectWords}
-          turn={turn}
-          isLastTurn={isLastTurn()}
-          onNextTurn={handleNextTurn}
+          translation={translation}
+          onAnswer={handleNextTurn}
           onQuit={handleQuit}
+          level={level}
+          levelRules={LevelsConfig[level]}
+          winsSinceLevelStart={winsSinceLevelStart}
+          score={score}
         />
       );
     }
@@ -137,14 +170,28 @@ const AudioChallengeRound = (): JSX.Element => {
     }
   };
 
+  const renderCountDown = (): JSX.Element | undefined => {
+    if (ready && !finish) {
+      return (
+        <CountDown
+          totalTime={ROUND_DURATION}
+          tickFrequency={TICK_FREQUENCY}
+          onFinished={() => setFinish(true)}
+          className="position-absolute top-0 start-0 m-3"
+        />
+      );
+    }
+  };
+
   return (
-    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+    <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center position-relative">
       {renderDifficultySelector()}
       {renderLoadingSpinner()}
+      {renderCountDown()}
       {renderGameRound()}
       {renderScore()}
     </div>
   );
 };
 
-export default AudioChallengeRound;
+export default SprintRound;
