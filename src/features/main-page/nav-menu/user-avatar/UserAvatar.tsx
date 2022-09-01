@@ -1,4 +1,3 @@
-import { Nav } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import styles from './UserAvatar.module.scss';
 import { ReactComponent as AnonymousUserAvatar } from '../../../../assets/icons/anonymous-user-avatar.svg';
@@ -17,7 +16,7 @@ const UserAvatar = (): JSX.Element => {
 
   return (
     <div className={styles.userAvatar}>
-      <Nav.Link href="/auth">{name} </Nav.Link>
+      {name}
       {!name && <AnonymousUserAvatar />}
       {name && <LogoutIcon onClick={logOut} />}
     </div>
