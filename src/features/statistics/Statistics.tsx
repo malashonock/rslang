@@ -1,6 +1,6 @@
-import { Paper, Alert, AlertTitle, Button, Typography } from '@mui/material';
 import { useAppSelector } from '../../store/hooks';
 import DayliStatistics from './DayliStatistic';
+import LongStatistic from './LongStatistic';
 
 import style from './Statistics.module.scss';
 
@@ -9,10 +9,9 @@ const Statistics = (): JSX.Element => {
 
   return (
     <>
-      <Typography variant="h5" component="h5" className={style.infoArea}>
-        {userAuth.name} statistics
-      </Typography>
-      {userAuth.authorizeStatus && <DayliStatistics />}
+      <h3 className={style.infoArea}>statistics</h3>
+      <DayliStatistics />
+      <LongStatistic />
     </>
   );
 };

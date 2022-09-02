@@ -13,8 +13,8 @@ export interface Statistic {
   userId: string;
   gameDate: Date;
   gameType: GameName;
-  countNewWords: number;
-  countGuessedWords: number;
-  countMovesInGames: number;
-  bestGuessedSeries: number;
+  learnedWords: number;
+  guessedWords: number;
+  totalWords: number;
+  maxGuessedSeries: number;
 }

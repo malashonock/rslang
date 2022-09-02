@@ -24,3 +24,48 @@
   gap: 3rem;
   flex-direction: row;
 }
+
+.teamTitle {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.team {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .card {
+    width: 38rem;
+  }
+
+  .cardFooter {
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+  }
+  
+  .logoGitHub {
+    width: 2rem;
+    height: 2rem;
+    filter: invert(50%);
+  
+    &:hover{
+      filter: invert(25%);
+    }
+  }
+  
+  .cardElements {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.wordsCount {
+  font-weight: 600;
+  font-size: 5rem;
+}
+
