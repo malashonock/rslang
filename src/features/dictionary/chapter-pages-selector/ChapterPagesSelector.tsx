@@ -4,15 +4,16 @@ import PaginationItem from '@mui/material/PaginationItem';
 
 type ChapterPagesSelectorProps = {
   className?: string;
+  isLeanedCurrentPage?: boolean;
 };
 
-const ChapterPagesSelector = ({ className }: ChapterPagesSelectorProps) => {
+const ChapterPagesSelector = ({ className, isLeanedCurrentPage }: ChapterPagesSelectorProps) => {
   const { page } = useParams();
 
   return (
     <Pagination
       className={className || ''}
-      color="primary"
+      color={isLeanedCurrentPage ? 'primary' : 'secondary'}
       variant="outlined"
       shape="rounded"
       page={page ? +page : 0}

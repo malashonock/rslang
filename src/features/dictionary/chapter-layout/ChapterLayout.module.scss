@@ -4,6 +4,27 @@
   padding: 1rem 0;
 }
 
+.learnedPage {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '✓ Page learned!';
+    top: -10px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 6.8rem;
+    padding: 0 0.2rem;
+
+    border-radius: 3px;
+
+    color: white;
+    background-color: #66bb6a;
+    font-size: 0.9rem;
+  }
+}
+
 .wordCardsWrapper {
   grid-column: 2 / 3;
 }
