@@ -6,17 +6,14 @@ import { getWords } from '../../../api/words';
 import WordCard from '../word-card/WordCard';
 import Word from '../../../model/Word';
 import styles from './ChapterPageLayout.module.scss';
-
-const isAuthorized = () => {
-  return true;
-};
+import { useAppSelector } from '../../../store/hooks';
 
 const isAllWordsOnPageLearned = (page: string) => {
   return !!(+page % 2);
 };
 
 const ChapterPageLayout = () => {
-  const authorizationStatus = isAuthorized();
+  const { authorizeStatus } = useAppSelector((state) => state.authorization);
   const { chapter, page } = useParams();
   const [displayedWords, updateDisplayedWords] = useState<Word[]>([]);
 
@@ -26,22 +23,25 @@ const ChapterPageLayout = () => {
     const loadWords = async () => {
       if (chapter && page) {
         const newWords = await getWords(+chapter - 1, +page - 1);
-        if (authorizationStatus) {
-          const isAllWordsLearned = isAllWordsOnPageLearned(page);
-          dispatch(setPageStatus(isAllWordsLearned));
-        }
         updateDisplayedWords(newWords);
       }
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  }, [authorizationStatus, chapter, dispatch, page]);
+  }, [chapter, page]);
+
+  useEffect(() => {
+    if (authorizeStatus && page) {
+      const isAllWordsLearned = isAllWordsOnPageLearned(page);
+      dispatch(setPageStatus(isAllWordsLearned));
+    }
+  }, [authorizeStatus, dispatch, page]);
 
   return (
     <div className={styles.cards}>
       {displayedWords.map((word) => (
-        <WordCard key={word.id} word={word} isAuthorized={authorizationStatus} />
+        <WordCard key={word.id} word={word} isAuthorized={authorizeStatus} />
       ))}
     </div>
   );
