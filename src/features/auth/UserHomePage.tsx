@@ -63,16 +63,6 @@ const UserHomePage = (): JSX.Element => {
             </Avatar>
             <h2>Update {name} information</h2>
             <FormControl className={styles.input} variant="standard">
-              <Button variant="contained" component="label" disabled>
-                Upload
-                <input hidden accept="image/*" type="file" />
-                <IconButton color="default" aria-label="upload picture" component="label">
-                  <input hidden accept="image/*" type="file" />
-                  <PhotoCamera />
-                </IconButton>
-              </Button>
-            </FormControl>
-            <FormControl className={styles.input} variant="standard">
               <InputLabel>E-mail</InputLabel>
               <Input
                 name="userEmail"
