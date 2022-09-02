@@ -5,13 +5,15 @@ import styles from './ChapterLayout.module.scss';
 import ChapterPagesSelector from '../chapter-pages-selector/ChapterPagesSelector';
 
 const ChapterLayout = () => {
-  const isLeanedCurrentPage = useSelector((state: RootState) => state.dictionary.value);
+  const { isCurrentChapterPageLearned } = useSelector((state: RootState) => state.dictionary);
 
   return (
     <>
       <ChapterPagesSelector
-        className={`${styles.switchChapterPages} ${isLeanedCurrentPage ? styles.learnedPage : ''}`}
-        isLeanedCurrentPage={isLeanedCurrentPage}
+        className={`${styles.switchChapterPages} ${
+          isCurrentChapterPageLearned ? styles.learnedPage : ''
+        }`}
+        isLeanedCurrentPage={isCurrentChapterPageLearned}
       />
       <div className={styles.wordCardsWrapper}>
         <Outlet />

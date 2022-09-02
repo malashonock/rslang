@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: false,
+  isCurrentChapterPageLearned: false,
 };
 
 const currentPageLearned = createSlice({
@@ -10,7 +10,7 @@ const currentPageLearned = createSlice({
   reducers: {
     setPageStatus: (state, action: { payload: boolean }) => {
       // eslint-disable-next-line no-param-reassign
-      state.value = action.payload;
+      state.isCurrentChapterPageLearned = action.payload;
     },
   },
 });
