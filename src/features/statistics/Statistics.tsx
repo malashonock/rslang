@@ -9,7 +9,6 @@ const Statistics = (): JSX.Element => {
 
   return (
     <>
-      <h3 className={style.infoArea}>statistics</h3>
       <DayliStatistics />
       <LongStatistic />
     </>

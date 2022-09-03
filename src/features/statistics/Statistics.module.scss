@@ -33,39 +33,37 @@
 .team {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 1rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
 
   .card {
-    width: 38rem;
+    width: 19rem;
+    box-shadow: inset ;
   }
 
-  .cardFooter {
-    display: flex;
-    justify-content: end;
-    align-items: flex-end;
-  }
-  
-  .logoGitHub {
-    width: 2rem;
-    height: 2rem;
-    filter: invert(50%);
-  
-    &:hover{
-      filter: invert(25%);
-    }
   }
   
   .cardElements {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 3rem;
+
+    span {
+      font-size: 2rem;
+      margin-right: .6rem;
+    }
   }
-}
 
 .wordsCount {
+  padding-top: -2rem;
   font-weight: 600;
-  font-size: 5rem;
+  font-size: 4rem;
 }
 
+.circle {
+  filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.5));
+}
