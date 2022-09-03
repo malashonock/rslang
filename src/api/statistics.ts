@@ -14,7 +14,7 @@ export const createStatistic = async (id: string, creatingStat: Statistic): Prom
 export const getDayliStatistic = async (userId: string, date?: string): Promise<Statistic[]> => {
   const dateState = date === undefined ? getNowDate() : date;
   const response: AxiosResponse<Statistic[], undefined> = await instanceAxios.get(
-    `/users/${userId}/statistics?gameDate=${dateState}`
+    `/users/${userId}/statistics?date=${dateState}`
   );
   return response.data;
 };

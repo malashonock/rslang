@@ -1,4 +1,4 @@
-export type GameName = 'audio-challenge' | 'sprint';
+export type GameName = 'audio-challenge' | 'sprint' | 'dictionary';
 
 export interface UserWord {
   userId: string;
@@ -14,6 +14,7 @@ export interface Statistic {
   gameDate: Date;
   gameType: GameName;
   learnedWords: number;
+  newWords: number;
   guessedWords: number;
   totalWords: number;
   maxGuessedSeries: number;
@@ -25,4 +26,5 @@ export type GameStatistic = Omit<Statistic, 'userId' | 'gameDate' | 'gameType'>;
 export interface SummaryGameStatistic {
   sprint: GameStatistic;
   audioChallenge: GameStatistic;
+  dictionary: GameStatistic;
 }

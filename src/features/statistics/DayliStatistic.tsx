@@ -15,6 +15,9 @@ const DayliStatistics = (): JSX.Element => {
   const [audioChallengeStat, setAudioChallengeStat] = useState<GameStatistic>(
     INITIAL_VALUES_GAME_STATISTICS
   );
+  const [dictionaryStat, setDictionaryStat] = useState<GameStatistic>(
+    INITIAL_VALUES_GAME_STATISTICS
+  );
   const [sprintStat, setSprintStat] = useState<GameStatistic>(INITIAL_VALUES_GAME_STATISTICS);
   const [totalStat, setTotalStat] = useState<GameStatistic>(INITIAL_VALUES_GAME_STATISTICS);
 
@@ -26,16 +29,25 @@ const DayliStatistics = (): JSX.Element => {
       const { sprint, audioChallenge } = parsingStatisticPerDay(stat);
       setSprintStat(sprint);
       setAudioChallengeStat(audioChallenge);
+      setDictionaryStat(dictionaryStat);
       setTotalStat({
-        totalWords: sprint.totalWords + audioChallenge.totalWords,
-        guessedWords: sprint.guessedWords + audioChallenge.guessedWords,
-        learnedWords: sprint.learnedWords + audioChallenge.learnedWords,
-        maxGuessedSeries: Math.max(sprint.maxGuessedSeries, audioChallenge.maxGuessedSeries),
-        persent: Math.trunc(
-          ((sprint.learnedWords + audioChallenge.learnedWords) /
-            (sprint.totalWords + audioChallenge.totalWords)) *
-            100
+        totalWords: sprint.totalWords + audioChallenge.totalWords + dictionaryStat.totalWords,
+        guessedWords:
+          sprint.guessedWords + audioChallenge.guessedWords + dictionaryStat.guessedWords,
+        learnedWords:
+          sprint.learnedWords + audioChallenge.learnedWords + dictionaryStat.learnedWords,
+        maxGuessedSeries: Math.max(
+          sprint.maxGuessedSeries,
+          audioChallenge.maxGuessedSeries,
+          dictionaryStat.maxGuessedSeries
         ),
+        newWords: sprint.newWords + audioChallenge.newWords,
+        persent:
+          Math.trunc(
+            ((sprint.learnedWords + audioChallenge.learnedWords + dictionaryStat.learnedWords) /
+              (sprint.totalWords + audioChallenge.totalWords + dictionaryStat.learnedWords)) *
+              100
+          ) || 0,
       });
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -51,7 +63,9 @@ const DayliStatistics = (): JSX.Element => {
             maxValue={totalStat.totalWords}
           >
             <img src={result} alt="You result" />
-            <span className={style.wordsCount}>{totalStat.learnedWords}</span>
+            <span className={style.wordsCount}>
+              {totalStat.learnedWords} <span>of {totalStat.totalWords}</span>
+            </span>
             <Card.Title>WORDS</Card.Title>
             <Card.Subtitle>were learned today</Card.Subtitle>
           </CircularProgressbarWithChildren>
@@ -64,16 +78,13 @@ const DayliStatistics = (): JSX.Element => {
         </Card.Header>
         <Card.Body className={style.cardElements}>
           <Card.Title>
-            <span className="text-primary">{sprintStat.guessedWords}</span> words per day
+            <span className="text-primary">{sprintStat.newWords}</span> new words per day
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{sprintStat.persent}</span> accuracy
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{sprintStat.maxGuessedSeries}</span> in a row
-          </Card.Title>
-          <Card.Title>
-            <span className="text-primary">{sprintStat.totalWords}</span> total words in the game
           </Card.Title>
         </Card.Body>
       </Card>
@@ -84,17 +95,13 @@ const DayliStatistics = (): JSX.Element => {
         </Card.Header>
         <Card.Body className={style.cardElements}>
           <Card.Title>
-            <span className="text-primary">{audioChallengeStat.guessedWords}</span> words per day
+            <span className="text-primary">{audioChallengeStat.newWords}</span> new words per day
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{audioChallengeStat.persent}</span> accuracy
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{audioChallengeStat.maxGuessedSeries}</span> in a row
-          </Card.Title>
-          <Card.Title>
-            <span className="text-primary">{audioChallengeStat.totalWords}</span> total words in the
-            game
           </Card.Title>
         </Card.Body>
       </Card>
@@ -105,16 +112,13 @@ const DayliStatistics = (): JSX.Element => {
         </Card.Header>
         <Card.Body className={style.cardElements}>
           <Card.Title>
-            <span className="text-primary">{totalStat.learnedWords}</span> words per day
+            <span className="text-primary">{totalStat.newWords}</span> new words per day
+          </Card.Title>
+          <Card.Title>
+            <span className="text-primary">{totalStat.learnedWords}</span> learned
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{totalStat.persent}</span> accuracy
-          </Card.Title>
-          <Card.Title>
-            <span className="text-primary">{totalStat.maxGuessedSeries}</span> in a row
-          </Card.Title>
-          <Card.Title>
-            <span className="text-primary">{totalStat.totalWords}</span> total words in the game
           </Card.Title>
         </Card.Body>
       </Card>
