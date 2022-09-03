@@ -50,7 +50,7 @@ const DayliStatistics = (): JSX.Element => {
             value={totalStat.learnedWords}
             maxValue={totalStat.totalWords}
           >
-            <img style={{ width: 40, marginTop: -5 }} src={result} alt="You result" />
+            <img src={result} alt="You result" />
             <span className={style.wordsCount}>{totalStat.learnedWords}</span>
             <Card.Title>WORDS</Card.Title>
             <Card.Subtitle>were learned today</Card.Subtitle>
@@ -59,7 +59,7 @@ const DayliStatistics = (): JSX.Element => {
       </Card>
       <Card className={style.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
-          <img src={agile} alt="waves icon" style={{ width: '2rem' }} />
+          <img src={agile} alt="waves icon" />
           <h4>Sprint</h4>
         </Card.Header>
         <Card.Body className={style.cardElements}>
@@ -79,7 +79,7 @@ const DayliStatistics = (): JSX.Element => {
       </Card>
       <Card className={style.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
-          <img src={audio} alt="waves icon" style={{ width: '2rem' }} />
+          <img src={audio} alt="waves icon" />
           <h4>Audio challenge</h4>
         </Card.Header>
         <Card.Body className={style.cardElements}>
@@ -100,7 +100,7 @@ const DayliStatistics = (): JSX.Element => {
       </Card>
       <Card className={style.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
-          <img src={dayliresult} alt="result icon" style={{ width: '2rem' }} />
+          <img src={dayliresult} alt="result icon" />
           <h4>Statistics per day</h4>
         </Card.Header>
         <Card.Body className={style.cardElements}>

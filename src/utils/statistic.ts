@@ -19,7 +19,7 @@ const miniGameStatistic = (statistics: Statistic[]): GameStatistic => {
     sumTotalWords += stat.totalWords;
     if (maxGuessedSeries < stat.maxGuessedSeries) maxGuessedSeries = stat.maxGuessedSeries;
   });
-  const persent = Math.trunc((sumGuessedWords / sumTotalWords) * 100);
+  const persent = sumGuessedWords > 0 ? Math.trunc((sumGuessedWords / sumTotalWords) * 100) : 0;
   return {
     guessedWords: sumGuessedWords,
     learnedWords: sumLearnedWords,
