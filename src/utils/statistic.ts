@@ -39,19 +39,16 @@ const parsingStatisticPerDay = (statistics: Statistic[]): SummaryGameStatistic =
   const dictionaryStatistics: Statistic[] = [];
   statistics.forEach((stat) => {
     // eslint-disable-next-line default-case
-    switch (stat.gameType) {
-      case 'audio-challenge': {
+    switch (stat.source) {
+      case 'audio-challenge':
         audioStatistics.push(stat);
         break;
-      }
-      case 'sprint': {
+      case 'sprint':
         sprintStatistics.push(stat);
         break;
-      }
-      case 'dictionary': {
+      case 'dictionary':
         dictionaryStatistics.push(stat);
         break;
-      }
     }
   });
   return {

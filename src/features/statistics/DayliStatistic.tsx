@@ -26,10 +26,10 @@ const DayliStatistics = (): JSX.Element => {
   useLayoutEffect(() => {
     const loadStat = async () => {
       const stat = await getDayliStatistic(id);
-      const { sprint, audioChallenge } = parsingStatisticPerDay(stat);
+      const { sprint, audioChallenge, dictionary } = parsingStatisticPerDay(stat);
       setSprintStat(sprint);
       setAudioChallengeStat(audioChallenge);
-      setDictionaryStat(dictionaryStat);
+      setDictionaryStat(dictionary);
       setTotalStat({
         totalWords: sprint.totalWords + audioChallenge.totalWords + dictionaryStat.totalWords,
         guessedWords:
@@ -49,6 +49,7 @@ const DayliStatistics = (): JSX.Element => {
               100
           ) || 0,
       });
+      // alert(JSON.stringify(sprint));
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadStat();

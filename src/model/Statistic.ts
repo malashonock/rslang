@@ -12,7 +12,7 @@ export interface UserWord {
 export interface Statistic {
   userId: string;
   gameDate: Date;
-  gameType: GameName;
+  source: GameName;
   learnedWords: number;
   newWords: number;
   guessedWords: number;
@@ -21,7 +21,7 @@ export interface Statistic {
   persent?: number;
 }
 
-export type GameStatistic = Omit<Statistic, 'userId' | 'gameDate' | 'gameType'>;
+export type GameStatistic = Omit<Statistic, 'userId' | 'gameDate' | 'source'>;
 
 export interface SummaryGameStatistic {
   sprint: GameStatistic;
