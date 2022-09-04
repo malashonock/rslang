@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import instanceAxios from './httpConfig';
-import { UserWord, NewUserWord } from '../model/UserWord';
+import { UserWord, NewUserWord, UpdatedUserWord } from '../model/UserWord';
 
 export const getUserWords = async (userId: string): Promise<UserWord[]> => {
   const response: AxiosResponse<UserWord[], undefined> = await instanceAxios.get(
@@ -24,6 +24,18 @@ export const createUserWord = async (
   const response: AxiosResponse<UserWord, NewUserWord> = await instanceAxios.post(
     `/users/${userId}/words/${wordId}`,
     newWord
+  );
+  return response.data;
+};
+
+export const updateUserWord = async (
+  userId: string,
+  wordId: string,
+  updatedWord: UpdatedUserWord
+): Promise<UserWord> => {
+  const response: AxiosResponse<UserWord, UserWord> = await instanceAxios.put(
+    `/users/${userId}/words/${wordId}`,
+    updatedWord
   );
   return response.data;
 };
