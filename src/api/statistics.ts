@@ -1,9 +1,8 @@
 import { AxiosResponse } from 'axios';
 import instanceAxios from './httpConfig';
 import { Statistic } from '../model/Statistic';
-import getNowDate from '../utils/date';
 
-export const createStatistic = async (id: string, creatingStat: Statistic): Promise<Statistic> => {
+export const setStatistic = async (id: string, creatingStat: Statistic): Promise<Statistic> => {
   const response: AxiosResponse<Statistic, undefined> = await instanceAxios.post(
     `/users${id}/statistics`,
     creatingStat
@@ -12,9 +11,9 @@ export const createStatistic = async (id: string, creatingStat: Statistic): Prom
 };
 
 export const getDayliStatistic = async (userId: string, date?: string): Promise<Statistic[]> => {
-  const dateState = date === undefined ? getNowDate() : date;
+  const queryString = date === undefined ? '' : `?date=${date}`;
   const response: AxiosResponse<Statistic[], undefined> = await instanceAxios.get(
-    `/users/${userId}/statistics?date=${dateState}`
+    `/users/${userId}/statistics${queryString}`
   );
   return response.data;
 };

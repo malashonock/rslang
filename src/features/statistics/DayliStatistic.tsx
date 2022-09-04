@@ -8,7 +8,8 @@ import result from '../../assets/icons/mission.png';
 import dayliresult from '../../assets/icons/dayliresults.png';
 import { getDayliStatistic } from '../../api/statistics';
 import { useAppSelector } from '../../store/hooks';
-import { GameStatistic, Statistic } from '../../model/Statistic';
+import { GameStatistic } from '../../model/Statistic';
+import getNowDate from '../../utils/date';
 import parsingStatisticPerDay, { INITIAL_VALUES_GAME_STATISTICS } from '../../utils/statistic';
 
 const DayliStatistics = (): JSX.Element => {
@@ -25,7 +26,7 @@ const DayliStatistics = (): JSX.Element => {
 
   useLayoutEffect(() => {
     const loadStat = async () => {
-      const stat = await getDayliStatistic(id);
+      const stat = await getDayliStatistic(id, getNowDate());
       const { sprint, audioChallenge, dictionary } = parsingStatisticPerDay(stat);
       setSprintStat(sprint);
       setAudioChallengeStat(audioChallenge);
@@ -41,7 +42,7 @@ const DayliStatistics = (): JSX.Element => {
           audioChallenge.maxGuessedSeries,
           dictionaryStat.maxGuessedSeries
         ),
-        newWords: sprint.newWords + audioChallenge.newWords,
+        newWords: sprint.newWords + audioChallenge.newWords + dictionary.newWords,
         persent:
           Math.trunc(
             ((sprint.learnedWords + audioChallenge.learnedWords + dictionaryStat.learnedWords) /
@@ -49,7 +50,6 @@ const DayliStatistics = (): JSX.Element => {
               100
           ) || 0,
       });
-      // alert(JSON.stringify(sprint));
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadStat();
@@ -79,13 +79,13 @@ const DayliStatistics = (): JSX.Element => {
         </Card.Header>
         <Card.Body className={style.cardElements}>
           <Card.Title>
-            <span className="text-primary">{sprintStat.newWords}</span> new words per day
+            <span className="text-primary">{sprintStat.newWords}</span> new words today
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{sprintStat.persent}</span> accuracy
+            <span className="text-primary">{sprintStat.persent}%</span> accuracy
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{sprintStat.maxGuessedSeries}</span> in a row
+            <span className="text-primary">{sprintStat.maxGuessedSeries}</span> guessed in a row
           </Card.Title>
         </Card.Body>
       </Card>
@@ -96,30 +96,31 @@ const DayliStatistics = (): JSX.Element => {
         </Card.Header>
         <Card.Body className={style.cardElements}>
           <Card.Title>
-            <span className="text-primary">{audioChallengeStat.newWords}</span> new words per day
+            <span className="text-primary">{audioChallengeStat.newWords}</span> new words today
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{audioChallengeStat.persent}</span> accuracy
+            <span className="text-primary">{audioChallengeStat.persent}%</span> accuracy
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{audioChallengeStat.maxGuessedSeries}</span> in a row
+            <span className="text-primary">{audioChallengeStat.maxGuessedSeries}</span> guessed in a
+            row
           </Card.Title>
         </Card.Body>
       </Card>
       <Card className={style.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
           <img src={dayliresult} alt="result icon" />
-          <h4>Statistics per day</h4>
+          <h4>Total for today</h4>
         </Card.Header>
         <Card.Body className={style.cardElements}>
           <Card.Title>
-            <span className="text-primary">{totalStat.newWords}</span> new words per day
+            <span className="text-primary">{totalStat.newWords}</span> new words today
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{totalStat.learnedWords}</span> learned
+            <span className="text-primary">{totalStat.persent}%</span> accuracy
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{totalStat.persent}</span> accuracy
+            <span className="text-primary">{totalStat.learnedWords}</span> words learned
           </Card.Title>
         </Card.Body>
       </Card>

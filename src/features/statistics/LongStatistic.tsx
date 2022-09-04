@@ -1,3 +1,7 @@
+import { useLayoutEffect } from 'react';
+import { getDayliStatistic } from '../../api/statistics';
+import { useAppSelector } from '../../store/hooks';
+import { getChart } from '../../utils/statistic';
 import StatChart from './Chart';
 import style from './Statistics.module.scss';
 

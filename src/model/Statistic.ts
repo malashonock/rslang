@@ -11,7 +11,7 @@ export interface UserWord {
 
 export interface Statistic {
   userId: string;
-  gameDate: Date;
+  date: Date;
   source: GameName;
   learnedWords: number;
   newWords: number;
@@ -21,10 +21,11 @@ export interface Statistic {
   persent?: number;
 }
 
-export type GameStatistic = Omit<Statistic, 'userId' | 'gameDate' | 'source'>;
+export type GameStatistic = Omit<Statistic, 'userId' | 'date' | 'source'>;
 
 export interface SummaryGameStatistic {
   sprint: GameStatistic;
   audioChallenge: GameStatistic;
   dictionary: GameStatistic;
 }
+export type StatisticForChar = Pick<Statistic, 'newWords' | 'learnedWords'>;
