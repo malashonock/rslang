@@ -14,4 +14,4 @@ export interface UserWord extends NewUserWord {
   wordId: string;
 }
 
-export type UpdatingUserWord = NewUserWord;
+export type UpdatedUserWord = NewUserWord;
