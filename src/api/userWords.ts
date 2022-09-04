@@ -9,6 +9,13 @@ export const getUserWords = async (userId: string): Promise<UserWord[]> => {
   return response.data;
 };
 
+export const getUserWord = async (userId: string, wordId: string): Promise<UserWord> => {
+  const response: AxiosResponse<UserWord, undefined> = await instanceAxios.get(
+    `/users/${userId}/words/${wordId}`
+  );
+  return response.data;
+};
+
 export const createUserWord = async (
   userId: string,
   wordId: string,
@@ -18,6 +25,5 @@ export const createUserWord = async (
     `/users/${userId}/words/${wordId}`,
     newWord
   );
-
   return response.data;
 };
