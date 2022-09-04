@@ -1,11 +1,15 @@
-export default interface UserWord {
+export interface UserWord {
   id: string;
+  userId: string;
+  wordId: string;
   wasPlayed: boolean;
   correctGuessCount: number;
   wrongGuessCount: number;
   isDifficult: boolean;
   isLearned: boolean;
-  optional: {
+  optional?: {
     [index: string]: unknown;
   };
 }
+
+export type NewUserWord = Omit<UserWord, 'id' | 'userId' | 'wordId'>;
