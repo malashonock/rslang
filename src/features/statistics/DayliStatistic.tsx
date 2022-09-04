@@ -53,7 +53,13 @@ const DayliStatistics = (): JSX.Element => {
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadStat();
-  }, [id]);
+  }, [
+    dictionaryStat.guessedWords,
+    dictionaryStat.learnedWords,
+    dictionaryStat.maxGuessedSeries,
+    dictionaryStat.totalWords,
+    id,
+  ]);
 
   return (
     <section className={style.team}>

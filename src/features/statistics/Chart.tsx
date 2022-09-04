@@ -47,16 +47,16 @@ const StatChart = (): JSX.Element => {
     const loadStat = async () => {
       const userStatistic = await getDayliStatistic(id);
       const summaryStat = getChart(userStatistic);
-      const value1: number[] = [];
-      const value2: number[] = [];
+      const tempChartValue1: number[] = [];
+      const tempChartValue2: number[] = [];
       summaryStat.forEach((stat) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        value1.push(stat.newWords);
+        tempChartValue1.push(stat.newWords);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        value2.push(stat.learnedWords);
+        tempChartValue2.push(stat.learnedWords);
       });
-      setChartValues1(value1);
-      setChartValues2(value2);
+      setChartValues1(tempChartValue1);
+      setChartValues2(tempChartValue2);
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadStat();

@@ -2,9 +2,9 @@ import { AxiosResponse } from 'axios';
 import instanceAxios from './httpConfig';
 import { Statistic } from '../model/Statistic';
 
-export const setStatistic = async (id: string, creatingStat: Statistic): Promise<Statistic> => {
+export const setStatistic = async (userId: string, creatingStat: Statistic): Promise<Statistic> => {
   const response: AxiosResponse<Statistic, undefined> = await instanceAxios.post(
-    `/users${id}/statistics`,
+    `/users${userId}/statistics`,
     creatingStat
   );
   return response.data;

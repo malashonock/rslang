@@ -1,6 +1,3 @@
-import moment from 'moment';
-import { AuthState } from '../model/AuthState';
-
 import {
   Statistic,
   GameStatistic,
@@ -8,7 +5,6 @@ import {
   StatisticForChar,
 } from '../model/Statistic';
 import { dateToYYYYMMDD, get10LastDays } from './date';
-import { getUserFromLocalStorage } from './localStorage';
 
 export const INITIAL_VALUES_GAME_STATISTICS: GameStatistic = {
   learnedWords: 0,
