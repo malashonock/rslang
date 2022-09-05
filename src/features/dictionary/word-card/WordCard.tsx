@@ -5,6 +5,8 @@ import Word from '../../../model/Word';
 import WordPicture from '../../shared/word-picture/WordPicture';
 import SoundButton from '../../shared/sound-button/SoundButton';
 import API_BASE_URL from '../../../api/constants';
+import { getUserWord, createUserWord, updateUserWord } from '../../../api/userWords';
+import { useAppSelector } from '../../../store/hooks';
 
 interface WordCardProps {
   word: Word;
@@ -16,7 +18,7 @@ interface WordCardProps {
 interface RenderFooterProps {
   isDifficult: boolean;
   isLearned: boolean;
-  id: string;
+  wordId: string;
 }
 
 const renderHeader = (word: Word): JSX.Element => {
@@ -81,15 +83,37 @@ const renderDescription = (word: Word) => {
   );
 };
 
-const RenderFooter = ({ isDifficult, isLearned, id }: RenderFooterProps) => {
+const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => {
+  const { id } = useAppSelector((state) => state.authorization);
   const [difficultState, updateDifficultState] = useState(isDifficult);
   const [learnedState, updatelearnedState] = useState(isLearned);
 
-  function difficultCheckboxHandler() {
+  const newUserWord = {
+    wasPlayed: false,
+    correctGuessCount: 0,
+    wrongGuessCount: 0,
+    isDifficult: false,
+    isLearned: false,
+  };
+
+  async function changeWordState(type: 'isDifficult' | 'isLearned', value: boolean) {
+    try {
+      await getUserWord(id, wordId);
+      const updateProperty = { [type]: value };
+      await updateUserWord(id, wordId, updateProperty);
+    } catch {
+      newUserWord[type] = true;
+      await createUserWord(id, wordId, newUserWord);
+    }
+  }
+
+  async function difficultCheckboxHandler() {
+    await changeWordState('isDifficult', !difficultState);
     updateDifficultState(!difficultState);
   }
 
-  function learnedCheckboxHandler() {
+  async function learnedCheckboxHandler() {
+    await changeWordState('isLearned', !learnedState);
     updatelearnedState(!learnedState);
   }
 
@@ -102,7 +126,7 @@ const RenderFooter = ({ isDifficult, isLearned, id }: RenderFooterProps) => {
           variant={isDifficult ? 'danger' : 'outline-danger'}
           type="checkbox"
           value="difficult"
-          id={`${id}-difficult`}
+          id={`${wordId}-difficult`}
           checked={difficultState}
           onChange={() => difficultCheckboxHandler()}
         >
@@ -116,7 +140,7 @@ const RenderFooter = ({ isDifficult, isLearned, id }: RenderFooterProps) => {
           variant={isLearned ? 'warning' : 'outline-warning'}
           type="checkbox"
           value="learned"
-          id={`${id}-learned`}
+          id={`${wordId}-learned`}
           checked={learnedState}
           onChange={() => learnedCheckboxHandler()}
         >
@@ -139,7 +163,7 @@ const WordCard = ({ word, isAuthorized, isDifficult, isLearned }: WordCardProps)
         />
         {renderDescription(word)}
         {isAuthorized && (
-          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} id={word.id} />
+          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} wordId={word.id} />
         )}
       </Card.Body>
     </Card>

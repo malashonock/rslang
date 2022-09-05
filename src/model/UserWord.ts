@@ -14,4 +14,13 @@ export interface UserWord extends NewUserWord {
   wordId: string;
 }
 
-export type UpdatedUserWord = NewUserWord;
+export interface UpdatedUserWord {
+  wasPlayed?: boolean;
+  correctGuessCount?: number;
+  wrongGuessCount?: number;
+  isDifficult?: boolean;
+  isLearned?: boolean;
+  optional?: {
+    [index: string]: unknown;
+  };
+}
