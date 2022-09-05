@@ -1,10 +1,12 @@
 import { Container, Nav, Navbar, NavDropdown, Offcanvas } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { useAppSelector } from '../../../store/hooks';
 import UserAvatar from './user-avatar/UserAvatar';
 
 const NavMenu = (): JSX.Element => {
+  const { authorizeStatus } = useAppSelector((state) => state.authorization);
   return (
-    <Navbar bg="primary" variant="dark" expand="sm">
+    <Navbar sticky="top" bg="primary" variant="dark" expand="sm">
       <Container fluid>
         <Navbar.Toggle aria-controls="navbar-main" />
         <LinkContainer to="/">
@@ -27,7 +29,7 @@ const NavMenu = (): JSX.Element => {
                   <NavDropdown.Item>Sprint</NavDropdown.Item>
                 </LinkContainer>
               </NavDropdown>
-              <LinkContainer to="/statistics">
+              <LinkContainer to={authorizeStatus ? '/statistics' : '/auth'}>
                 <Nav.Link>Statistics</Nav.Link>
               </LinkContainer>
             </Nav>
