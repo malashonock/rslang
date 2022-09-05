@@ -7,7 +7,7 @@ import { ReactComponent as SoundIcon } from '../../../assets/icons/sound.svg';
 interface SoundButtonProps {
   soundSrc: string;
   diameter?: string;
-  variant?: 'primary' | 'warning' | 'danger' | 'info';
+  variant?: 'primary' | 'secondary' | 'warning' | 'danger' | 'info';
 }
 
 const SoundButton = ({

@@ -3,11 +3,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
+import { AuthState } from '../../../model/AuthState';
+import GameTurnResult from '../../../model/GameTurnResult';
 import Word from '../../../model/Word';
+import { useAppSelector } from '../../../store/hooks';
+import { RootState } from '../../../store/store';
 
 import { Seconds } from '../../../utils/types';
 import CountDown from '../shared/count-down/CountDown';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
+import GameResult from '../shared/game-result/GameResult';
+import saveGameResults from '../shared/saveGameResults';
 import SprintTurn from './sprint-turn/SprintTurn';
 
 const ROUND_DURATION: Seconds = 60;
@@ -26,6 +32,10 @@ const LevelsConfig: { [level: number]: LevelRules } = {
 };
 
 const SprintRound = (): JSX.Element => {
+  const { id: userId, authorizeStatus } = useAppSelector(
+    (state: RootState): AuthState => state.authorization
+  );
+
   const [searchParams] = useSearchParams();
 
   const chapter = useMemo(() => {
@@ -45,6 +55,7 @@ const SprintRound = (): JSX.Element => {
   const [level, setLevel] = useState(1);
   const [turn, setTurn] = useState(1);
   const [winsSinceLevelStart, setWinsSinceLevelStart] = useState(0);
+  const [gameResult, setGameResult] = useState<GameTurnResult[]>([]);
   const [score, setScore] = useState(0);
   const [ready, setReady] = useState(false);
   const [finish, setFinish] = useState(false);
@@ -96,8 +107,15 @@ const SprintRound = (): JSX.Element => {
     }
   };
 
-  const updateScore = (turnResult: boolean): void => {
-    if (turnResult) {
+  const updateGameResult = (isCorrect: boolean): void => {
+    const turnResult: GameTurnResult = {
+      word: correctWord as Word,
+      wasGuessed: isCorrect,
+    };
+
+    setGameResult([...gameResult, turnResult]);
+
+    if (isCorrect) {
       const { scorePerWin, winsToLevelUp } = LevelsConfig[level];
 
       setScore(score + scorePerWin);
@@ -115,8 +133,8 @@ const SprintRound = (): JSX.Element => {
     }
   };
 
-  const handleNextTurn = (turnResult: boolean): void => {
-    updateScore(turnResult);
+  const handleNextTurn = (isCorrect: boolean): void => {
+    updateGameResult(isCorrect);
 
     if (!finish) {
       setTurn(turn + 1);
@@ -134,9 +152,16 @@ const SprintRound = (): JSX.Element => {
     }
   };
 
-  const renderScore = (): JSX.Element | undefined => {
+  useEffect(() => {
+    if (finish && userId && authorizeStatus === true) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      saveGameResults(userId, new Date(), 'sprint', gameResult);
+    }
+  }, [authorizeStatus, finish, gameResult, userId]);
+
+  const renderGameResult = (): JSX.Element | undefined => {
     if (finish) {
-      return <h3>Your score: {score}</h3>;
+      return <GameResult score={score} gameResult={gameResult} />;
     }
   };
 
@@ -189,7 +214,7 @@ const SprintRound = (): JSX.Element => {
       {renderLoadingSpinner()}
       {renderCountDown()}
       {renderGameRound()}
-      {renderScore()}
+      {renderGameResult()}
     </div>
   );
 };

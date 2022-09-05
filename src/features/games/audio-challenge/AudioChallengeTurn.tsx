@@ -5,6 +5,7 @@ import Word from '../../../model/Word';
 import { shuffle } from '../../../utils/array';
 import SoundButton from '../../shared/sound-button/SoundButton';
 import WordPicture from '../../shared/word-picture/WordPicture';
+import QuitGameModal from '../shared/QuitGameModal';
 import GuessWordButton from './guess-word-button/GuessWordButton';
 import NextTurnButton from './NextTurnButton';
 
@@ -33,6 +34,7 @@ const AudioChallengeTurn = ({
   }, [correctWord, incorrectWords]);
 
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  const [showQuitModal, setShowQuitModal] = useState(false);
 
   useEffect(() => {
     setSelectedWord(null);
@@ -62,7 +64,10 @@ const AudioChallengeTurn = ({
 
   return (
     <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-5 position-relative">
-      <CloseButton className="position-absolute top-0 end-0 m-3" onClick={handleQuit} />
+      <CloseButton
+        className="position-absolute top-0 end-0 m-3"
+        onClick={() => setShowQuitModal(true)}
+      />
       <div className="correct-word d-flex flex-column align-items-center gap-2">
         <WordPicture
           imageSrc={correctWordImageSrc}
@@ -96,6 +101,11 @@ const AudioChallengeTurn = ({
         isWordSelected={!!selectedWord}
         isLastTurn={isLastTurn}
         onClick={handleNextTurn}
+      />
+      <QuitGameModal
+        show={showQuitModal}
+        onConfirm={handleQuit}
+        onCancel={() => setShowQuitModal(false)}
       />
     </Container>
   );
