@@ -69,7 +69,7 @@ export const getChart = (statistics: Statistic[]): StatisticForChar[] => {
   const statPerDayCommon = last10Day.map((date) =>
     statistics.filter((stat) => date === dateToYYYYMMDD(stat.date))
   );
-  let allNewWord = statistics.reduce((sum, stat) => sum + stat.newWords, 0);
+  // const allNewWord = statistics.reduce((sum, stat) => sum + stat.newWords, 0);
   let allLearnedWord = statistics.reduce((sum, stat) => sum + stat.learnedWords, 0);
   const statPerDay = statPerDayCommon
     .map((stat) => {
@@ -83,9 +83,9 @@ export const getChart = (statistics: Statistic[]): StatisticForChar[] => {
   for (let i = 0; i < statPerDay.length; i++) {
     if (i !== 0) {
       allLearnedWord -= statPerDay[i - 1].learnedWord;
-      allNewWord -= statPerDay[i - 1].newWords;
+      // allNewWord -= statPerDay[i - 1].newWords;
     }
-    chartData.push({ newWords: allNewWord, learnedWords: allLearnedWord });
+    chartData.push({ newWords: statPerDay[i].newWords, learnedWords: allLearnedWord });
   }
   return chartData.reverse();
 };

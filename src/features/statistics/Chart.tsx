@@ -7,8 +7,9 @@ import {
   Title,
   Tooltip,
   Legend,
+  BarElement,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useLayoutEffect, useState } from 'react';
 import { get10LastDays } from '../../utils/date';
@@ -16,9 +17,18 @@ import { getDayliStatistic } from '../../api/statistics';
 import { getChart } from '../../utils/statistic';
 import { useAppSelector } from '../../store/hooks';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-export const options = {
+export const optionsLine = {
   responsive: true,
   type: 'line',
   plugins: {
@@ -31,6 +41,15 @@ export const options = {
       font: {
         size: 18,
       },
+    },
+  },
+};
+
+export const optionsBar = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top' as const,
     },
   },
 };
@@ -62,26 +81,38 @@ const StatChart = (): JSX.Element => {
     loadStat();
   }, [id]);
 
-  const data = {
+  const dataLineChart = {
     type: LinearScale,
     labels,
     datasets: [
       {
-        label: 'New words',
-        data: chartValues1,
-        borderColor: 'rgba(242, 10, 10, 1)',
-        backgroundColor: 'rgba(242, 10, 10, 1)',
-      },
-      {
-        label: 'Learned words per day',
+        label: 'Total words learned',
         data: chartValues2,
-        borderColor: 'rgba(0, 125, 21, 1)',
-        backgroundColor: 'rgba(0, 125, 21, 1)',
+        borderColor: 'rgba(13, 110, 253, 1)',
+        backgroundColor: 'rgba(13, 110, 253, 1)',
       },
     ],
   };
 
-  return <Line options={options} data={data} />;
+  const dataBarChart = {
+    type: Bar,
+    labels,
+    datasets: [
+      {
+        label: 'New words by day',
+        data: chartValues1,
+        borderColor: 'rgba(13, 110, 253, 1)',
+        backgroundColor: 'rgba(13, 110, 253, 1)',
+      },
+    ],
+  };
+
+  return (
+    <>
+      <Line options={optionsLine} data={dataLineChart} />
+      <Bar options={optionsBar} data={dataBarChart} />
+    </>
+  );
 };
 
 export default StatChart;
