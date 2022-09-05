@@ -1,7 +1,7 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import useInterval from '../../../../utils/hooks';
+import useInterval from '../../../../utils/hooks/useInterval';
 import { Seconds } from '../../../../utils/types';
 import styles from './CountDown.module.scss';
 

@@ -3,6 +3,7 @@ import dingSound from '../../../../../assets/sounds/ding.mp3';
 import buzzerSound from '../../../../../assets/sounds/buzzer.mp3';
 import playAudioAsync from '../../../../../utils/sound';
 import styles from './GuessTranslationButton.module.scss';
+import useKeyUp from '../../../../../utils/hooks/useKeyUp';
 
 interface GuessTranslationButtonProps {
   variant: 'correct' | 'incorrect';
@@ -22,6 +23,10 @@ const GuessTranslationButton = ({
 
     onSelect(isCorrect);
   };
+
+  useKeyUp([variant === 'correct' ? 'ArrowRight' : 'ArrowLeft'], (event: KeyboardEvent) => {
+    handleClick();
+  });
 
   return (
     <Button

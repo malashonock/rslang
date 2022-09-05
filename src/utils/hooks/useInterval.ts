@@ -1,6 +1,6 @@
 // Taken from: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 import { useRef, useEffect } from 'react';
-import { MilliSeconds } from './types';
+import { MilliSeconds } from '../types';
 
 type Action = () => void;
 
