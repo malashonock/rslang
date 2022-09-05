@@ -5,14 +5,14 @@ import style from './Statistics.module.scss';
 import audio from '../../assets/icons/audio-waves.png';
 import agile from '../../assets/icons/agile.png';
 import result from '../../assets/icons/mission.png';
-import dayliresult from '../../assets/icons/dayliresults.png';
-import { getDayliStatistic } from '../../api/statistics';
+import dailyresult from '../../assets/icons/dailyresults.png';
+import { getDailyStatistic } from '../../api/statistics';
 import { useAppSelector } from '../../store/hooks';
 import { GameStatistic } from '../../model/Statistic';
 import getNowDate from '../../utils/date';
 import parsingStatisticPerDay, { INITIAL_VALUES_GAME_STATISTICS } from '../../utils/statistic';
 
-const DayliStatistics = (): JSX.Element => {
+const DailyStatistics = (): JSX.Element => {
   const [audioChallengeStat, setAudioChallengeStat] = useState<GameStatistic>(
     INITIAL_VALUES_GAME_STATISTICS
   );
@@ -26,7 +26,7 @@ const DayliStatistics = (): JSX.Element => {
 
   useLayoutEffect(() => {
     const loadStat = async () => {
-      const stat = await getDayliStatistic(id, getNowDate());
+      const stat = await getDailyStatistic(id, getNowDate());
       const { sprint, audioChallenge, dictionary } = parsingStatisticPerDay(stat);
       setSprintStat(sprint);
       setAudioChallengeStat(audioChallenge);
@@ -43,7 +43,7 @@ const DayliStatistics = (): JSX.Element => {
           dictionaryStat.maxGuessedSeries
         ),
         newWords: sprint.newWords + audioChallenge.newWords + dictionary.newWords,
-        persent:
+        accuracy:
           Math.trunc(
             ((sprint.learnedWords + audioChallenge.learnedWords + dictionaryStat.learnedWords) /
               (sprint.totalWords + audioChallenge.totalWords + dictionaryStat.learnedWords)) *
@@ -53,7 +53,13 @@ const DayliStatistics = (): JSX.Element => {
     };
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     loadStat().catch(() => {});
-  }, [id]);
+  }, [
+    dictionaryStat.guessedWords,
+    dictionaryStat.learnedWords,
+    dictionaryStat.maxGuessedSeries,
+    dictionaryStat.totalWords,
+    id,
+  ]);
 
   return (
     <section className={style.team}>
@@ -82,7 +88,7 @@ const DayliStatistics = (): JSX.Element => {
             <span className="text-primary">{sprintStat.newWords}</span> new words today
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{sprintStat.persent}%</span> accuracy
+            <span className="text-primary">{sprintStat.accuracy}%</span> accuracy
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{sprintStat.maxGuessedSeries}</span> guessed in a row
@@ -99,7 +105,7 @@ const DayliStatistics = (): JSX.Element => {
             <span className="text-primary">{audioChallengeStat.newWords}</span> new words today
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{audioChallengeStat.persent}%</span> accuracy
+            <span className="text-primary">{audioChallengeStat.accuracy}%</span> accuracy
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{audioChallengeStat.maxGuessedSeries}</span> guessed in a
@@ -109,7 +115,7 @@ const DayliStatistics = (): JSX.Element => {
       </Card>
       <Card className={style.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
-          <img src={dayliresult} alt="result icon" />
+          <img src={dailyresult} alt="result icon" />
           <h4>Total for today</h4>
         </Card.Header>
         <Card.Body className={style.cardElements}>
@@ -117,7 +123,7 @@ const DayliStatistics = (): JSX.Element => {
             <span className="text-primary">{totalStat.newWords}</span> new words today
           </Card.Title>
           <Card.Title>
-            <span className="text-primary">{totalStat.persent}%</span> accuracy
+            <span className="text-primary">{totalStat.accuracy}%</span> accuracy
           </Card.Title>
           <Card.Title>
             <span className="text-primary">{totalStat.learnedWords}</span> words learned
@@ -128,4 +134,4 @@ const DayliStatistics = (): JSX.Element => {
   );
 };
 
-export default DayliStatistics;
+export default DailyStatistics;

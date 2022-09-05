@@ -12,11 +12,10 @@ import {
 import { Bar, Line } from 'react-chartjs-2';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useLayoutEffect, useState } from 'react';
-import { get10LastDays } from '../../utils/date';
-import { getDayliStatistic } from '../../api/statistics';
+import { getNLastDays } from '../../utils/date';
+import { getDailyStatistic } from '../../api/statistics';
 import { getChartData } from '../../utils/statistic';
 import { useAppSelector } from '../../store/hooks';
-import { Statistic } from '../../model/Statistic';
 
 ChartJS.register(
   CategoryScale,
@@ -55,30 +54,28 @@ export const optionsBar = {
   },
 };
 
-const labels = get10LastDays();
+const labels = getNLastDays(10);
 
-const StatChart = (): JSX.Element => {
-  const [chartValues1, setChartValues1] = useState<number[]>([]);
-  const [chartValues2, setChartValues2] = useState<number[]>([]);
+const Chart = (): JSX.Element => {
+  const [chartValuesNewWords, setChartValuesNewWords] = useState<number[]>([]);
+  const [chartValuesLearnedWords, setChartValuesLearnedWords] = useState<number[]>([]);
 
   const { id } = useAppSelector((state) => state.authorization);
 
   useLayoutEffect(() => {
     const loadStat = async (): Promise<void> => {
-      const userStatistic = await getDayliStatistic(id);
+      const userStatistic = await getDailyStatistic(id);
       const summaryStat = getChartData(userStatistic);
-      const tempChartValue1: number[] = [];
-      const tempChartValue2: number[] = [];
-      const tempChartValue3: number[] = [];
+      const tempChartValueNewWords: number[] = [];
+      const tempChartValueLearnedWords: number[] = [];
       summaryStat.forEach((stat) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        tempChartValue1.push(stat.newWords);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        tempChartValue2.push(stat.learnedWords);
-        tempChartValue3.push(0);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+        tempChartValueNewWords.push(stat.newWords);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+        tempChartValueLearnedWords.push(stat.learnedWords);
       });
-      setChartValues1(tempChartValue1);
-      setChartValues2(tempChartValue2);
+      setChartValuesNewWords(tempChartValueNewWords);
+      setChartValuesLearnedWords(tempChartValueLearnedWords);
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-empty-function
     loadStat().catch(() => {});
@@ -99,9 +96,9 @@ const StatChart = (): JSX.Element => {
     datasets: [
       {
         label: 'Total words learned',
-        data: chartValues2,
-        borderColor: 'rgba(13, 110, 253, 1)',
-        backgroundColor: 'rgba(13, 110, 253, 1)',
+        data: chartValuesLearnedWords,
+        borderColor: 'rgba(255, 193, 7, 1)',
+        backgroundColor: 'rgba(255, 193, 7, 1)',
         fill: 'start',
         pointStyle: 'circle',
         pointRadius: 10,
@@ -115,9 +112,9 @@ const StatChart = (): JSX.Element => {
     datasets: [
       {
         label: 'New words by day',
-        data: chartValues1,
-        borderColor: 'rgba(13, 110, 253, 1)',
-        backgroundColor: 'rgba(13, 110, 253, 1)',
+        data: chartValuesNewWords,
+        borderColor: 'rgba(32, 201, 151, 1)',
+        backgroundColor: 'rgba(32, 201, 151, 1)',
       },
     ],
   };
@@ -130,4 +127,4 @@ const StatChart = (): JSX.Element => {
   );
 };
 
-export default StatChart;
+export default Chart;

@@ -2,9 +2,9 @@ import {
   Statistic,
   GameStatistic,
   SummaryGameStatistic,
-  StatisticForChar,
+  StatisticForChart,
 } from '../model/Statistic';
-import { dateToYYYYMMDD, get10LastDays } from './date';
+import { dateToYYYYMMDD, getNLastDays } from './date';
 
 export const INITIAL_VALUES_GAME_STATISTICS: GameStatistic = {
   learnedWords: 0,
@@ -12,7 +12,7 @@ export const INITIAL_VALUES_GAME_STATISTICS: GameStatistic = {
   newWords: 0,
   maxGuessedSeries: 0,
   totalWords: 0,
-  persent: 0,
+  accuracy: 0,
 };
 
 const miniGameStatistic = (statistics: Statistic[]): GameStatistic => {
@@ -21,21 +21,21 @@ const miniGameStatistic = (statistics: Statistic[]): GameStatistic => {
   let sumTotalWords = 0;
   let sumNewWords = 0;
   let maxGuessedSeries = 0;
+  maxGuessedSeries = Math.max(...statistics.map((stat) => stat.maxGuessedSeries));
   statistics.forEach((stat) => {
     sumGuessedWords += stat.guessedWords;
     sumLearnedWords += stat.learnedWords;
     sumTotalWords += stat.totalWords;
     sumNewWords += stat.newWords;
-    if (maxGuessedSeries < stat.maxGuessedSeries) maxGuessedSeries = stat.maxGuessedSeries;
   });
-  const persent = sumGuessedWords !== 0 ? Math.trunc((sumGuessedWords / sumTotalWords) * 100) : 0;
+  const accuracy = sumGuessedWords !== 0 ? Math.trunc((sumGuessedWords / sumTotalWords) * 100) : 0;
   return {
     guessedWords: sumGuessedWords,
     learnedWords: sumLearnedWords,
     newWords: sumNewWords,
     maxGuessedSeries,
     totalWords: sumTotalWords,
-    persent,
+    accuracy,
   };
 };
 
@@ -64,8 +64,8 @@ const parsingStatisticPerDay = (statistics: Statistic[]): SummaryGameStatistic =
   };
 };
 
-export const getChartData = (statistics: Statistic[]): StatisticForChar[] => {
-  const last10Day = get10LastDays();
+export const getChartData = (statistics: Statistic[]): StatisticForChart[] => {
+  const last10Day = getNLastDays(10);
   const statPerDayCommon = last10Day.map((date) =>
     statistics.filter((stat) => date === dateToYYYYMMDD(stat.date))
   );
@@ -78,7 +78,7 @@ export const getChartData = (statistics: Statistic[]): StatisticForChar[] => {
       return { newWords, learnedWord };
     })
     .reverse();
-  const chartData: StatisticForChar[] = [];
+  const chartData: StatisticForChart[] = [];
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < statPerDay.length; i++) {
     if (i !== 0) {

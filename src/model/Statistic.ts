@@ -18,7 +18,7 @@ export interface Statistic {
   guessedWords: number;
   totalWords: number;
   maxGuessedSeries: number;
-  persent?: number;
+  accuracy?: number;
 }
 
 export type GameStatistic = Omit<Statistic, 'userId' | 'date' | 'source'>;
@@ -28,4 +28,4 @@ export interface SummaryGameStatistic {
   audioChallenge: GameStatistic;
   dictionary: GameStatistic;
 }
-export type StatisticForChar = Pick<Statistic, 'newWords' | 'learnedWords'>;
+export type StatisticForChart = Pick<Statistic, 'newWords' | 'learnedWords'>;

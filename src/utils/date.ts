@@ -5,9 +5,9 @@ const getNowDate = (): string => {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
-export const get10LastDays = (): string[] => {
+export const getNLastDays = (n: number): string[] => {
   const dateEnd = moment();
-  const dateStart = moment().subtract(10, 'days').calendar();
+  const dateStart = moment().subtract(n, 'days').calendar();
   const current = moment(dateStart);
   const dates = [];
 
