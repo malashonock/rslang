@@ -73,6 +73,14 @@ const ChapterPageLayout = () => {
     return 'isLearned' in object;
   }
 
+  if (!displayedWords.length && chapter && +chapter === 7) {
+    return (
+      <h4 className={styles.notDifficultWordsMessage}>
+        You haven&apos;t added any difficult words yet
+      </h4>
+    );
+  }
+
   return (
     <div className={styles.cards}>
       {displayedWords.map((word) => {
