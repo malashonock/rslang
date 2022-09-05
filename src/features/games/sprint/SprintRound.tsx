@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
-import { Container, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import { AuthState } from '../../../model/AuthState';
@@ -12,7 +12,7 @@ import { RootState } from '../../../store/store';
 import { Seconds } from '../../../utils/types';
 import CountDown from '../shared/count-down/CountDown';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
-import GameResult from '../shared/GameResult';
+import GameResult from '../shared/game-result/GameResult';
 import saveGameResults from '../shared/saveGameResults';
 import SprintTurn from './sprint-turn/SprintTurn';
 
