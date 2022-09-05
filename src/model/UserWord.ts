@@ -1,4 +1,7 @@
-export interface NewUserWord {
+export interface UserWord {
+  id: string;
+  userId: string;
+  wordId: string;
   wasPlayed: boolean;
   correctGuessCount: number;
   wrongGuessCount: number;
@@ -9,9 +12,4 @@ export interface NewUserWord {
   };
 }
 
-export interface UserWord extends NewUserWord {
-  id: string;
-  wordId: string;
-}
-
-export type UpdatedUserWord = NewUserWord;
+export type NewUserWord = Omit<UserWord, 'id' | 'userId' | 'wordId'>;

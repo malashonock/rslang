@@ -3,7 +3,7 @@ import {
   GameStatistic,
   SummaryGameStatistic,
   StatisticForChart,
-} from '../model/Statistic';
+} from '../model/Statistics';
 import { dateToYYYYMMDD, getNLastDays } from './date';
 
 export const INITIAL_VALUES_GAME_STATISTICS: GameStatistic = {
@@ -12,7 +12,6 @@ export const INITIAL_VALUES_GAME_STATISTICS: GameStatistic = {
   newWords: 0,
   maxGuessedSeries: 0,
   totalWords: 0,
-  accuracy: 0,
 };
 
 const miniGameStatistic = (statistics: Statistic[]): GameStatistic => {
@@ -21,7 +20,9 @@ const miniGameStatistic = (statistics: Statistic[]): GameStatistic => {
   let sumTotalWords = 0;
   let sumNewWords = 0;
   let maxGuessedSeries = 0;
-  maxGuessedSeries = Math.max(...statistics.map((stat) => stat.maxGuessedSeries));
+  maxGuessedSeries = Math.max(...statistics.map((stat) => stat.maxGuessedSeries)) || 0;
+  maxGuessedSeries =
+    maxGuessedSeries === -Infinity || maxGuessedSeries === Infinity ? 0 : maxGuessedSeries;
   statistics.forEach((stat) => {
     sumGuessedWords += stat.guessedWords;
     sumLearnedWords += stat.learnedWords;
@@ -52,7 +53,7 @@ const parsingStatisticPerDay = (statistics: Statistic[]): SummaryGameStatistic =
       case 'sprint':
         sprintStatistics.push(stat);
         break;
-      case 'dictionary':
+      case 'destination':
         dictionaryStatistics.push(stat);
         break;
     }
@@ -69,6 +70,7 @@ export const getChartData = (statistics: Statistic[]): StatisticForChart[] => {
   const statPerDayCommon = last10Day.map((date) =>
     statistics.filter((stat) => date === dateToYYYYMMDD(stat.date))
   );
+  // statistics.filter((stat) => date === dateToYYYYMMDD(stat.date))
   // const allNewWord = statistics.reduce((sum, stat) => sum + stat.newWords, 0);
   let allLearnedWord = statistics.reduce((sum, stat) => sum + stat.learnedWords, 0);
   const statPerDay = statPerDayCommon
@@ -83,7 +85,6 @@ export const getChartData = (statistics: Statistic[]): StatisticForChart[] => {
   for (let i = 0; i < statPerDay.length; i++) {
     if (i !== 0) {
       allLearnedWord -= statPerDay[i - 1].learnedWord;
-      // allNewWord -= statPerDay[i - 1].newWords;
     }
     chartData.push({ newWords: statPerDay[i].newWords, learnedWords: allLearnedWord });
   }

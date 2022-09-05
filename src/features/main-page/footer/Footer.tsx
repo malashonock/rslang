@@ -8,7 +8,7 @@ const Footer = (): JSX.Element => {
     <Navbar bg="primary" variant="dark" expand="sm">
       <Container className="justify-content-between">
         <Nav className="d-flex gap-2">
-          <Nav.Link href="https://rollingscopes.com/">
+          <Nav.Link href="https://rs.school/js/">
             <Image className={styles.logoRss} src={rsschool} />
           </Nav.Link>
           <Nav.Item className="text-light d-flex align-items-center">2022</Nav.Item>

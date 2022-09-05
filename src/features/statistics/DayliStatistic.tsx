@@ -1,15 +1,14 @@
 import { Card } from 'react-bootstrap';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './Statistics.module.scss';
 import audio from '../../assets/icons/audio-waves.png';
 import agile from '../../assets/icons/agile.png';
 import result from '../../assets/icons/mission.png';
 import dailyresult from '../../assets/icons/dailyresults.png';
-import { getDailyStatistic } from '../../api/statistics';
+import { getStatistics } from '../../api/statistics';
 import { useAppSelector } from '../../store/hooks';
-import { GameStatistic } from '../../model/Statistic';
-import getNowDate from '../../utils/date';
+import { GameStatistic } from '../../model/Statistics';
 import parsingStatisticPerDay, { INITIAL_VALUES_GAME_STATISTICS } from '../../utils/statistic';
 
 const DailyStatistics = (): JSX.Element => {
@@ -24,9 +23,10 @@ const DailyStatistics = (): JSX.Element => {
 
   const { id } = useAppSelector((state) => state.authorization);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const loadStat = async () => {
-      const stat = await getDailyStatistic(id, getNowDate());
+      const date = new Date();
+      const stat = await getStatistics(id, date);
       const { sprint, audioChallenge, dictionary } = parsingStatisticPerDay(stat);
       setSprintStat(sprint);
       setAudioChallengeStat(audioChallenge);

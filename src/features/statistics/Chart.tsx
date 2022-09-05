@@ -11,9 +11,9 @@ import {
 } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getNLastDays } from '../../utils/date';
-import { getDailyStatistic } from '../../api/statistics';
+import { getStatistics } from '../../api/statistics';
 import { getChartData } from '../../utils/statistic';
 import { useAppSelector } from '../../store/hooks';
 
@@ -62,9 +62,9 @@ const Chart = (): JSX.Element => {
 
   const { id } = useAppSelector((state) => state.authorization);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const loadStat = async (): Promise<void> => {
-      const userStatistic = await getDailyStatistic(id);
+      const userStatistic = await getStatistics(id);
       const summaryStat = getChartData(userStatistic);
       const tempChartValueNewWords: number[] = [];
       const tempChartValueLearnedWords: number[] = [];

@@ -1,20 +1,46 @@
 import { AxiosResponse } from 'axios';
+import { NewStatistic, Statistic } from '../model/Statistics';
+import { buildQueryString } from '../utils/url';
 import instanceAxios from './httpConfig';
-import { Statistic } from '../model/Statistic';
 
-export const setStatistic = async (userId: string, creatingStat: Statistic): Promise<Statistic> => {
-  const response: AxiosResponse<Statistic, undefined> = await instanceAxios.post(
-    `/users${userId}/statistics`,
-    creatingStat
+export const getStatistics = async (userId: string, date?: Date): Promise<Statistic[]> => {
+  const queryString = buildQueryString({ date: date?.toISOString() });
+
+  const response: AxiosResponse<Statistic[], undefined> = await instanceAxios.get(
+    `/users/${userId}/statistics${queryString}`
   );
+
   return response.data;
 };
 
-export const getDailyStatistic = async (userId: string, date?: string): Promise<Statistic[]> => {
-  console.log(`query - ${userId}`);
-  const queryString = date === undefined ? '' : `?date=${date}`;
-  const response: AxiosResponse<Statistic[], undefined> = await instanceAxios.get(
-    `/users/${userId}/statistics${queryString}`
+export const getStatistic = async (userId: string, statId: string): Promise<Statistic> => {
+  const response: AxiosResponse<Statistic, undefined> = await instanceAxios.get(
+    `/users/${userId}/statistics/${statId}`
+  );
+
+  return response.data;
+};
+
+export const createStatistic = async (
+  userId: string,
+  newStatistic: NewStatistic
+): Promise<Statistic> => {
+  const response: AxiosResponse<Statistic, NewStatistic> = await instanceAxios.post(
+    `/users/${userId}/statistics`,
+    newStatistic
+  );
+
+  return response.data;
+};
+
+export const updateStatistic = async (
+  userId: string,
+  statId: string,
+  updatedStatistic: NewStatistic
+): Promise<Statistic> => {
+  const response: AxiosResponse<Statistic, NewStatistic> = await instanceAxios.put(
+    `/users/${userId}/statistics/${statId}`,
+    updatedStatistic
   );
   return response.data;
 };

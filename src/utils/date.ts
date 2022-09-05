@@ -18,6 +18,6 @@ export const getNLastDays = (n: number): string[] => {
   return dates;
 };
 
-export const dateToYYYYMMDD = (date: Date): string => date.toString().slice(0, 10);
+export const dateToYYYYMMDD = (date: string): string => date.slice(0, 10);
 
 export default getNowDate;
