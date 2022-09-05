@@ -8,35 +8,39 @@ import styles from './ChapterPageLayout.module.scss';
 import { useAppSelector } from '../../../store/hooks';
 import { getUserWords } from '../../../api/userWords';
 
+type UserWordInDictionary = Word & UserWord;
+
 const ChapterPageLayout = () => {
   const { authorizeStatus, id } = useAppSelector((state) => state.authorization);
   const { chapter, page } = useParams();
-  const [displayedWords, updateDisplayedWords] = useState<Array<Word & UserWord> | Array<Word>>([]);
+  const [displayedWords, updateDisplayedWords] = useState<
+    Array<UserWordInDictionary> | Array<Word>
+  >([]);
 
   useEffect(() => {
     const loadWords = async () => {
       if (chapter && page) {
-        const newWords = await getWords(+chapter - 1, +page - 1);
+        const dictionaryWords = await getWords(+chapter - 1, +page - 1);
 
         if (authorizeStatus) {
           const userWords = await getUserWords(id);
-          const updatingNewWords = newWords.map((word) => {
-            const isActiveWord = userWords.find((userWord) => userWord.wordId === word.id);
-            if (isActiveWord) return { ...word, ...userWords };
+          const userWordsInDictionary = dictionaryWords.map((word) => {
+            const activeWord = userWords.find((userWord) => userWord.wordId === word.id);
 
-            const inactiveWordOptions = {
+            const defaultWordParameters = {
               wasPlayed: false,
               correctGuessCount: 0,
               wrongGuessCount: 0,
               isDifficult: false,
               isLearned: false,
             };
-
-            return { ...word, ...inactiveWordOptions };
+            if (activeWord) return { ...activeWord, ...word };
+            return { ...defaultWordParameters, ...word };
           });
-          updateDisplayedWords(updatingNewWords);
+
+          updateDisplayedWords(userWordsInDictionary);
         } else {
-          updateDisplayedWords(newWords);
+          updateDisplayedWords(dictionaryWords);
         }
       }
     };
@@ -45,11 +49,27 @@ const ChapterPageLayout = () => {
     loadWords();
   }, [authorizeStatus, chapter, id, page]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function instanceOfUserWordInDictionary(object: any): object is UserWordInDictionary {
+    return 'isLearned' in object;
+  }
+
   return (
     <div className={styles.cards}>
-      {displayedWords.map((word) => (
-        <WordCard key={word.id} word={word} isAuthorized isLearned={false} isDifficult={false} />
-      ))}
+      {displayedWords.map((word) => {
+        if (instanceOfUserWordInDictionary(word)) {
+          return (
+            <WordCard
+              key={word.id}
+              word={word}
+              isAuthorized
+              isLearned={word.isLearned}
+              isDifficult={word.isDifficult}
+            />
+          );
+        }
+        return <WordCard key={word.id} word={word} isAuthorized={false} />;
+      })}
     </div>
   );
 };

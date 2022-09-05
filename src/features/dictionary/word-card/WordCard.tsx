@@ -11,13 +11,13 @@ import { useAppSelector } from '../../../store/hooks';
 interface WordCardProps {
   word: Word;
   isAuthorized: boolean;
-  isLearned: boolean;
-  isDifficult: boolean;
+  isLearned?: boolean;
+  isDifficult?: boolean;
 }
 
 interface RenderFooterProps {
-  isDifficult: boolean;
-  isLearned: boolean;
+  isDifficult: boolean | undefined;
+  isLearned: boolean | undefined;
   wordId: string;
 }
 
@@ -123,7 +123,7 @@ const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => 
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant={isDifficult ? 'danger' : 'outline-danger'}
+          variant={difficultState ? 'danger' : 'outline-danger'}
           type="checkbox"
           value="difficult"
           id={`${wordId}-difficult`}
@@ -137,7 +137,7 @@ const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => 
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant={isLearned ? 'warning' : 'outline-warning'}
+          variant={learnedState ? 'warning' : 'outline-warning'}
           type="checkbox"
           value="learned"
           id={`${wordId}-learned`}
