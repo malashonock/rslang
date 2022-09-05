@@ -26,6 +26,7 @@ import styles from './LoginForm.module.scss';
 import { User } from '../../../model/User';
 import { setAuthorizeUser, createUserData } from '../authSlice';
 import { AuthState } from '../../../model/AuthState';
+import history from '../../..';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -58,7 +59,8 @@ const LoginForm = (): JSX.Element => {
           refreshToken: '',
         };
         dispatch(createUserData(userData));
-        redirectToMainPage();
+        history.back();
+        // redirectToMainPage();
       } catch {
         setIsRegisterSuccess(false);
         setIsServerError(true);
@@ -77,7 +79,8 @@ const LoginForm = (): JSX.Element => {
           refreshToken: existUser.refreshToken,
         };
         dispatch(setAuthorizeUser(userData));
-        redirectToMainPage();
+        history.back();
+        // redirectToMainPage();
       } catch {
         setIsServerError(true);
       }

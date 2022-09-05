@@ -1,8 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { createBrowserHistory } from 'history';
 import App from './App';
 import Games from './features/games/Games';
 import AudioChallengeRound from './features/games/audio-challenge/AudioChallengeRound';
@@ -18,11 +25,13 @@ import Auth from './features/auth/Auth';
 import store from './store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const history = createBrowserHistory({ window });
 
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <BrowserRouter>
+      <HistoryRouter history={history}>
+        {/* <BrowserRouter> */}
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<MainPage />} />
@@ -41,7 +50,10 @@ root.render(
             <Route path="auth" element={<Auth />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HistoryRouter>
+      {/* </BrowserRouter> */}
     </React.StrictMode>
   </Provider>
 );
+
+export default history;
