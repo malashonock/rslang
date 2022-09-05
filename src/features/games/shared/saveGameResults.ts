@@ -25,14 +25,14 @@ const createMissingUserWord = async (
 };
 
 const updateExistingUserWord = async (
+  userId: string,
   existingUserWord: UserWord,
   wasGuessed: boolean
 ): Promise<boolean> => {
   try {
-    const { userId, wordId, isDifficult, optional } = existingUserWord;
+    const { wordId, isDifficult, optional } = existingUserWord;
 
     await updateUserWord(userId, wordId, {
-      ...existingUserWord,
       wasPlayed: true,
       correctGuessCount: wasGuessed ? 1 : 0,
       wrongGuessCount: wasGuessed ? 0 : 1,
@@ -96,7 +96,7 @@ const saveGameResults = async (
 
       // Update existing user word
       if (matchingUserWord) {
-        await updateExistingUserWord(matchingUserWord, result.wasGuessed);
+        await updateExistingUserWord(userId, matchingUserWord, result.wasGuessed);
       }
     })
   );
