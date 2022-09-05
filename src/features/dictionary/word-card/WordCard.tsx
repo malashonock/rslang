@@ -1,4 +1,5 @@
 import { Card, Row, Col, ToggleButton, Popover, OverlayTrigger, Button } from 'react-bootstrap';
+import { useState } from 'react';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
 import WordPicture from '../../shared/word-picture/WordPicture';
@@ -8,6 +9,14 @@ import API_BASE_URL from '../../../api/constants';
 interface WordCardProps {
   word: Word;
   isAuthorized: boolean;
+  isLearned: boolean;
+  isDifficult: boolean;
+}
+
+interface RenderFooterProps {
+  isDifficult: boolean;
+  isLearned: boolean;
+  id: string;
 }
 
 const renderHeader = (word: Word): JSX.Element => {
@@ -72,38 +81,53 @@ const renderDescription = (word: Word) => {
   );
 };
 
-const renderFooter = () => {
+const RenderFooter = ({ isDifficult, isLearned, id }: RenderFooterProps) => {
+  const [difficultState, updateDifficultState] = useState(isDifficult);
+  const [learnedState, updatelearnedState] = useState(isLearned);
+
+  function difficultCheckboxHandler() {
+    updateDifficultState(!difficultState);
+  }
+
+  function learnedCheckboxHandler() {
+    updatelearnedState(!learnedState);
+  }
+
   return (
     <Row>
       <Col>
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant="danger"
+          variant={isDifficult ? 'danger' : 'outline-danger'}
           type="checkbox"
           value="difficult"
-          id="difficult"
+          id={`${id}-difficult`}
+          checked={difficultState}
+          onChange={() => difficultCheckboxHandler()}
         >
-          Mark as Difficult
+          {difficultState ? 'Marked as Difficult' : 'Mark as Difficult'}
         </ToggleButton>
       </Col>
       <Col>
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant="warning"
+          variant={isLearned ? 'warning' : 'outline-warning'}
           type="checkbox"
           value="learned"
-          id="learned"
+          id={`${id}-learned`}
+          checked={learnedState}
+          onChange={() => learnedCheckboxHandler()}
         >
-          Mark as Learned
+          {learnedState ? 'Marked as Learned' : 'Mark as Learned'}
         </ToggleButton>
       </Col>
     </Row>
   );
 };
 
-const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
+const WordCard = ({ word, isAuthorized, isDifficult, isLearned }: WordCardProps): JSX.Element => {
   return (
     <Card className={styles.card}>
       <Card.Body>
@@ -114,7 +138,9 @@ const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
           diameter="9rem"
         />
         {renderDescription(word)}
-        {isAuthorized && renderFooter()}
+        {isAuthorized && (
+          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} id={word.id} />
+        )}
       </Card.Body>
     </Card>
   );

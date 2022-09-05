@@ -48,7 +48,7 @@ const ChapterPageLayout = () => {
   return (
     <div className={styles.cards}>
       {displayedWords.map((word) => (
-        <WordCard key={word.id} word={word} isAuthorized />
+        <WordCard key={word.id} word={word} isAuthorized isLearned={false} isDifficult={false} />
       ))}
     </div>
   );
