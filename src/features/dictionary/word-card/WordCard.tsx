@@ -13,12 +13,16 @@ interface WordCardProps {
   isAuthorized: boolean;
   isLearned?: boolean;
   isDifficult?: boolean;
+  correctGuessCount?: number;
+  wrongGuessCount?: number;
 }
 
 interface RenderFooterProps {
-  isDifficult: boolean | undefined;
-  isLearned: boolean | undefined;
+  isDifficult?: boolean;
+  isLearned?: boolean;
   wordId: string;
+  correctGuessCount?: number;
+  wrongGuessCount?: number;
 }
 
 const renderHeader = (word: Word): JSX.Element => {
@@ -83,7 +87,13 @@ const renderDescription = (word: Word) => {
   );
 };
 
-const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => {
+const RenderFooter = ({
+  wordId,
+  isDifficult,
+  isLearned,
+  correctGuessCount,
+  wrongGuessCount,
+}: RenderFooterProps) => {
   const { id } = useAppSelector((state) => state.authorization);
   const [difficultState, updateDifficultState] = useState(isDifficult);
   const [learnedState, updatelearnedState] = useState(isLearned);
@@ -118,40 +128,53 @@ const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => 
   }
 
   return (
-    <Row>
-      <Col>
-        <ToggleButton
-          className={styles.controls}
-          size="sm"
-          variant={difficultState ? 'danger' : 'outline-danger'}
-          type="checkbox"
-          value="difficult"
-          id={`${wordId}-difficult`}
-          checked={difficultState}
-          onChange={() => difficultCheckboxHandler()}
-        >
-          {difficultState ? 'Marked as Difficult' : 'Mark as Difficult'}
-        </ToggleButton>
-      </Col>
-      <Col>
-        <ToggleButton
-          className={styles.controls}
-          size="sm"
-          variant={learnedState ? 'warning' : 'outline-warning'}
-          type="checkbox"
-          value="learned"
-          id={`${wordId}-learned`}
-          checked={learnedState}
-          onChange={() => learnedCheckboxHandler()}
-        >
-          {learnedState ? 'Marked as Learned' : 'Mark as Learned'}
-        </ToggleButton>
-      </Col>
-    </Row>
+    <>
+      <Row>
+        <Col>
+          <ToggleButton
+            className={styles.controls}
+            size="sm"
+            variant={difficultState ? 'danger' : 'outline-danger'}
+            type="checkbox"
+            value="difficult"
+            id={`${wordId}-difficult`}
+            checked={difficultState}
+            onChange={() => difficultCheckboxHandler()}
+          >
+            {difficultState ? 'Marked as Difficult' : 'Mark as Difficult'}
+          </ToggleButton>
+        </Col>
+        <Col>
+          <ToggleButton
+            className={styles.controls}
+            size="sm"
+            variant={learnedState ? 'warning' : 'outline-warning'}
+            type="checkbox"
+            value="learned"
+            id={`${wordId}-learned`}
+            checked={learnedState}
+            onChange={() => learnedCheckboxHandler()}
+          >
+            {learnedState ? 'Marked as Learned' : 'Mark as Learned'}
+          </ToggleButton>
+        </Col>
+      </Row>
+      <Row className={styles.gameStatistics}>
+        <Col>guessed correctly: {correctGuessCount}</Col>
+        <Col>guessed wrong: {wrongGuessCount}</Col>
+      </Row>
+    </>
   );
 };
 
-const WordCard = ({ word, isAuthorized, isDifficult, isLearned }: WordCardProps): JSX.Element => {
+const WordCard = ({
+  word,
+  isAuthorized,
+  isDifficult,
+  isLearned,
+  correctGuessCount,
+  wrongGuessCount,
+}: WordCardProps): JSX.Element => {
   return (
     <Card className={styles.card}>
       <Card.Body>
@@ -163,7 +186,13 @@ const WordCard = ({ word, isAuthorized, isDifficult, isLearned }: WordCardProps)
         />
         {renderDescription(word)}
         {isAuthorized && (
-          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} wordId={word.id} />
+          <RenderFooter
+            isDifficult={isDifficult}
+            isLearned={isLearned}
+            wordId={word.id}
+            correctGuessCount={correctGuessCount}
+            wrongGuessCount={wrongGuessCount}
+          />
         )}
       </Card.Body>
     </Card>

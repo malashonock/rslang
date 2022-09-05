@@ -65,6 +65,8 @@ const ChapterPageLayout = () => {
               isAuthorized
               isLearned={word.isLearned}
               isDifficult={word.isDifficult}
+              correctGuessCount={word.correctGuessCount}
+              wrongGuessCount={word.wrongGuessCount}
             />
           );
         }
