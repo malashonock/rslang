@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import { AuthState } from '../../../model/AuthState';
@@ -9,6 +9,7 @@ import Word from '../../../model/Word';
 import { useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
+import GameResult from '../shared/GameResult';
 import saveGameResults from '../shared/saveGameResults';
 import AudioChallengeTurn from './AudioChallengeTurn';
 
@@ -129,19 +130,14 @@ const AudioChallengeRound = (): JSX.Element => {
 
   const renderGameResult = (): JSX.Element | undefined => {
     if (finish) {
-      return (
-        <>
-          <h3>Your score: {score}</h3>
-          <p>
-            {JSON.stringify(
-              gameResult.map((result) => ({
-                word: result.word.word,
-                wasGuessed: result.wasGuessed,
-              }))
-            )}
-          </p>
-        </>
-      );
+      if (finish) {
+        return (
+          <Container>
+            <h2>Your score is: {score}</h2>
+            <GameResult gameResult={gameResult} />
+          </Container>
+        );
+      }
     }
   };
 
