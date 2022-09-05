@@ -131,12 +131,7 @@ const AudioChallengeRound = (): JSX.Element => {
   const renderGameResult = (): JSX.Element | undefined => {
     if (finish) {
       if (finish) {
-        return (
-          <Container>
-            <h2>Your score is: {score}</h2>
-            <GameResult gameResult={gameResult} />
-          </Container>
-        );
+        return <GameResult score={score} gameResult={gameResult} />;
       }
     }
   };

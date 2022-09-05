@@ -4,15 +4,17 @@ import GameTurnResult from '../../../model/GameTurnResult';
 import SoundButton from '../../shared/sound-button/SoundButton';
 
 interface GameResultProps {
+  score: number;
   gameResult: GameTurnResult[];
 }
 
-const GameResult = ({ gameResult }: GameResultProps) => {
+const GameResult = ({ score, gameResult }: GameResultProps) => {
   const correctGuesses = gameResult.filter((result: GameTurnResult): boolean => result.wasGuessed);
   const wrongGuesses = gameResult.filter((result: GameTurnResult): boolean => !result.wasGuessed);
 
   return (
-    <Stack gap={3} className="my-3">
+    <Stack gap={3} className="col-sm-9 col-md-7 col-lg-5 my-3 mx-auto flex-grow-0">
+      <h2 className="text-center">Your score: {score}</h2>
       <Stack gap={2} className={wrongGuesses.length > 0 ? '' : 'd-none'}>
         <h3>
           Wrong{' '}
@@ -20,8 +22,8 @@ const GameResult = ({ gameResult }: GameResultProps) => {
         </h3>
         <Stack gap={2}>
           {wrongGuesses.map((result: GameTurnResult) => (
-            <Row key={result.word.id}>
-              <Col xs={1}>
+            <Row key={result.word.id} className="row-cols-auto">
+              <Col>
                 <SoundButton
                   soundSrc={`${API_BASE_URL}/${result.word.audio}`}
                   diameter="2rem"
@@ -44,8 +46,8 @@ const GameResult = ({ gameResult }: GameResultProps) => {
         </h3>
         <Stack gap={2}>
           {correctGuesses.map((result: GameTurnResult) => (
-            <Row key={result.word.id}>
-              <Col xs={1}>
+            <Row key={result.word.id} className="row-cols-auto">
+              <Col>
                 <SoundButton
                   soundSrc={`${API_BASE_URL}/${result.word.audio}`}
                   diameter="2rem"
