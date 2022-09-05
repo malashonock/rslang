@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getWords } from '../../../api/words';
+import { getWord, getWords } from '../../../api/words';
 import WordCard from '../word-card/WordCard';
 import Word from '../../../model/Word';
 import { UserWord } from '../../../model/UserWord';
@@ -19,7 +19,7 @@ const ChapterPageLayout = () => {
 
   useEffect(() => {
     const loadWords = async () => {
-      if (chapter && page) {
+      if (chapter && page && +chapter < 7) {
         const dictionaryWords = await getWords(+chapter - 1, +page - 1);
 
         if (authorizeStatus) {
@@ -48,6 +48,25 @@ const ChapterPageLayout = () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
   }, [authorizeStatus, chapter, userId, page]);
+
+  useEffect(() => {
+    const getDifficultWords = async () => {
+      if (authorizeStatus && chapter && +chapter === 7) {
+        const userWords = await getUserWords(userId);
+        const difficultUserWords = userWords.filter(({ isDifficult }) => isDifficult);
+        const difficultWords = await Promise.all(
+          difficultUserWords.map(async (userWord) => {
+            const dictionaryWord = await getWord(userWord.wordId);
+            return { ...userWord, ...dictionaryWord };
+          })
+        );
+        updateDisplayedWords(difficultWords);
+      }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    getDifficultWords();
+  }, [authorizeStatus, chapter, userId]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function instanceOfUserWordInDictionary(object: any): object is UserWordInDictionary {

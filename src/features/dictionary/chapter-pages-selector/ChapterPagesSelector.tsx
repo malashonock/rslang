@@ -4,9 +4,10 @@ import PaginationItem from '@mui/material/PaginationItem';
 
 type ChapterPagesSelectorProps = {
   className?: string;
+  pageCount: number;
 };
 
-const ChapterPagesSelector = ({ className }: ChapterPagesSelectorProps) => {
+const ChapterPagesSelector = ({ pageCount, className }: ChapterPagesSelectorProps) => {
   const { page } = useParams();
 
   return (
@@ -16,7 +17,7 @@ const ChapterPagesSelector = ({ className }: ChapterPagesSelectorProps) => {
       variant="outlined"
       shape="rounded"
       page={page ? +page : 0}
-      count={30}
+      count={pageCount}
       renderItem={(item) => (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <PaginationItem component={Link} to={`pages/${item.page || 1}`} {...item} />
