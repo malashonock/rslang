@@ -9,7 +9,7 @@ const teamMembers = [
     ghLink: 'https://github.com/qrvck',
     imgSrc: author1,
     role: 'Front-End',
-    work: 'Описание реализованных функций',
+    work: 'A dictionary, A word card, Pagination, Main page elements, Took part in writing the API',
   },
   {
     id: 1,
@@ -17,7 +17,7 @@ const teamMembers = [
     ghLink: 'https://github.com/malashonock',
     imgSrc: author2,
     role: 'Team Lead, Front-End',
-    work: 'Описание реализованных функций',
+    work: 'Basic project settings, Initial layout, Router setup, "Audio Challenge", "Savannah" game, Backend',
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const teamMembers = [
     ghLink: 'https://github.com/stanlys',
     imgSrc: author3,
     role: 'Front-End',
-    work: 'Описание реализованных функций',
+    work: 'An authorization form, Statistics, Main page elements, Took part in writing the API',
   },
 ];
 
