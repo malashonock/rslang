@@ -141,7 +141,7 @@ const RenderFooter = ({
             checked={difficultState}
             onChange={() => difficultCheckboxHandler()}
           >
-            {difficultState ? 'Marked as Difficult' : 'Mark as Difficult'}
+            {difficultState ? 'Difficult' : 'Mark as Difficult'}
           </ToggleButton>
         </Col>
         <Col>
@@ -155,7 +155,7 @@ const RenderFooter = ({
             checked={learnedState}
             onChange={() => learnedCheckboxHandler()}
           >
-            {learnedState ? 'Marked as Learned' : 'Mark as Learned'}
+            {learnedState ? 'Learned' : 'Mark as Learned'}
           </ToggleButton>
         </Col>
       </Row>
