@@ -3,11 +3,21 @@ import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
+import { AuthState } from '../../../model/AuthState';
+import GameTurnResult from '../../../model/GameTurnResult';
 import Word from '../../../model/Word';
+import { useAppSelector } from '../../../store/hooks';
+import { RootState } from '../../../store/store';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
+import GameResult from '../shared/game-result/GameResult';
+import saveGameResults from '../shared/saveGameResults';
 import AudioChallengeTurn from './AudioChallengeTurn';
 
 const AudioChallengeRound = (): JSX.Element => {
+  const { id: userId, authorizeStatus } = useAppSelector(
+    (state: RootState): AuthState => state.authorization
+  );
+
   const [searchParams] = useSearchParams();
 
   const chapter = useMemo(() => {
@@ -28,6 +38,7 @@ const AudioChallengeRound = (): JSX.Element => {
   const WORDS_PER_TURN = 5;
 
   const [turn, setTurn] = useState(1);
+  const [gameResult, setGameResult] = useState<GameTurnResult[]>([]);
   const [score, setScore] = useState(0);
   const [ready, setReady] = useState(false);
   const [finish, setFinish] = useState(false);
@@ -75,14 +86,21 @@ const AudioChallengeRound = (): JSX.Element => {
     return turn === TURNS_COUNT;
   };
 
-  const updateScore = (turnResult: boolean): void => {
-    if (turnResult) {
+  const updateGameResult = (isCorrect: boolean): void => {
+    const turnResult: GameTurnResult = {
+      word: correctWord as Word,
+      wasGuessed: isCorrect,
+    };
+
+    setGameResult([...gameResult, turnResult]);
+
+    if (isCorrect) {
       setScore(score + 1);
     }
   };
 
-  const handleNextTurn = (turnResult: boolean): void => {
-    updateScore(turnResult);
+  const handleNextTurn = (isCorrect: boolean): void => {
+    updateGameResult(isCorrect);
 
     if (turn < TURNS_COUNT) {
       setTurn(turn + 1);
@@ -92,8 +110,8 @@ const AudioChallengeRound = (): JSX.Element => {
     }
   };
 
-  const handleQuit = (turnResult: boolean): void => {
-    updateScore(turnResult);
+  const handleQuit = (isCorrect: boolean): void => {
+    updateGameResult(isCorrect);
     setFinish(true);
   };
 
@@ -103,9 +121,18 @@ const AudioChallengeRound = (): JSX.Element => {
     }
   };
 
-  const renderScore = (): JSX.Element | undefined => {
+  useEffect(() => {
+    if (finish && userId && authorizeStatus === true) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      saveGameResults(userId, new Date(), 'audio-challenge', gameResult);
+    }
+  }, [authorizeStatus, finish, gameResult, userId]);
+
+  const renderGameResult = (): JSX.Element | undefined => {
     if (finish) {
-      return <h3>Your score: {score}</h3>;
+      if (finish) {
+        return <GameResult score={score} gameResult={gameResult} />;
+      }
     }
   };
 
@@ -142,7 +169,7 @@ const AudioChallengeRound = (): JSX.Element => {
       {renderDifficultySelector()}
       {renderLoadingSpinner()}
       {renderGameRound()}
-      {renderScore()}
+      {renderGameResult()}
     </div>
   );
 };
