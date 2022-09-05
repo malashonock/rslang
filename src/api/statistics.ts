@@ -11,6 +11,7 @@ export const setStatistic = async (userId: string, creatingStat: Statistic): Pro
 };
 
 export const getDayliStatistic = async (userId: string, date?: string): Promise<Statistic[]> => {
+  console.log(`query - ${userId}`);
   const queryString = date === undefined ? '' : `?date=${date}`;
   const response: AxiosResponse<Statistic[], undefined> = await instanceAxios.get(
     `/users/${userId}/statistics${queryString}`

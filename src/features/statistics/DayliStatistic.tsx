@@ -51,15 +51,9 @@ const DayliStatistics = (): JSX.Element => {
           ) || 0,
       });
     };
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadStat();
-  }, [
-    dictionaryStat.guessedWords,
-    dictionaryStat.learnedWords,
-    dictionaryStat.maxGuessedSeries,
-    dictionaryStat.totalWords,
-    id,
-  ]);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    loadStat().catch(() => {});
+  }, [id]);
 
   return (
     <section className={style.team}>

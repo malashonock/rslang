@@ -16,6 +16,7 @@ import { get10LastDays } from '../../utils/date';
 import { getDayliStatistic } from '../../api/statistics';
 import { getChart } from '../../utils/statistic';
 import { useAppSelector } from '../../store/hooks';
+import { Statistic } from '../../model/Statistic';
 
 ChartJS.register(
   CategoryScale,
@@ -63,33 +64,47 @@ const StatChart = (): JSX.Element => {
   const { id } = useAppSelector((state) => state.authorization);
 
   useLayoutEffect(() => {
-    const loadStat = async () => {
+    const loadStat = async (): Promise<void> => {
       const userStatistic = await getDayliStatistic(id);
       const summaryStat = getChart(userStatistic);
       const tempChartValue1: number[] = [];
       const tempChartValue2: number[] = [];
+      const tempChartValue3: number[] = [];
       summaryStat.forEach((stat) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         tempChartValue1.push(stat.newWords);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         tempChartValue2.push(stat.learnedWords);
+        tempChartValue3.push(0);
       });
       setChartValues1(tempChartValue1);
       setChartValues2(tempChartValue2);
     };
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadStat();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-empty-function
+    loadStat().catch(() => {});
   }, [id]);
 
   const dataLineChart = {
-    type: LinearScale,
+    type: 'line',
     labels,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    plugins: {
+      filler: {
+        propagate: true,
+      },
+    },
     datasets: [
       {
         label: 'Total words learned',
         data: chartValues2,
         borderColor: 'rgba(13, 110, 253, 1)',
         backgroundColor: 'rgba(13, 110, 253, 1)',
+        fill: 'start',
+        pointStyle: 'circle',
+        pointRadius: 10,
       },
     ],
   };
@@ -109,7 +124,7 @@ const StatChart = (): JSX.Element => {
 
   return (
     <>
-      <Line options={optionsLine} data={dataLineChart} />
+      <Line data={dataLineChart} />
       <Bar options={optionsBar} data={dataBarChart} />
     </>
   );
