@@ -23,7 +23,7 @@ const TeamSection = (): JSX.Element => {
               </Card.Text>
             </Card.Body>
             <Card.Body className={styles.cardFooter}>
-              <a href={ghLink} title="Посмотреть Github аккаунт">
+              <a href={ghLink} title="Check Github account">
                 <Image className={styles.logoGitHub} src={github} />
               </a>
             </Card.Body>
