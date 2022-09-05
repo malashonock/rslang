@@ -11,7 +11,7 @@ import { getUserWords } from '../../../api/userWords';
 type UserWordInDictionary = Word & UserWord;
 
 const ChapterPageLayout = () => {
-  const { authorizeStatus, id } = useAppSelector((state) => state.authorization);
+  const { authorizeStatus, id: userId } = useAppSelector((state) => state.authorization);
   const { chapter, page } = useParams();
   const [displayedWords, updateDisplayedWords] = useState<
     Array<UserWordInDictionary> | Array<Word>
@@ -23,7 +23,7 @@ const ChapterPageLayout = () => {
         const dictionaryWords = await getWords(+chapter - 1, +page - 1);
 
         if (authorizeStatus) {
-          const userWords = await getUserWords(id);
+          const userWords = await getUserWords(userId);
           const userWordsInDictionary = dictionaryWords.map((word) => {
             const activeWord = userWords.find((userWord) => userWord.wordId === word.id);
 
@@ -47,7 +47,7 @@ const ChapterPageLayout = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  }, [authorizeStatus, chapter, id, page]);
+  }, [authorizeStatus, chapter, userId, page]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function instanceOfUserWordInDictionary(object: any): object is UserWordInDictionary {
