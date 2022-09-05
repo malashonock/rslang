@@ -35,7 +35,6 @@ const LoginForm = (): JSX.Element => {
   const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  const redirectToMainPage = () => navigate('/');
   const dispatch = useDispatch();
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
@@ -84,7 +83,7 @@ const LoginForm = (): JSX.Element => {
       } catch {
         setIsServerError(true);
       }
-      // if (!isServerError) setTimeout(redirectToMainPage, 5000);
+      // // if (!isServerError) setTimeout(redirectToMainPage, 5000);
     }
   };
 

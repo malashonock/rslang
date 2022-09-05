@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .infoCenter {
@@ -17,4 +18,66 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
+}
+
+.stat {
+  display: flex;
+  gap: 3rem;
+  flex-direction: row;
+}
+
+.teamTitle {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.team {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  .card {
+    width: 19rem;
+    box-shadow: inset ;
+
+    img {
+      width: 2rem;
+    }
+  }
+
+  }
+  
+  .cardElements {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 3rem;
+
+    span {
+      font-size: 2rem;
+      margin-right: .6rem;
+    }
+  }
+
+.wordsCount {
+  padding-top: -2rem;
+  font-weight: 600;
+  font-size: 3rem;
+
+  span {
+    font-size: 2rem;
+  }
+}
+
+.circle {
+  filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.5));
+  
+  img {
+    width: 2rem; 
+    margin-top: -5px;
+  } 
 }

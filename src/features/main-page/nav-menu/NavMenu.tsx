@@ -6,7 +6,7 @@ import UserAvatar from './user-avatar/UserAvatar';
 const NavMenu = (): JSX.Element => {
   const { authorizeStatus } = useAppSelector((state) => state.authorization);
   return (
-    <Navbar bg="primary" variant="dark" expand="sm">
+    <Navbar sticky="top" bg="primary" variant="dark" expand="sm">
       <Container fluid>
         <Navbar.Toggle aria-controls="navbar-main" />
         <LinkContainer to="/">

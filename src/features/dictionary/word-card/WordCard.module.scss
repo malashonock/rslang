@@ -58,4 +58,29 @@
 .controls {
   width: 100%;
   font-size: 0.8rem;
+  padding: 0.3rem 0;
+}
+
+.statisticCounter {
+  margin-left: 0.2rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+
+  font-size: 0.6rem;
+  color: white;
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+
+.correctGuess {
+  background-color: #28d685;
+}
+
+.wrongGuess {
+  background-color: #f55767;
 }
