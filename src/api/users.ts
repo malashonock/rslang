@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import Auth from '../model/Auth';
-import { User, UserResponse, UserDeleted } from '../model/User';
+import { User, UserResponse, UserDeleted, UserSetting, UserUpdateData } from '../model/User';
 import instanceAxios from './httpConfig';
 
 export const createUser = async (creatingUser: User): Promise<UserResponse> => {
@@ -26,8 +26,11 @@ export const getUser = async (userId: string): Promise<UserResponse> => {
   return response.data;
 };
 
-export const updateUser = async (userId: string): Promise<User> => {
-  const response: AxiosResponse<User, undefined> = await instanceAxios.put(`/users/${userId}`);
+export const updateUser = async (userId: string, updateUserData: UserUpdateData): Promise<User> => {
+  const response: AxiosResponse<User, undefined> = await instanceAxios.put(
+    `/users/${userId}`,
+    updateUserData
+  );
   return response.data;
 };
 
