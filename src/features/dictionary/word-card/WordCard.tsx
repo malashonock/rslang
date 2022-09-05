@@ -1,20 +1,75 @@
-import { Card, Row, Col, ToggleButton, Popover, OverlayTrigger, Button } from 'react-bootstrap';
+import {
+  Card,
+  Row,
+  Col,
+  ToggleButton,
+  Popover,
+  OverlayTrigger,
+  Button,
+  Tooltip,
+} from 'react-bootstrap';
+import { useState } from 'react';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
 import WordPicture from '../../shared/word-picture/WordPicture';
 import SoundButton from '../../shared/sound-button/SoundButton';
 import API_BASE_URL from '../../../api/constants';
+import { getUserWord, createUserWord, updateUserWord } from '../../../api/userWords';
+import { useAppSelector } from '../../../store/hooks';
 
 interface WordCardProps {
   word: Word;
   isAuthorized: boolean;
+  isLearned?: boolean;
+  isDifficult?: boolean;
+  correctGuessCount?: number;
+  wrongGuessCount?: number;
 }
 
-const renderHeader = (word: Word): JSX.Element => {
+interface RenderFooterProps {
+  isDifficult?: boolean;
+  isLearned?: boolean;
+  wordId: string;
+}
+
+const renderHeader = (
+  word: Word,
+  correctGuessCount?: number,
+  wrongGuessCount?: number
+): JSX.Element => {
+  const gameStatisticsParameters = [
+    {
+      count: correctGuessCount,
+      label: 'The number of games where you guessed this word correctly',
+      type: 'correctGuess',
+    },
+    {
+      count: wrongGuessCount,
+      label: 'The number of games where you failed to guess this word',
+      type: 'wrongGuess',
+    },
+  ];
+
   return (
     <Row className={styles.header}>
       <Col>
-        <Card.Title>{word.word}</Card.Title>
+        <Card.Title>
+          {word.word}
+          {gameStatisticsParameters.map(({ count, label, type }) => {
+            if (count) {
+              return (
+                <OverlayTrigger
+                  key={label}
+                  placement="top"
+                  overlay={<Tooltip id="tooltip">{label}</Tooltip>}
+                >
+                  <span className={`${styles.statisticCounter} ${styles[type]}`}>{count}</span>
+                </OverlayTrigger>
+              );
+            }
+            return null;
+          })}
+        </Card.Title>
         <Card.Subtitle>{word.transcription}</Card.Subtitle>
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
@@ -72,49 +127,95 @@ const renderDescription = (word: Word) => {
   );
 };
 
-const renderFooter = () => {
+const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => {
+  const { id } = useAppSelector((state) => state.authorization);
+  const [difficultState, updateDifficultState] = useState(isDifficult);
+  const [learnedState, updatelearnedState] = useState(isLearned);
+
+  const newUserWord = {
+    wasPlayed: false,
+    correctGuessCount: 0,
+    wrongGuessCount: 0,
+    isDifficult: false,
+    isLearned: false,
+  };
+
+  async function changeWordState(type: 'isDifficult' | 'isLearned', value: boolean) {
+    try {
+      await getUserWord(id, wordId);
+      const updateProperty = { [type]: value };
+      await updateUserWord(id, wordId, updateProperty);
+    } catch {
+      newUserWord[type] = true;
+      await createUserWord(id, wordId, newUserWord);
+    }
+  }
+
+  async function difficultCheckboxHandler() {
+    await changeWordState('isDifficult', !difficultState);
+    updateDifficultState(!difficultState);
+  }
+
+  async function learnedCheckboxHandler() {
+    await changeWordState('isLearned', !learnedState);
+    updatelearnedState(!learnedState);
+  }
+
   return (
     <Row>
       <Col>
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant="danger"
+          variant={difficultState ? 'danger' : 'outline-danger'}
           type="checkbox"
           value="difficult"
-          id="difficult"
+          id={`${wordId}-difficult`}
+          checked={difficultState}
+          onChange={() => difficultCheckboxHandler()}
         >
-          Mark as Difficult
+          {difficultState ? 'Difficult' : 'Mark as Difficult'}
         </ToggleButton>
       </Col>
       <Col>
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant="warning"
+          variant={learnedState ? 'warning' : 'outline-warning'}
           type="checkbox"
           value="learned"
-          id="learned"
+          id={`${wordId}-learned`}
+          checked={learnedState}
+          onChange={() => learnedCheckboxHandler()}
         >
-          Mark as Learned
+          {learnedState ? 'Learned' : 'Mark as Learned'}
         </ToggleButton>
       </Col>
     </Row>
   );
 };
 
-const WordCard = ({ word, isAuthorized }: WordCardProps): JSX.Element => {
+const WordCard = ({
+  word,
+  isAuthorized,
+  isDifficult,
+  isLearned,
+  correctGuessCount,
+  wrongGuessCount,
+}: WordCardProps): JSX.Element => {
   return (
     <Card className={styles.card}>
       <Card.Body>
-        {renderHeader(word)}
+        {renderHeader(word, correctGuessCount, wrongGuessCount)}
         <WordPicture
           className={styles.img}
           imageSrc={`${API_BASE_URL}/${word.image}`}
           diameter="9rem"
         />
         {renderDescription(word)}
-        {isAuthorized && renderFooter()}
+        {isAuthorized && (
+          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} wordId={word.id} />
+        )}
       </Card.Body>
     </Card>
   );
