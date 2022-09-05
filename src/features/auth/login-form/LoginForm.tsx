@@ -34,7 +34,7 @@ const LoginForm = (): JSX.Element => {
   const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  // const redirectToMainPage = () => navigate('/');
+  const redirectToMainPage = () => navigate('/');
   const dispatch = useDispatch();
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
@@ -58,7 +58,7 @@ const LoginForm = (): JSX.Element => {
           refreshToken: '',
         };
         dispatch(createUserData(userData));
-        // redirectToMainPage();
+        redirectToMainPage();
       } catch {
         setIsRegisterSuccess(false);
         setIsServerError(true);
@@ -77,6 +77,7 @@ const LoginForm = (): JSX.Element => {
           refreshToken: existUser.refreshToken,
         };
         dispatch(setAuthorizeUser(userData));
+        redirectToMainPage();
       } catch {
         setIsServerError(true);
       }
@@ -105,7 +106,7 @@ const LoginForm = (): JSX.Element => {
           <>
             <Avatar className={styles.error}>{isServerError && <ErrorIcon />}</Avatar>
             <FormHelperText error>
-              <span>Error in Server response</span>
+              <span>Incorrect email or password, please try again</span>
             </FormHelperText>
           </>
         )}
