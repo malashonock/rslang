@@ -33,9 +33,11 @@ const NavMenu = (): JSX.Element => {
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
-        <Nav.Link>
-          <UserAvatar />
-        </Nav.Link>
+        <LinkContainer to="/auth">
+          <Nav.Link>
+            <UserAvatar />
+          </Nav.Link>
+        </LinkContainer>
       </Container>
     </Navbar>
   );
