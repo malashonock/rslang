@@ -64,7 +64,7 @@ const parsingStatisticPerDay = (statistics: Statistic[]): SummaryGameStatistic =
   };
 };
 
-export const getChart = (statistics: Statistic[]): StatisticForChar[] => {
+export const getChartData = (statistics: Statistic[]): StatisticForChar[] => {
   const last10Day = get10LastDays();
   const statPerDayCommon = last10Day.map((date) =>
     statistics.filter((stat) => date === dateToYYYYMMDD(stat.date))

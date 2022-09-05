@@ -14,7 +14,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import { useLayoutEffect, useState } from 'react';
 import { get10LastDays } from '../../utils/date';
 import { getDayliStatistic } from '../../api/statistics';
-import { getChart } from '../../utils/statistic';
+import { getChartData } from '../../utils/statistic';
 import { useAppSelector } from '../../store/hooks';
 import { Statistic } from '../../model/Statistic';
 
@@ -66,7 +66,7 @@ const StatChart = (): JSX.Element => {
   useLayoutEffect(() => {
     const loadStat = async (): Promise<void> => {
       const userStatistic = await getDayliStatistic(id);
-      const summaryStat = getChart(userStatistic);
+      const summaryStat = getChartData(userStatistic);
       const tempChartValue1: number[] = [];
       const tempChartValue2: number[] = [];
       const tempChartValue3: number[] = [];
