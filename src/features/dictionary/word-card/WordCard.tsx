@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from 'react-bootstrap';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
 import WordPicture from '../../shared/word-picture/WordPicture';
@@ -24,12 +25,14 @@ interface WordCardProps {
   isDifficult?: boolean;
   correctGuessCount?: number;
   wrongGuessCount?: number;
+  difficultChapterUpdateHandler?: () => Promise<void>;
 }
 
 interface RenderFooterProps {
   isDifficult?: boolean;
   isLearned?: boolean;
   wordId: string;
+  difficultChapterUpdateHandler?: () => Promise<void>;
 }
 
 const renderHeader = (
@@ -74,7 +77,11 @@ const renderHeader = (
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
-        <SoundButton soundSrc={`${API_BASE_URL}/${word.audio}`} />
+        <SoundButton
+          soundSrc={[word.audio, word.audioMeaning, word.audioExample].map(
+            (src) => `${API_BASE_URL}/${src}`
+          )}
+        />
       </Col>
     </Row>
   );
@@ -127,7 +134,12 @@ const renderDescription = (word: Word) => {
   );
 };
 
-const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => {
+const RenderFooter = ({
+  wordId,
+  isDifficult,
+  isLearned,
+  difficultChapterUpdateHandler,
+}: RenderFooterProps) => {
   const { id } = useAppSelector((state) => state.authorization);
   const [difficultState, updateDifficultState] = useState(isDifficult);
   const [learnedState, updatelearnedState] = useState(isLearned);
@@ -142,9 +154,16 @@ const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => 
 
   async function changeWordState(type: 'isDifficult' | 'isLearned', value: boolean) {
     try {
-      await getUserWord(id, wordId);
+      const userWord = await getUserWord(id, wordId);
       const updateProperty = { [type]: value };
-      await updateUserWord(id, wordId, updateProperty);
+      if (userWord.isDifficult && type === 'isLearned' && value === true) {
+        updateProperty.isDifficult = false;
+        await updateUserWord(id, wordId, updateProperty);
+        if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
+        updateDifficultState(!difficultState);
+      } else {
+        await updateUserWord(id, wordId, updateProperty);
+      }
     } catch {
       newUserWord[type] = true;
       await createUserWord(id, wordId, newUserWord);
@@ -153,6 +172,7 @@ const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => 
 
   async function difficultCheckboxHandler() {
     await changeWordState('isDifficult', !difficultState);
+    if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
     updateDifficultState(!difficultState);
   }
 
@@ -202,9 +222,13 @@ const WordCard = ({
   isLearned,
   correctGuessCount,
   wrongGuessCount,
+  difficultChapterUpdateHandler,
 }: WordCardProps): JSX.Element => {
+  const { chapter } = useParams();
+  const colorClass = chapter ? styles[`page${chapter}Card`] : '';
+
   return (
-    <Card className={styles.card}>
+    <Card className={`${styles.card} ${colorClass}`}>
       <Card.Body>
         {renderHeader(word, correctGuessCount, wrongGuessCount)}
         <WordPicture
@@ -214,7 +238,12 @@ const WordCard = ({
         />
         {renderDescription(word)}
         {isAuthorized && (
-          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} wordId={word.id} />
+          <RenderFooter
+            isDifficult={isDifficult}
+            isLearned={isLearned}
+            wordId={word.id}
+            difficultChapterUpdateHandler={difficultChapterUpdateHandler}
+          />
         )}
       </Card.Body>
     </Card>
