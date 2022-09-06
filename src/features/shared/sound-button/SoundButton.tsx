@@ -16,29 +16,32 @@ const SoundButton = ({
   diameter = '2rem',
   variant = 'primary',
 }: SoundButtonProps): JSX.Element => {
-  const [played, setPlayedState] = useState(false);
-  const sound = useRef<HTMLAudioElement>();
+  const [playing, setPlaying] = useState(false);
+  const soundRef = useRef<HTMLAudioElement>();
 
   const play = async () => {
-    if (!played) {
-      setPlayedState(true);
-      if (typeof soundSrc === 'string') {
-        sound.current = new Audio(soundSrc);
-        await playAudioAsync(sound.current);
-      } else {
+    if (!playing) {
+      setPlaying(true);
+
+      if (Array.isArray(soundSrc)) {
         // eslint-disable-next-line no-restricted-syntax
         for (const i of soundSrc) {
-          sound.current = new Audio(i);
+          soundRef.current = new Audio(i);
           // eslint-disable-next-line no-await-in-loop
-          await playAudioAsync(sound.current);
+          await playAudioAsync(soundRef.current);
         }
+      } else {
+        soundRef.current = new Audio(soundSrc);
+        await playAudioAsync(soundRef.current);
       }
-      setPlayedState(false);
+
+      setPlaying(false);
     } else {
-      setPlayedState(false);
-      if (sound.current) {
-        sound.current.currentTime = 0;
-        sound.current.pause();
+      setPlaying(false);
+
+      if (soundRef.current) {
+        soundRef.current.currentTime = 0;
+        soundRef.current.pause();
       }
     }
   };
@@ -49,7 +52,7 @@ const SoundButton = ({
       onClick={play}
       className={`${styles.soundButton} btn btn-${variant} rounded-circle`}
     >
-      {played ? (
+      {playing ? (
         <StopSoundIcon className={styles.soundIcon} />
       ) : (
         <PlaySoundIcon className={styles.soundIcon} />
