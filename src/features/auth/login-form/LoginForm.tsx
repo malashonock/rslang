@@ -57,7 +57,7 @@ const LoginForm = (): JSX.Element => {
           refreshToken: '',
         };
         dispatch(createUserData(userData));
-        // redirectToMainPage();
+        navigate(-1);
       } catch {
         setIsRegisterSuccess(false);
         setIsServerError(true);
@@ -76,10 +76,10 @@ const LoginForm = (): JSX.Element => {
           refreshToken: existUser.refreshToken,
         };
         dispatch(setAuthorizeUser(userData));
+        navigate(-1);
       } catch {
         setIsServerError(true);
       }
-      // if (!isServerError) setTimeout(redirectToMainPage, 5000);
     }
   };
 
@@ -104,7 +104,7 @@ const LoginForm = (): JSX.Element => {
           <>
             <Avatar className={styles.error}>{isServerError && <ErrorIcon />}</Avatar>
             <FormHelperText error>
-              <span>Error in Server response</span>
+              <span>Incorrect email or password, please try again</span>
             </FormHelperText>
           </>
         )}
