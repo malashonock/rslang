@@ -24,10 +24,9 @@ import { deleteUser, updateUser } from '../../api/users';
 import { deleteUserData, UpdatedUserInfo, updateUserData } from './authSlice';
 
 const UserHomePage = (): JSX.Element => {
-  const { name } = useAppSelector((state) => state.authorization);
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
-  const [isServerError, serIsServerError] = useState<boolean>(false);
-  const [isServerSuccess, serIsServerSuccess] = useState<boolean>(false);
+  const [isServerError, setIsServerError] = useState<boolean>(false);
+  const [isServerSuccess, setIsServerSuccess] = useState<boolean>(false);
   const { id } = useAppSelector((state) => state.authorization);
 
   const dispatch = useDispatch();
@@ -45,9 +44,9 @@ const UserHomePage = (): JSX.Element => {
     try {
       await updateUser(id, updatedUserData);
       dispatch(updateUserData(updatedUserData));
-      serIsServerSuccess(true);
+      setIsServerSuccess(true);
     } catch {
-      serIsServerError(true);
+      setIsServerError(true);
     }
   };
 
