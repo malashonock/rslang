@@ -1,12 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  unstable_HistoryRouter as HistoryRouter,
-} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
 import Games from './features/games/Games';
