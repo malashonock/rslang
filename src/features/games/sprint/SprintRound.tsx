@@ -147,9 +147,11 @@ const SprintRound = (): JSX.Element => {
   };
 
   const renderDifficultySelector = (): JSX.Element | undefined => {
-    if (!ready) {
+    if (!ready && page === undefined) {
       return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
     }
+
+    setReady(true);
   };
 
   useEffect(() => {
