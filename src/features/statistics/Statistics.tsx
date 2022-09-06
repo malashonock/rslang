@@ -1,19 +1,12 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
+import DayliStatistics from './DayliStatistic';
+import LongStatistic from './LongStatistic';
 
 const Statistics = (): JSX.Element => {
-  const userAuth = useAppSelector((state) => state.authorization);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!userAuth.authorizeStatus) navigate('/auth');
-  });
-
   return (
-    <div className="card mt-5">
-      <div className="card-body">Goal</div>
-    </div>
+    <>
+      <DayliStatistics />
+      <LongStatistic />
+    </>
   );
 };
 

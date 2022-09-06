@@ -77,7 +77,11 @@ const renderHeader = (
         <Card.Subtitle>{word.wordTranslate}</Card.Subtitle>
       </Col>
       <Col sm="auto" xs="auto">
-        <SoundButton soundSrc={`${API_BASE_URL}/${word.audio}`} />
+        <SoundButton
+          soundSrc={[word.audio, word.audioMeaning, word.audioExample].map(
+            (src) => `${API_BASE_URL}/${src}`
+          )}
+        />
       </Col>
     </Row>
   );
