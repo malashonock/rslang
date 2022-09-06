@@ -14,6 +14,7 @@ const GamesLinks = (): JSX.Element => {
     return {
       group: chapter ? +chapter - 1 : undefined,
       page: page ? +page - 1 : undefined,
+      'exclude-learned': true,
     };
   }, [chapter, page]);
 

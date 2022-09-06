@@ -1,9 +1,12 @@
 /* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
+import { getUserWords } from '../../../api/userWords';
 import { getWords } from '../../../api/words';
 import { AuthState } from '../../../model/AuthState';
 import GameTurnResult from '../../../model/GameTurnResult';
+import { UserWord } from '../../../model/UserWord';
 import Word from '../../../model/Word';
 import { useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
@@ -38,6 +41,11 @@ const SprintRound = (): JSX.Element => {
 
   const { chapter, page } = useDictionaryLocation();
 
+  const [searchParams] = useSearchParams();
+  const excludeLearnedWords = useMemo(() => {
+    return searchParams.get('exclude-learned') === 'true';
+  }, [searchParams]);
+
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
@@ -53,24 +61,46 @@ const SprintRound = (): JSX.Element => {
   // Initialize available words
   useEffect(() => {
     const loadWords = async () => {
-      const words = await getWords(chapter, page);
-      setAvailableWords([...words]);
-      setCorrectWords([...words]);
+      const allWords = await getWords(chapter, page);
+      let freeWords: Word[];
+
+      if (authorizeStatus && excludeLearnedWords) {
+        const userWords = await getUserWords(userId);
+        freeWords = allWords.filter(
+          (word: Word): boolean =>
+            !userWords.some(
+              (userWord: UserWord): boolean => word.id === userWord.wordId && userWord.isLearned
+            )
+        );
+      } else {
+        freeWords = allWords;
+      }
+
+      if (freeWords.length === 0) {
+        setFinish(true);
+      }
+
+      setAvailableWords([...freeWords]);
+      setCorrectWords([...freeWords]);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  }, [chapter, page]);
+  }, [authorizeStatus, chapter, excludeLearnedWords, page, userId]);
 
   // Set new correct word
   useEffect(() => {
     if (correctWords.length === 0) {
+      if (turn > 1) {
+        setFinish(true);
+      }
+
       return;
     }
 
     const randomIndex = Math.floor(Math.random() * correctWords.length);
     setCorrectWord(correctWords[randomIndex]);
-  }, [correctWords]);
+  }, [correctWords, turn]);
 
   const updateCorrectWords = () => {
     setCorrectWords(correctWords.filter(({ id }) => id !== correctWord?.id));
