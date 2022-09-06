@@ -117,7 +117,11 @@ const AudioChallengeRound = (): JSX.Element => {
 
   const renderDifficultySelector = (): JSX.Element | undefined => {
     if (!ready) {
-      return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
+      if (chapter === undefined && page === undefined) {
+        return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
+      }
+
+      setReady(true);
     }
   };
 
