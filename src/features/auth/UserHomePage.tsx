@@ -11,9 +11,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Avatar from '@mui/material/Avatar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Alert, AlertTitle, FormHelperText, Paper } from '@mui/material';
 import { FormikValues, useFormik } from 'formik';
-import { FormHelperText, Paper } from '@mui/material';
 import { Email } from '@mui/icons-material';
+import ErrorIcon from '@mui/icons-material/Error';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../store/hooks';
 import { INITIAL_VALUES_FORM } from './login-form/сonstants';
@@ -25,7 +26,10 @@ import { deleteUserData, UpdatedUserInfo, updateUserData } from './authSlice';
 const UserHomePage = (): JSX.Element => {
   const { name } = useAppSelector((state) => state.authorization);
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
+  const [isServerError, serIsServerError] = useState<boolean>(false);
+  const [isServerSuccess, serIsServerSuccess] = useState<boolean>(false);
   const { id } = useAppSelector((state) => state.authorization);
+
   const dispatch = useDispatch();
 
   const deleteLoggedUser = async (): Promise<void> => {
@@ -38,8 +42,13 @@ const UserHomePage = (): JSX.Element => {
       password: values.userPassword as string,
       email: values.userEmail as string,
     };
-    await updateUser(id, updatedUserData);
-    dispatch(updateUserData(updatedUserData));
+    try {
+      await updateUser(id, updatedUserData);
+      dispatch(updateUserData(updatedUserData));
+      serIsServerSuccess(true);
+    } catch {
+      serIsServerError(true);
+    }
   };
 
   const { values, touched, handleSubmit, handleChange, errors } = useFormik({
@@ -56,6 +65,20 @@ const UserHomePage = (): JSX.Element => {
     <Paper elevation={3} style={{ margin: '2rem', padding: '2rem' }}>
       <form onSubmit={handleSubmit}>
         <Box className={styles.loginForm}>
+          {isServerError && (
+            <>
+              <Avatar className={styles.error}>{isServerError && <ErrorIcon />}</Avatar>
+              <FormHelperText error>
+                <span>Incorrect email or password, please try again</span>
+              </FormHelperText>
+            </>
+          )}
+          {isServerSuccess && (
+            <Alert severity="success">
+              <AlertTitle>Success</AlertTitle>
+              Login and password have been successfully updated
+            </Alert>
+          )}
           <Avatar className={styles.avatar}>
             <AccountCircleIcon />
           </Avatar>
