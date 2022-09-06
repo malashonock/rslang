@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getWords } from '../../../api/words';
+import { useEffect, useState, useCallback } from 'react';
+import { getWord, getWords } from '../../../api/words';
 import WordCard from '../word-card/WordCard';
 import Word from '../../../model/Word';
 import { UserWord } from '../../../model/UserWord';
@@ -19,7 +19,7 @@ const ChapterPageLayout = () => {
 
   useEffect(() => {
     const loadWords = async () => {
-      if (chapter && page) {
+      if (chapter && page && +chapter < 7) {
         const dictionaryWords = await getWords(+chapter - 1, +page - 1);
 
         if (authorizeStatus) {
@@ -49,9 +49,36 @@ const ChapterPageLayout = () => {
     loadWords();
   }, [authorizeStatus, chapter, userId, page]);
 
+  const getDifficultWords = useCallback(async () => {
+    if (authorizeStatus && chapter && +chapter === 7) {
+      const userWords = await getUserWords(userId);
+      const difficultUserWords = userWords.filter(({ isDifficult }) => isDifficult);
+      const difficultWords = await Promise.all(
+        difficultUserWords.map(async (userWord) => {
+          const dictionaryWord = await getWord(userWord.wordId);
+          return { ...userWord, ...dictionaryWord };
+        })
+      );
+      updateDisplayedWords(difficultWords);
+    }
+  }, [authorizeStatus, chapter, userId]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    getDifficultWords();
+  }, [authorizeStatus, chapter, getDifficultWords, userId]);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function instanceOfUserWordInDictionary(object: any): object is UserWordInDictionary {
     return 'isLearned' in object;
+  }
+
+  if (!displayedWords.length && chapter && +chapter === 7) {
+    return (
+      <h4 className={styles.notDifficultWordsMessage}>
+        You haven&apos;t added any difficult words yet
+      </h4>
+    );
   }
 
   return (
@@ -67,6 +94,9 @@ const ChapterPageLayout = () => {
               isDifficult={word.isDifficult}
               correctGuessCount={word.correctGuessCount}
               wrongGuessCount={word.wrongGuessCount}
+              difficultChapterUpdateHandler={
+                chapter && +chapter === 7 ? getDifficultWords : undefined
+              }
             />
           );
         }

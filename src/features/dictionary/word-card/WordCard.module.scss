@@ -1,5 +1,37 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+
 .card {
   width: 18rem;
+}
+
+.page1Card {
+  border-color: $indigo;
+}
+
+.page2Card {
+  border-color: $blue;
+}
+
+.page3Card {
+  border-color: $cyan;
+}
+
+.page4Card {
+  border-color: $teal;
+}
+
+.page5Card {
+  border-color: $yellow;
+}
+
+.page6Card {
+  border-color: $orange;
+}
+
+.page7Card {
+  border-color: $red;
 }
 
 .header {
