@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { AuthState } from '../model/AuthState';
 import { removeItemFromLocalStorage, getUserFromLocalStorage } from '../utils/localStorage';
 import API_BASE_URL from './constants';
@@ -31,8 +30,6 @@ instanceAxios.interceptors.response.use(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (error.response.status === 401) {
       removeItemFromLocalStorage('Auth');
-      const navigate = useNavigate();
-      navigate('/');
     } else {
       throw error;
     }

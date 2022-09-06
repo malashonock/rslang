@@ -1,5 +1,13 @@
+import DayliStatistics from './DayliStatistic';
+import LongStatistic from './LongStatistic';
+
 const Statistics = (): JSX.Element => {
-  return <h2>Statistics</h2>;
+  return (
+    <>
+      <DayliStatistics />
+      <LongStatistic />
+    </>
+  );
 };
 
 export default Statistics;

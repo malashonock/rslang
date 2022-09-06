@@ -42,6 +42,5 @@ export const updateStatistic = async (
     `/users/${userId}/statistics/${statId}`,
     updatedStatistic
   );
-
   return response.data;
 };

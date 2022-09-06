@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Stack, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { useAppSelector } from '../../../store/hooks';
 import styles from './ChaptersSelector.module.scss';
 
 type ChaptersSelectorProps = {
@@ -18,6 +19,7 @@ const ChaptersSelector = ({ className }: ChaptersSelectorProps): JSX.Element => 
     { colorClass: 'redButton' },
   ];
 
+  const userAuth = useAppSelector((state) => state.authorization);
   const { chapter } = useParams();
   const currentButtonIndex = chapter ? +chapter : 0;
 
@@ -30,7 +32,14 @@ const ChaptersSelector = ({ className }: ChaptersSelectorProps): JSX.Element => 
         const currentButtonClass = currentButtonIndex === index + 1 ? `${colorClass}--current` : '';
 
         return (
-          <LinkContainer to={`chapters/${index + 1}/pages/1`} key={colorClass}>
+          <LinkContainer
+            to={
+              !userAuth.authorizeStatus && colorClass === 'redButton'
+                ? `/auth`
+                : `chapters/${index + 1}/pages/1`
+            }
+            key={colorClass}
+          >
             <Button
               className={`${styles.button} ${styles[colorClass]} 
               ${styles[currentButtonClass]}`}
