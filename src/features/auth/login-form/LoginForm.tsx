@@ -26,6 +26,7 @@ import styles from './LoginForm.module.scss';
 import { User } from '../../../model/User';
 import { setAuthorizeUser, createUserData } from '../authSlice';
 import { AuthState } from '../../../model/AuthState';
+// import history from '../../..';
 
 const LoginForm = (): JSX.Element => {
   const [isShowPassword, setShowPassword] = useState<boolean>(false);
@@ -57,6 +58,7 @@ const LoginForm = (): JSX.Element => {
           refreshToken: '',
         };
         dispatch(createUserData(userData));
+        navigate(-1);
         // redirectToMainPage();
       } catch {
         setIsRegisterSuccess(false);
@@ -76,10 +78,12 @@ const LoginForm = (): JSX.Element => {
           refreshToken: existUser.refreshToken,
         };
         dispatch(setAuthorizeUser(userData));
+        navigate(-1);
+        // redirectToMainPage();
       } catch {
         setIsServerError(true);
       }
-      // if (!isServerError) setTimeout(redirectToMainPage, 5000);
+      // // if (!isServerError) setTimeout(redirectToMainPage, 5000);
     }
   };
 
@@ -104,7 +108,7 @@ const LoginForm = (): JSX.Element => {
           <>
             <Avatar className={styles.error}>{isServerError && <ErrorIcon />}</Avatar>
             <FormHelperText error>
-              <span>Error in Server response</span>
+              <span>Incorrect email or password, please try again</span>
             </FormHelperText>
           </>
         )}

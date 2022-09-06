@@ -11,10 +11,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Avatar from '@mui/material/Avatar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AlertTitle from '@mui/material/AlertTitle';
 import { FormikValues, useFormik } from 'formik';
-import { Alert, FormHelperText, Paper } from '@mui/material';
-import { Email, PhotoCamera } from '@mui/icons-material';
+import { FormHelperText, Paper } from '@mui/material';
+import { Email } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../store/hooks';
 import { INITIAL_VALUES_FORM } from './login-form/сonstants';
@@ -54,72 +53,67 @@ const UserHomePage = (): JSX.Element => {
   };
 
   return (
-    <>
-      <Paper elevation={3} style={{ margin: '2rem', padding: '2rem' }}>
-        <form onSubmit={handleSubmit}>
-          <Box className={styles.loginForm}>
-            <Avatar className={styles.avatar}>
-              <AccountCircleIcon />
-            </Avatar>
-            <h2>Update {name} information</h2>
-            <FormControl className={styles.input} variant="standard">
-              <InputLabel>E-mail</InputLabel>
-              <Input
-                name="userEmail"
-                value={values.userEmail}
-                required
-                onChange={handleChange}
-                error={touched.userEmail && Boolean(errors.userEmail)}
-                endAdornment={
-                  <InputAdornment position="start">
-                    <Email />
-                  </InputAdornment>
-                }
-              />
-              {touched.userEmail && <FormHelperText error>{errors.userEmail}</FormHelperText>}
-            </FormControl>
-            <FormControl className={styles.input} variant="standard">
-              <InputLabel>Password</InputLabel>
-              <Input
-                type={isShowPassword ? 'text' : 'password'}
-                name="userPassword"
-                value={values.userPassword}
-                required
-                onChange={handleChange}
-                error={touched.userPassword && Boolean(errors.userPassword)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={toggleVisibilityPassword}
-                    >
-                      {isShowPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {touched.userPassword && <FormHelperText error>{errors.userPassword}</FormHelperText>}
-            </FormControl>
-            <Stack className={styles.btnArea}>
-              <Button variant="contained" className={styles.input} type="submit">
-                UPDATE
-              </Button>
-            </Stack>
-          </Box>
-        </form>
-      </Paper>
-      <Paper elevation={3} style={{ margin: '2rem', padding: '2rem', textAlign: 'center' }}>
-        <Alert severity="error" className={styles.loginForm}>
-          <AlertTitle>
-            For delete <strong>{name}</strong> profile PUSH button
-          </AlertTitle>
-          <Button variant="outlined" color="error" onClick={deleteLoggedUser}>
-            {' '}
-            DELETE
-          </Button>
-        </Alert>
-      </Paper>
-    </>
+    <Paper elevation={3} style={{ margin: '2rem', padding: '2rem' }}>
+      <form onSubmit={handleSubmit}>
+        <Box className={styles.loginForm}>
+          <Avatar className={styles.avatar}>
+            <AccountCircleIcon />
+          </Avatar>
+          <h2> Update your profile</h2>
+          <FormControl className={styles.input} variant="standard">
+            <InputLabel>E-mail</InputLabel>
+            <Input
+              name="userEmail"
+              value={values.userEmail}
+              required
+              onChange={handleChange}
+              error={touched.userEmail && Boolean(errors.userEmail)}
+              endAdornment={
+                <InputAdornment position="start">
+                  <Email />
+                </InputAdornment>
+              }
+            />
+            {touched.userEmail && <FormHelperText error>{errors.userEmail}</FormHelperText>}
+          </FormControl>
+          <FormControl className={styles.input} variant="standard">
+            <InputLabel>Password</InputLabel>
+            <Input
+              type={isShowPassword ? 'text' : 'password'}
+              name="userPassword"
+              value={values.userPassword}
+              required
+              onChange={handleChange}
+              error={touched.userPassword && Boolean(errors.userPassword)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={toggleVisibilityPassword}
+                  >
+                    {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            {touched.userPassword && <FormHelperText error>{errors.userPassword}</FormHelperText>}
+          </FormControl>
+          <Stack className={styles.btnArea}>
+            <Button variant="contained" className={styles.input} type="submit">
+              UPDATE
+            </Button>
+            <Button
+              variant="contained"
+              className={styles.input}
+              color="error"
+              onClick={deleteLoggedUser}
+            >
+              DELETE PROFILE
+            </Button>
+          </Stack>
+        </Box>
+      </form>
+    </Paper>
   );
 };
 
