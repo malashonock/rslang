@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from 'react-bootstrap';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './WordCard.module.scss';
 import Word from '../../../model/Word';
 import WordPicture from '../../shared/word-picture/WordPicture';
@@ -212,8 +213,11 @@ const WordCard = ({
   wrongGuessCount,
   difficultChapterUpdateHandler,
 }: WordCardProps): JSX.Element => {
+  const { chapter } = useParams();
+  const colorClass = chapter ? styles[`page${chapter}Card`] : '';
+
   return (
-    <Card className={styles.card}>
+    <Card className={`${styles.card} ${colorClass}`}>
       <Card.Body>
         {renderHeader(word, correctGuessCount, wrongGuessCount)}
         <WordPicture
