@@ -1,5 +1,5 @@
-import DayliStatistics from './DayliStatistic';
-import LongStatistic from './LongStatistic';
+import DayliStatistics from './DailyStatistics';
+import LongStatistic from './LongTermStatistic';
 
 const Statistics = (): JSX.Element => {
   return (
