@@ -1,13 +1,13 @@
 /* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
 import { getWords } from '../../../api/words';
 import { AuthState } from '../../../model/AuthState';
 import GameTurnResult from '../../../model/GameTurnResult';
 import Word from '../../../model/Word';
 import { useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
+import useDictionaryLocation from '../../../utils/hooks/useDictionaryLocation';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import GameResult from '../shared/game-result/GameResult';
 import saveGameResults from '../shared/saveGameResults';
@@ -18,17 +18,7 @@ const AudioChallengeRound = (): JSX.Element => {
     (state: RootState): AuthState => state.authorization
   );
 
-  const [searchParams] = useSearchParams();
-
-  const chapter = useMemo(() => {
-    const chapterStr = searchParams.get('group');
-    return chapterStr ? Number(chapterStr) : undefined;
-  }, [searchParams]);
-
-  const page = useMemo(() => {
-    const pageStr = searchParams.get('page');
-    return pageStr ? Number(pageStr) : undefined;
-  }, [searchParams]);
+  const { chapter, page } = useDictionaryLocation();
 
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
