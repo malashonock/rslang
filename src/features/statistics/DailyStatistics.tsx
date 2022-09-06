@@ -1,7 +1,7 @@
 import { Card } from 'react-bootstrap';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import { useEffect, useState } from 'react';
-import style from './Statistics.module.scss';
+import styles from './Statistics.module.scss';
 import audio from '../../assets/icons/audio-waves.png';
 import agile from '../../assets/icons/agile.png';
 import result from '../../assets/icons/mission.png';
@@ -62,15 +62,15 @@ const DailyStatistics = (): JSX.Element => {
   ]);
 
   return (
-    <section className={style.team}>
-      <Card className={style.card}>
-        <Card.Body className={(style.cardElements, style.circle)}>
+    <section className={styles.team}>
+      <Card className={styles.card}>
+        <Card.Body className={(styles.cardElements, styles.circle)}>
           <CircularProgressbarWithChildren
             value={totalStat.learnedWords}
             maxValue={totalStat.totalWords}
           >
             <img src={result} alt="You result" />
-            <span className={style.wordsCount}>
+            <span className={styles.wordsCount}>
               {totalStat.learnedWords} <span>of {totalStat.totalWords}</span>
             </span>
             <Card.Title>WORDS</Card.Title>
@@ -78,12 +78,12 @@ const DailyStatistics = (): JSX.Element => {
           </CircularProgressbarWithChildren>
         </Card.Body>
       </Card>
-      <Card className={style.card}>
+      <Card className={styles.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
           <img src={agile} alt="waves icon" />
           <h4>Sprint</h4>
         </Card.Header>
-        <Card.Body className={style.cardElements}>
+        <Card.Body className={styles.cardElements}>
           <Card.Title>
             <span className="text-primary">{sprintStat.newWords}</span> new words today
           </Card.Title>
@@ -95,12 +95,12 @@ const DailyStatistics = (): JSX.Element => {
           </Card.Title>
         </Card.Body>
       </Card>
-      <Card className={style.card}>
+      <Card className={styles.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
           <img src={audio} alt="waves icon" />
           <h4>Audio challenge</h4>
         </Card.Header>
-        <Card.Body className={style.cardElements}>
+        <Card.Body className={styles.cardElements}>
           <Card.Title>
             <span className="text-primary">{audioChallengeStat.newWords}</span> new words today
           </Card.Title>
@@ -113,12 +113,12 @@ const DailyStatistics = (): JSX.Element => {
           </Card.Title>
         </Card.Body>
       </Card>
-      <Card className={style.card}>
+      <Card className={styles.card}>
         <Card.Header className="bg-primary text-white d-flex justify-content-between">
           <img src={dailyresult} alt="result icon" />
           <h4>Total for today</h4>
         </Card.Header>
-        <Card.Body className={style.cardElements}>
+        <Card.Body className={styles.cardElements}>
           <Card.Title>
             <span className="text-primary">{totalStat.newWords}</span> new words today
           </Card.Title>
