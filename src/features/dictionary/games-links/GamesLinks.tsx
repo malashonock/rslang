@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
-import { Button, Collapse, NavDropdown, Stack } from 'react-bootstrap';
+import { Button, Collapse, Stack } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useParams } from 'react-router-dom';
 import { buildQueryString } from '../../../utils/url';
+
+const REGULAR_CHAPTERS_COUNT = 6;
 
 const GamesLinks = (): JSX.Element => {
   const [collapseOpen, setCollapseOpen] = useState(false);
@@ -16,7 +18,7 @@ const GamesLinks = (): JSX.Element => {
   }, [chapter, page]);
 
   return (
-    <Stack>
+    <Stack className={chapter && +chapter <= REGULAR_CHAPTERS_COUNT ? '' : 'd-none'}>
       <Button
         variant="link"
         className="text-center fs-6 fw-semibold"
