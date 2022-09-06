@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getWord, getWords } from '../../../api/words';
 import WordCard from '../word-card/WordCard';
 import Word from '../../../model/Word';
@@ -49,24 +49,24 @@ const ChapterPageLayout = () => {
     loadWords();
   }, [authorizeStatus, chapter, userId, page]);
 
-  useEffect(() => {
-    const getDifficultWords = async () => {
-      if (authorizeStatus && chapter && +chapter === 7) {
-        const userWords = await getUserWords(userId);
-        const difficultUserWords = userWords.filter(({ isDifficult }) => isDifficult);
-        const difficultWords = await Promise.all(
-          difficultUserWords.map(async (userWord) => {
-            const dictionaryWord = await getWord(userWord.wordId);
-            return { ...userWord, ...dictionaryWord };
-          })
-        );
-        updateDisplayedWords(difficultWords);
-      }
-    };
+  const getDifficultWords = useCallback(async () => {
+    if (authorizeStatus && chapter && +chapter === 7) {
+      const userWords = await getUserWords(userId);
+      const difficultUserWords = userWords.filter(({ isDifficult }) => isDifficult);
+      const difficultWords = await Promise.all(
+        difficultUserWords.map(async (userWord) => {
+          const dictionaryWord = await getWord(userWord.wordId);
+          return { ...userWord, ...dictionaryWord };
+        })
+      );
+      updateDisplayedWords(difficultWords);
+    }
+  }, [authorizeStatus, chapter, userId]);
 
+  useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     getDifficultWords();
-  }, [authorizeStatus, chapter, userId]);
+  }, [authorizeStatus, chapter, getDifficultWords, userId]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function instanceOfUserWordInDictionary(object: any): object is UserWordInDictionary {
@@ -94,6 +94,9 @@ const ChapterPageLayout = () => {
               isDifficult={word.isDifficult}
               correctGuessCount={word.correctGuessCount}
               wrongGuessCount={word.wrongGuessCount}
+              difficultChapterUpdateHandler={
+                chapter && +chapter === 7 ? getDifficultWords : undefined
+              }
             />
           );
         }

@@ -24,12 +24,14 @@ interface WordCardProps {
   isDifficult?: boolean;
   correctGuessCount?: number;
   wrongGuessCount?: number;
+  difficultChapterUpdateHandler?: () => Promise<void>;
 }
 
 interface RenderFooterProps {
   isDifficult?: boolean;
   isLearned?: boolean;
   wordId: string;
+  difficultChapterUpdateHandler?: () => Promise<void>;
 }
 
 const renderHeader = (
@@ -127,7 +129,12 @@ const renderDescription = (word: Word) => {
   );
 };
 
-const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => {
+const RenderFooter = ({
+  wordId,
+  isDifficult,
+  isLearned,
+  difficultChapterUpdateHandler,
+}: RenderFooterProps) => {
   const { id } = useAppSelector((state) => state.authorization);
   const [difficultState, updateDifficultState] = useState(isDifficult);
   const [learnedState, updatelearnedState] = useState(isLearned);
@@ -153,6 +160,7 @@ const RenderFooter = ({ wordId, isDifficult, isLearned }: RenderFooterProps) => 
 
   async function difficultCheckboxHandler() {
     await changeWordState('isDifficult', !difficultState);
+    if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
     updateDifficultState(!difficultState);
   }
 
@@ -202,6 +210,7 @@ const WordCard = ({
   isLearned,
   correctGuessCount,
   wrongGuessCount,
+  difficultChapterUpdateHandler,
 }: WordCardProps): JSX.Element => {
   return (
     <Card className={styles.card}>
@@ -214,7 +223,12 @@ const WordCard = ({
         />
         {renderDescription(word)}
         {isAuthorized && (
-          <RenderFooter isDifficult={isDifficult} isLearned={isLearned} wordId={word.id} />
+          <RenderFooter
+            isDifficult={isDifficult}
+            isLearned={isLearned}
+            wordId={word.id}
+            difficultChapterUpdateHandler={difficultChapterUpdateHandler}
+          />
         )}
       </Card.Body>
     </Card>
