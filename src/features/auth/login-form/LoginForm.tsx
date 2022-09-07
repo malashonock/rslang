@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import { Email } from '@mui/icons-material';
 import { FormikValues, useFormik } from 'formik';
 import { Alert, AlertTitle, FormHelperText } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { registerSchema, loginSchema } from './validationSchemas';
 import { INITIAL_VALUES_FORM } from './сonstants';
 import { createUser, signIn } from '../../../api/users';
@@ -34,7 +34,13 @@ const LoginForm = (): JSX.Element => {
   const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  // const redirectToMainPage = () => navigate('/');
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const isAuthPage = (): boolean => {
+    return location.pathname.includes('auth');
+  };
 
   const submitLoginForm = async (values: FormikValues): Promise<void> => {
     setIsServerError(false);
@@ -57,7 +63,9 @@ const LoginForm = (): JSX.Element => {
           refreshToken: '',
         };
         dispatch(createUserData(userData));
-        navigate(-1);
+        const prevPage: string =
+          ((location.state as { [key: string]: string }) || null)?.from || '/';
+        navigate(prevPage);
       } catch {
         setIsRegisterSuccess(false);
         setIsServerError(true);
@@ -76,7 +84,9 @@ const LoginForm = (): JSX.Element => {
           refreshToken: existUser.refreshToken,
         };
         dispatch(setAuthorizeUser(userData));
-        navigate(-1);
+        const prevPage: string =
+          ((location.state as { [key: string]: string }) || null)?.from || '/';
+        navigate(prevPage);
       } catch {
         setIsServerError(true);
       }
