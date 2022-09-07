@@ -154,9 +154,16 @@ const RenderFooter = ({
 
   async function changeWordState(type: 'isDifficult' | 'isLearned', value: boolean) {
     try {
-      await getUserWord(id, wordId);
+      const userWord = await getUserWord(id, wordId);
       const updateProperty = { [type]: value };
-      await updateUserWord(id, wordId, updateProperty);
+      if (userWord.isDifficult && type === 'isLearned' && value === true) {
+        updateProperty.isDifficult = false;
+        await updateUserWord(id, wordId, updateProperty);
+        if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
+        updateDifficultState(!difficultState);
+      } else {
+        await updateUserWord(id, wordId, updateProperty);
+      }
     } catch {
       newUserWord[type] = true;
       await createUserWord(id, wordId, newUserWord);

@@ -2,12 +2,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
+import { getUserWords } from '../../../api/userWords';
 import { getWords } from '../../../api/words';
 import { AuthState } from '../../../model/AuthState';
 import GameTurnResult from '../../../model/GameTurnResult';
+import { UserWord } from '../../../model/UserWord';
 import Word from '../../../model/Word';
 import { useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
+import useDictionaryLocation from '../../../utils/hooks/useDictionaryLocation';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import GameResult from '../shared/game-result/GameResult';
 import saveGameResults from '../shared/saveGameResults';
@@ -18,16 +21,11 @@ const AudioChallengeRound = (): JSX.Element => {
     (state: RootState): AuthState => state.authorization
   );
 
+  const { chapter, page } = useDictionaryLocation();
+
   const [searchParams] = useSearchParams();
-
-  const chapter = useMemo(() => {
-    const chapterStr = searchParams.get('group');
-    return chapterStr ? Number(chapterStr) : undefined;
-  }, [searchParams]);
-
-  const page = useMemo(() => {
-    const pageStr = searchParams.get('page');
-    return pageStr ? Number(pageStr) : undefined;
+  const excludeLearnedWords = useMemo(() => {
+    return searchParams.get('exclude-learned') === 'true';
   }, [searchParams]);
 
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
@@ -46,24 +44,46 @@ const AudioChallengeRound = (): JSX.Element => {
   // Initialize available words
   useEffect(() => {
     const loadWords = async () => {
-      const words = await getWords(chapter, page);
-      setAvailableWords([...words]);
-      setCorrectWords([...words]);
+      const allWords = await getWords(chapter, page);
+      let freeWords: Word[];
+
+      if (authorizeStatus && excludeLearnedWords) {
+        const userWords = await getUserWords(userId);
+        freeWords = allWords.filter(
+          (word: Word): boolean =>
+            !userWords.some(
+              (userWord: UserWord): boolean => word.id === userWord.wordId && userWord.isLearned
+            )
+        );
+      } else {
+        freeWords = allWords;
+      }
+
+      if (freeWords.length < 2) {
+        setFinish(true);
+      }
+
+      setAvailableWords([...freeWords]);
+      setCorrectWords([...freeWords]);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  }, [chapter, page]);
+  }, [authorizeStatus, chapter, excludeLearnedWords, page, userId]);
 
   // Set new correct word
   useEffect(() => {
     if (correctWords.length === 0) {
+      if (turn > 1) {
+        setFinish(true);
+      }
+
       return;
     }
 
     const randomIndex = Math.floor(Math.random() * correctWords.length);
     setCorrectWord(correctWords[randomIndex]);
-  }, [correctWords]);
+  }, [correctWords, turn]);
 
   const updateCorrectWords = () => {
     setCorrectWords(correctWords.filter(({ id }) => id !== correctWord?.id));
@@ -71,9 +91,14 @@ const AudioChallengeRound = (): JSX.Element => {
 
   const incorrectWords = useMemo((): Word[] => {
     const source = availableWords.filter((word) => word.id !== correctWord?.id);
+
+    if (turn > 1 && source.length === 0) {
+      setFinish(true);
+    }
+
     const selection: Word[] = [];
 
-    for (let i = 1; i < WORDS_PER_TURN; i += 1) {
+    for (let i = 1; i < WORDS_PER_TURN && i <= source.length; i += 1) {
       const randomIndex = Math.floor(Math.random() * (source.length - 1));
       selection.push(source[randomIndex]);
       source.splice(randomIndex, 1);
@@ -117,7 +142,11 @@ const AudioChallengeRound = (): JSX.Element => {
 
   const renderDifficultySelector = (): JSX.Element | undefined => {
     if (!ready) {
-      return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
+      if (chapter === undefined && page === undefined) {
+        return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
+      }
+
+      setReady(true);
     }
   };
 
