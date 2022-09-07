@@ -63,9 +63,9 @@ const LoginForm = (): JSX.Element => {
           refreshToken: '',
         };
         dispatch(createUserData(userData));
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const oldPage: string = location.state?.from || '/';
-        navigate(oldPage);
+        const prevPage: string =
+          ((location.state as { [key: string]: string }) || null)?.from || '/';
+        navigate(prevPage);
       } catch {
         setIsRegisterSuccess(false);
         setIsServerError(true);
@@ -84,9 +84,9 @@ const LoginForm = (): JSX.Element => {
           refreshToken: existUser.refreshToken,
         };
         dispatch(setAuthorizeUser(userData));
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const oldPage: string = location.state?.from || '/';
-        navigate(oldPage);
+        const prevPage: string =
+          ((location.state as { [key: string]: string }) || null)?.from || '/';
+        navigate(prevPage);
       } catch {
         setIsServerError(true);
       }
