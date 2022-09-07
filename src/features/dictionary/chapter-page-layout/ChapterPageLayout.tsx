@@ -7,11 +7,15 @@ import { UserWord } from '../../../model/UserWord';
 import styles from './ChapterPageLayout.module.scss';
 import { useAppSelector } from '../../../store/hooks';
 import { getUserWords } from '../../../api/userWords';
+import { RootState } from '../../../store/store';
+import { AuthState } from '../../../model/AuthState';
 
 type UserWordInDictionary = Word & UserWord;
 
 const ChapterPageLayout = () => {
-  const { authorizeStatus, id: userId } = useAppSelector((state) => state.authorization);
+  const { authorizeStatus, id: userId } = useAppSelector(
+    (state: RootState): AuthState => state.authorization
+  );
   const { chapter, page } = useParams();
   const [displayedWords, updateDisplayedWords] = useState<
     Array<UserWordInDictionary> | Array<Word>

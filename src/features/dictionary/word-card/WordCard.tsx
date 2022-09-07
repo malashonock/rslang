@@ -16,7 +16,8 @@ import WordPicture from '../../shared/word-picture/WordPicture';
 import SoundButton from '../../shared/sound-button/SoundButton';
 import API_BASE_URL from '../../../api/constants';
 import { getUserWord, createUserWord, updateUserWord } from '../../../api/userWords';
-import { useAppSelector } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { fetchUserPages } from '../dictionarySlice';
 
 interface WordCardProps {
   word: Word;
@@ -140,9 +141,11 @@ const RenderFooter = ({
   isLearned,
   difficultChapterUpdateHandler,
 }: RenderFooterProps) => {
-  const { id } = useAppSelector((state) => state.authorization);
-  const [difficultState, updateDifficultState] = useState(isDifficult);
-  const [learnedState, updatelearnedState] = useState(isLearned);
+  const { id: userId } = useAppSelector((state) => state.authorization);
+  const dispatch = useAppDispatch();
+
+  const [difficult, setDifficult] = useState(isDifficult);
+  const [learned, setLearned] = useState(isLearned);
 
   const newUserWord = {
     wasPlayed: false,
@@ -154,31 +157,33 @@ const RenderFooter = ({
 
   async function changeWordState(type: 'isDifficult' | 'isLearned', value: boolean) {
     try {
-      const userWord = await getUserWord(id, wordId);
+      const userWord = await getUserWord(userId, wordId);
       const updateProperty = { [type]: value };
       if (userWord.isDifficult && type === 'isLearned' && value === true) {
         updateProperty.isDifficult = false;
-        await updateUserWord(id, wordId, updateProperty);
+        await updateUserWord(userId, wordId, updateProperty);
         if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
-        updateDifficultState(!difficultState);
+        setDifficult(!difficult);
       } else {
-        await updateUserWord(id, wordId, updateProperty);
+        await updateUserWord(userId, wordId, updateProperty);
       }
     } catch {
       newUserWord[type] = true;
-      await createUserWord(id, wordId, newUserWord);
+      await createUserWord(userId, wordId, newUserWord);
     }
   }
 
   async function difficultCheckboxHandler() {
-    await changeWordState('isDifficult', !difficultState);
+    await changeWordState('isDifficult', !difficult);
     if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
-    updateDifficultState(!difficultState);
+    setDifficult(!difficult);
   }
 
   async function learnedCheckboxHandler() {
-    await changeWordState('isLearned', !learnedState);
-    updatelearnedState(!learnedState);
+    await changeWordState('isLearned', !learned);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    dispatch(fetchUserPages(userId));
+    setLearned(!learned);
   }
 
   return (
@@ -187,28 +192,28 @@ const RenderFooter = ({
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant={difficultState ? 'danger' : 'outline-danger'}
+          variant={difficult ? 'danger' : 'outline-danger'}
           type="checkbox"
           value="difficult"
           id={`${wordId}-difficult`}
-          checked={difficultState}
+          checked={difficult}
           onChange={() => difficultCheckboxHandler()}
         >
-          {difficultState ? 'Difficult' : 'Mark as Difficult'}
+          {difficult ? 'Difficult' : 'Mark as Difficult'}
         </ToggleButton>
       </Col>
       <Col>
         <ToggleButton
           className={styles.controls}
           size="sm"
-          variant={learnedState ? 'warning' : 'outline-warning'}
+          variant={learned ? 'warning' : 'outline-warning'}
           type="checkbox"
           value="learned"
           id={`${wordId}-learned`}
-          checked={learnedState}
+          checked={learned}
           onChange={() => learnedCheckboxHandler()}
         >
-          {learnedState ? 'Learned' : 'Mark as Learned'}
+          {learned ? 'Learned' : 'Mark as Learned'}
         </ToggleButton>
       </Col>
     </Row>
