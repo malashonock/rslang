@@ -39,6 +39,7 @@ const ChaptersSelector = ({ className }: ChaptersSelectorProps): JSX.Element => 
                 : `chapters/${index + 1}/pages/1`
             }
             key={colorClass}
+            state={{ from: `/dictionary/chapters/${index + 1}/pages/1` }}
           >
             <Button
               className={`${styles.button} ${styles[colorClass]} 
