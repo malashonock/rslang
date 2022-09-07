@@ -51,7 +51,7 @@ const ChapterLayout = () => {
           pageCount={chapter === '7' ? 1 : 30}
           isCurrentPageLearned={isCurrentPageLearned}
         />
-        <GamesLinks />
+        <GamesLinks disabled={isCurrentPageLearned} />
       </Stack>
       <div className={styles.wordCardsWrapper}>
         <Outlet />

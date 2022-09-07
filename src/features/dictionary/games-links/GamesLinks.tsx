@@ -6,7 +6,11 @@ import { buildQueryString } from '../../../utils/url';
 
 const REGULAR_CHAPTERS_COUNT = 6;
 
-const GamesLinks = (): JSX.Element => {
+interface GamesLinksProps {
+  disabled: boolean;
+}
+
+const GamesLinks = ({ disabled }: GamesLinksProps): JSX.Element => {
   const [collapseOpen, setCollapseOpen] = useState(false);
   const { chapter, page } = useParams();
 
@@ -33,10 +37,14 @@ const GamesLinks = (): JSX.Element => {
         <div id="mini-games-links">
           <Stack direction="horizontal" gap={2} className="justify-content-center mt-2">
             <LinkContainer to={`/games/audio-challenge${buildQueryString(searchParams)}`}>
-              <Button variant="warning">Play Audio Challenge</Button>
+              <Button variant="warning" disabled={disabled}>
+                Play Audio Challenge
+              </Button>
             </LinkContainer>
             <LinkContainer to={`/games/sprint${buildQueryString(searchParams)}`}>
-              <Button variant="warning">Play Sprint</Button>
+              <Button variant="warning" disabled={disabled}>
+                Play Sprint
+              </Button>
             </LinkContainer>
           </Stack>
         </div>
