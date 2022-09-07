@@ -8,9 +8,10 @@ import { AuthState } from '../../../model/AuthState';
 import GameTurnResult from '../../../model/GameTurnResult';
 import { UserWord } from '../../../model/UserWord';
 import Word from '../../../model/Word';
-import { useAppSelector } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { RootState } from '../../../store/store';
 import useDictionaryLocation from '../../../utils/hooks/useDictionaryLocation';
+import { fetchUserPages } from '../../dictionary/dictionarySlice';
 import DifficultyLevelSelector from '../shared/difficulty-level-selector/DifficultyLevelSelector';
 import GameResult from '../shared/game-result/GameResult';
 import saveGameResults from '../shared/saveGameResults';
@@ -27,6 +28,8 @@ const AudioChallengeRound = (): JSX.Element => {
   const excludeLearnedWords = useMemo(() => {
     return searchParams.get('exclude-learned') === 'true';
   }, [searchParams]);
+
+  const dispatch = useAppDispatch();
 
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
@@ -154,8 +157,10 @@ const AudioChallengeRound = (): JSX.Element => {
     if (finish && userId && authorizeStatus === true) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       saveGameResults(userId, new Date(), 'audio-challenge', gameResult);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      dispatch(fetchUserPages(userId));
     }
-  }, [authorizeStatus, finish, gameResult, userId]);
+  }, [authorizeStatus, chapter, dispatch, finish, gameResult, page, userId]);
 
   const renderGameResult = (): JSX.Element | undefined => {
     if (finish) {
