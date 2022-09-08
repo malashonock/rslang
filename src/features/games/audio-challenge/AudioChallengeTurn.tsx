@@ -41,7 +41,7 @@ const AudioChallengeTurn = ({
   }, [turn]);
 
   const isGuessCorrect = (): boolean => {
-    return selectedWord === correctWord.word;
+    return selectedWord === correctWord.wordTranslate;
   };
 
   const handleSelect = (word: string): void => {
@@ -79,6 +79,7 @@ const AudioChallengeTurn = ({
             soundSrc={correctWordSoundSrc}
             diameter={selectedWord ? '2rem' : '7rem'}
             variant="warning"
+            autoplay
           />
           <span
             className={`fs-5 ${selectedWord ? '' : 'd-none'}`}
@@ -86,10 +87,10 @@ const AudioChallengeTurn = ({
         </div>
       </div>
       <div className="incorrect-words d-flex gap-3">
-        {allWords.map(({ id, word }) => (
+        {allWords.map(({ id, wordTranslate }) => (
           <GuessWordButton
             key={id}
-            word={word}
+            word={wordTranslate}
             isCorrect={id === correctWord.id}
             turn={turn}
             disabled={!!selectedWord}

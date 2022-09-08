@@ -1,4 +1,4 @@
-import { CSSProperties, useRef, useState } from 'react';
+import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import playAudioAsync from '../../../utils/sound';
 import styles from './SoundButton.module.scss';
@@ -9,17 +9,19 @@ interface SoundButtonProps {
   soundSrc: string | string[];
   diameter?: string;
   variant?: 'primary' | 'secondary' | 'warning' | 'danger' | 'info';
+  autoplay?: boolean;
 }
 
 const SoundButton = ({
   soundSrc,
   diameter = '2rem',
   variant = 'primary',
+  autoplay = false,
 }: SoundButtonProps): JSX.Element => {
   const [playing, setPlaying] = useState(false);
   const soundRef = useRef<HTMLAudioElement>();
 
-  const play = async () => {
+  const play = useCallback(async () => {
     if (!playing) {
       setPlaying(true);
 
@@ -44,7 +46,14 @@ const SoundButton = ({
         soundRef.current.pause();
       }
     }
-  };
+  }, [soundSrc, playing]);
+
+  useEffect(() => {
+    if (autoplay) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      play();
+    }
+  }, [soundSrc, autoplay]);
 
   return (
     <Button
