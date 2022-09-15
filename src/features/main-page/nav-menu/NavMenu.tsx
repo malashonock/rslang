@@ -5,7 +5,7 @@ import UserAvatar from './user-avatar/UserAvatar';
 const NavMenu = (): JSX.Element => {
   return (
     <Navbar sticky="top" bg="primary" variant="dark" expand="sm">
-      <Container fluid>
+      <Container>
         <Navbar.Toggle aria-controls="navbar-main" />
         <LinkContainer to="/">
           <Navbar.Brand>RS Lang</Navbar.Brand>
