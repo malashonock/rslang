@@ -1,13 +1,18 @@
-import { Image } from 'react-bootstrap';
 import styles from './TitleSection.module.scss';
-import img from '../../../assets/english-title.webp';
 
 const TitleSection = () => {
   return (
     <div className={styles.section}>
-      <Image className={styles.img} src={img} roundedCircle />
-      <p className={styles.slogan}>
-        Learn English by playing. Online platform for self-study of English. Always at hand.
+      <div className={styles.title}>
+        <p className={styles.firstTitleLine}>online-</p>
+        <p className={styles.secondTitleLine}>
+          platform<span className={styles.secondTitleLineDot}>.</span>
+        </p>
+      </div>
+      <p className={styles.subtitle}>for learning English</p>
+      <p className={styles.description}>
+        Non-boring online English learning with games and interesting tasks at any time convenient
+        for you.
       </p>
     </div>
   );

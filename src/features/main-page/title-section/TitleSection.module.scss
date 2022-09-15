@@ -1,35 +1,55 @@
 .section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  max-width: 22rem;
-  margin: auto;
-  padding: 1rem 0;
+  padding: 4.5rem 0;
+  width: 20rem;
+  margin: 0 auto;
 }
 
-.img {
-  width: 12rem;
-}
-
-.slogan {
-  text-align: center;
+.title {
+  font-size: 3.3rem;
+  line-height: 3.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  width: 75%;
   margin: 0;
+
+  display: grid;
+}
+
+.firstTitleLine,
+.secondTitleLine {
+  margin: 0;
+}
+
+.firstTitleLine {
+  color: #0d6efd;
+}
+
+.secondTitleLine {
+  justify-self: end;
+
+  &Dot {
+    color: #0d6efd;
+  }
+}
+
+.subtitle {
+  margin: 0 0 0 auto;
+  width: 9rem;
+  font-weight: 500;
+}
+
+.description {
+  margin-top: 2.5rem;
+  text-align: center;
 }
 
 @media (min-width: 576px) {
   .section {
-    flex-direction: row;
-
-    max-width: 40rem;
+    width: 32.8rem;
   }
 
-  .img {
-    width: 16rem;
-  }
-
-  .slogan {
-    margin: 0;
+  .title {
+    font-size: 3.5rem;
+    width: 81%;
   }
 }
