@@ -1,40 +1,110 @@
-.teamTitle {
+.section {
+  padding: 3.5rem 0;
+}
+
+.title {
+  margin: auto;
+  width: 6.4rem;
+
+  text-transform: uppercase;
+  font-size: 1.2rem;
   text-align: center;
-  margin-bottom: 1rem;
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 0.35rem;
+    background-color: #0d6dfdc1;
+    bottom: 1px;
+    left: 0;
+    z-index: -1;
+  }
 }
 
-.team {
+.teamWrapper {
+  padding: 2rem 0;
+
+  display: grid;
+  grid-template-columns: auto;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.card {
+  text-align: center;
+  width: 14.4rem;
+}
+
+.cardBody {
+  padding: 0;
+}
+
+.featureList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
 
-  .card {
-    width: 38rem;
-  }
+  font-size: 0.8rem;
+}
 
-  .cardFooter{
-    display: flex;
-    justify-content: end;
-    align-items: flex-end;
-  }
-  
-  .logoGitHub {
-    width: 2rem;
-    height: 2rem;
-    filter: invert(50%);
-  
-    &:hover{
-      filter: invert(25%);
-    }
-  }
-  
-  .cardElements {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.featureItem {
+  padding-left: 1rem;
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '';
+    background-color: black;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    bottom: 0.4rem;
+    left: 0.4rem;
   }
 }
 
+.cardFooter {
+  display: flex;
+  justify-content: end;
+  align-items: flex-end;
 
+  padding: 0;
+}
+
+.logoGitHub {
+  width: 2rem;
+  height: 2rem;
+  filter: invert(50%);
+
+  &:hover {
+    filter: invert(25%);
+  }
+}
+
+@media (min-width: 576px) {
+  .teamWrapper {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  .card:nth-child(3) {
+    grid-column: 1 / 3;
+    justify-self: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .teamWrapper {
+    grid-template-columns: repeat(3, auto);
+  }
+
+  .card:nth-child(3) {
+    grid-column: auto;
+    justify-self: auto;
+  }
+}
