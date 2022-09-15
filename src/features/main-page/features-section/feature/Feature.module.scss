@@ -1,84 +1,45 @@
-@import '~bootstrap/scss/bootstrap.scss';
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/maps";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/utilities";
+.card {
+  border: none;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding-top: 1rem;
 
-  .featurePositionLeft {
-    display: flex;
-    width: 62rem;
-    justify-content: left;
+  &::after {
+    position: absolute;
+    content: '';
+    width: 80%;
+    margin: auto;
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.3);
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 
-  .featurePositionRight {
-    display: flex;
-    width: 62rem;
-    justify-content: right;
+  &:last-child::after {
+    display: none;
+  }
+}
+
+.cardImage {
+  width: 4rem;
+  height: 4rem;
+}
+
+@media (min-width: 576px) {
+  .card:nth-child(3)::after {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .card::after {
+    display: none;
   }
 
-  .featureCardLeft {
-    display: flex;
-    flex-direction: row;
-    border: 0px;
-    justify-content: space-between;
-    width: 34rem;
+  .cardImage {
+    width: 4.5rem;
+    height: 4.5rem;
   }
-
-  .featureCardRight {
-    display: flex;
-    flex-direction: row-reverse;
-    border: 0;
-    justify-content: space-between;
-    width: 34rem;
-  }
-
-  .imageSize {
-    width: 6rem;
-  }
-
-  .cardBodyLeft {
-    display: flex;
-    width: 23rem;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
-  .cardBodyRight {
-    display: flex;
-    width: 23rem;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  @include media-breakpoint-down(xl){
-    .featurePositionLeft, .featurePositionRight {
-      width: 42rem;
-    }
-
-    .featureCardLeft, .featureCardRight{
-      width: 23.5rem;
-    }
-  }
-
-  @include media-breakpoint-down(md){
-    .featurePositionLeft, .featurePositionRight {
-      width: 36rem;
-    }
-
-    .featureCardLeft, .featureCardRight{
-      width: 20.5rem;
-    }
-  }
-
-  @include media-breakpoint-down(sm){
-    .featurePositionLeft, .featurePositionRight {
-      width: 32rem;
-    }
-
-    .featureCardLeft, .featureCardRight{
-      width: 18.5rem;
-    }
-  }
+}
