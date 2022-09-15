@@ -21,27 +21,27 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<MainPage />} />
-            <Route path="dictionary" element={<Dictionary />}>
-              <Route index element={<ChaptersHint />} />
-              <Route path="chapters/:chapter" element={<ChapterLayout />}>
-                <Route path="pages/:page" element={<ChapterPageLayout />} />
-              </Route>
+    {/* <React.StrictMode> */}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<MainPage />} />
+          <Route path="dictionary" element={<Dictionary />}>
+            <Route index element={<ChaptersHint />} />
+            <Route path="chapters/:chapter" element={<ChapterLayout />}>
+              <Route path="pages/:page" element={<ChapterPageLayout />} />
             </Route>
-            <Route path="games" element={<Games />}>
-              <Route index element={<GamesList />} />
-              <Route path="audio-challenge" element={<AudioChallengeRound />} />
-              <Route path="sprint" element={<SprintRound />} />
-            </Route>
-            <Route path="statistics" element={<Statistics />} />
-            <Route path="auth" element={<Auth />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </React.StrictMode>
+          <Route path="games" element={<Games />}>
+            <Route index element={<GamesList />} />
+            <Route path="audio-challenge" element={<AudioChallengeRound />} />
+            <Route path="sprint" element={<SprintRound />} />
+          </Route>
+          <Route path="statistics" element={<Statistics />} />
+          <Route path="auth" element={<Auth />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    {/* </React.StrictMode> */}
   </Provider>
 );
