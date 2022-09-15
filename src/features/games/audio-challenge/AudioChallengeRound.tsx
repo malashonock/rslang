@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Stack } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getUserWords } from '../../../api/userWords';
 import { getWords } from '../../../api/words';
@@ -16,6 +16,9 @@ import DifficultyLevelSelector from '../shared/difficulty-level-selector/Difficu
 import GameResult from '../shared/game-result/GameResult';
 import saveGameResults from '../shared/saveGameResults';
 import AudioChallengeTurn from './AudioChallengeTurn';
+
+const TURNS_COUNT = 20;
+const WORDS_PER_TURN = 5;
 
 const AudioChallengeRound = (): JSX.Element => {
   const { id: userId, authorizeStatus } = useAppSelector(
@@ -34,19 +37,50 @@ const AudioChallengeRound = (): JSX.Element => {
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
+  const [incorrectWords, setIncorrectWords] = useState<Word[]>([]);
 
-  const TURNS_COUNT = 20;
-  const WORDS_PER_TURN = 5;
+  const [configured, setConfigured] = useState(false);
+  const [enoughWords, setEnoughWords] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [turn, setTurn] = useState(0);
+  const [finished, setFinished] = useState(false);
 
-  const [turn, setTurn] = useState(1);
   const [gameResult, setGameResult] = useState<GameTurnResult[]>([]);
   const [score, setScore] = useState(0);
-  const [ready, setReady] = useState(false);
-  const [finish, setFinish] = useState(false);
 
-  // Initialize available words
-  useEffect(() => {
-    const loadWords = async () => {
+  // 1. Prompt user to select difficulty level,
+  // unless chapter and page are specified
+  const renderDifficultySelector = (): JSX.Element | undefined => {
+    if (!configured) {
+      if (chapter === undefined && page === undefined) {
+        return <DifficultyLevelSelector show={!configured} onHide={() => setConfigured(true)} />;
+      }
+
+      setConfigured(true);
+    }
+  };
+
+  // Until available words are loaded, render loading spinner
+  const renderLoadingSpinner = (): JSX.Element | undefined => {
+    if (configured && !started) {
+      return (
+        <div className="d-flex flex-column align-items-center gap-2">
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <h5>Loading words...</h5>
+        </div>
+      );
+    }
+  };
+
+  // 2. Set available words
+  useEffect((): void => {
+    if (!configured) {
+      return;
+    }
+
+    const loadWords = async (): Promise<void> => {
       const allWords = await getWords(chapter, page);
       let freeWords: Word[];
 
@@ -59,56 +93,59 @@ const AudioChallengeRound = (): JSX.Element => {
             )
         );
       } else {
-        freeWords = allWords;
+        freeWords = [...allWords];
       }
 
-      if (freeWords.length < 2) {
-        setFinish(true);
+      if (freeWords.length < 1) {
+        setEnoughWords(false);
+        setFinished(true);
+        return;
       }
 
-      setAvailableWords([...freeWords]);
-      setCorrectWords([...freeWords]);
+      setAvailableWords(freeWords);
+      setEnoughWords(true);
+      setStarted(true);
+      setTurn(1);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  }, [authorizeStatus, chapter, excludeLearnedWords, page, userId]);
+  }, [configured, authorizeStatus, userId, chapter, page, excludeLearnedWords]);
 
-  // Set new correct word
+  // 3. Prepare for the next turn
   useEffect(() => {
-    if (correctWords.length === 0) {
-      if (turn > 1) {
-        setFinish(true);
-      }
-
+    if (!enoughWords) {
       return;
     }
 
-    const randomIndex = Math.floor(Math.random() * correctWords.length);
-    setCorrectWord(correctWords[randomIndex]);
-  }, [correctWords, turn]);
+    // Remove just played word from correct words
+    const newCorrectWords =
+      turn === 1 ? [...availableWords] : correctWords.filter(({ id }) => id !== correctWord?.id);
 
-  const updateCorrectWords = () => {
-    setCorrectWords(correctWords.filter(({ id }) => id !== correctWord?.id));
-  };
-
-  const incorrectWords = useMemo((): Word[] => {
-    const source = availableWords.filter((word) => word.id !== correctWord?.id);
-
-    if (turn > 1 && source.length === 0) {
-      setFinish(true);
+    if (newCorrectWords.length === 0) {
+      setEnoughWords(false);
+      setFinished(true);
+      return;
     }
 
-    const selection: Word[] = [];
+    // Set new correct word
+    let randomIndex = Math.floor(Math.random() * newCorrectWords.length);
+    const newCorrectWord = newCorrectWords[randomIndex];
 
-    for (let i = 1; i < WORDS_PER_TURN && i <= source.length; i += 1) {
-      const randomIndex = Math.floor(Math.random() * (source.length - 1));
-      selection.push(source[randomIndex]);
-      source.splice(randomIndex, 1);
+    // Generate new set of incorrect words
+    const availableIncorrectWords = availableWords.filter(({ id }) => id !== newCorrectWord.id);
+    const newIncorrectWords: Word[] = [];
+    for (let i = 1; i < WORDS_PER_TURN && i <= availableIncorrectWords.length; i += 1) {
+      randomIndex = Math.floor(Math.random() * (availableIncorrectWords.length - 1));
+      newIncorrectWords.push(availableIncorrectWords[randomIndex]);
+      availableIncorrectWords.splice(randomIndex, 1);
     }
 
-    return selection;
-  }, [availableWords, correctWord?.id]);
+    // Update state
+    setCorrectWord(newCorrectWord);
+    setCorrectWords(newCorrectWords);
+    setIncorrectWords(newIncorrectWords);
+  }, [availableWords, enoughWords, turn]);
 
   const isLastTurn = (): boolean => {
     return turn === TURNS_COUNT;
@@ -132,46 +169,19 @@ const AudioChallengeRound = (): JSX.Element => {
 
     if (turn < TURNS_COUNT) {
       setTurn(turn + 1);
-      updateCorrectWords();
     } else {
-      setFinish(true);
+      setFinished(true);
     }
   };
 
   const handleQuit = (isCorrect: boolean): void => {
     updateGameResult(isCorrect);
-    setFinish(true);
+    setFinished(true);
   };
 
-  const renderDifficultySelector = (): JSX.Element | undefined => {
-    if (!ready) {
-      if (chapter === undefined && page === undefined) {
-        return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
-      }
-
-      setReady(true);
-    }
-  };
-
-  useEffect(() => {
-    if (finish && userId && authorizeStatus === true) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      saveGameResults(userId, new Date(), 'audio-challenge', gameResult);
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      dispatch(fetchUserPages(userId));
-    }
-  }, [authorizeStatus, chapter, dispatch, finish, gameResult, page, userId]);
-
-  const renderGameResult = (): JSX.Element | undefined => {
-    if (finish) {
-      if (finish) {
-        return <GameResult score={score} gameResult={gameResult} />;
-      }
-    }
-  };
-
-  const renderGameRound = (): JSX.Element | undefined => {
-    if (ready && correctWord && !finish) {
+  // 4. Render turn
+  const renderGameTurn = (): JSX.Element | undefined => {
+    if (started && enoughWords && correctWord && !finished) {
       return (
         <AudioChallengeTurn
           correctWord={correctWord}
@@ -185,15 +195,27 @@ const AudioChallengeRound = (): JSX.Element => {
     }
   };
 
-  const renderLoadingSpinner = (): JSX.Element | undefined => {
-    if (!finish && !correctWord) {
+  // 5. Show game results
+  useEffect(() => {
+    if (finished && userId && authorizeStatus === true) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      saveGameResults(userId, new Date(), 'audio-challenge', gameResult);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      dispatch(fetchUserPages(userId));
+    }
+  }, [authorizeStatus, chapter, dispatch, finished, gameResult, page, userId]);
+
+  const renderGameResult = (): JSX.Element | undefined => {
+    if (finished) {
       return (
-        <div className="d-flex flex-column align-items-center gap-2">
-          <Spinner animation="border" variant="primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-          <h5>Loading words...</h5>
-        </div>
+        <Stack className="col-sm-9 col-md-7 col-lg-5 my-3 mx-auto flex-grow-0">
+          <GameResult score={score} gameResult={gameResult} canPlayAgain={enoughWords} />
+          <h5 className={`${enoughWords ? 'd-none' : ''} p-2 text-success text-center`}>
+            Looks like you&apos;ve learned all words on this page.
+            <br />
+            Don&apos;t stop and practise further!
+          </h5>
+        </Stack>
       );
     }
   };
@@ -202,7 +224,7 @@ const AudioChallengeRound = (): JSX.Element => {
     <div className="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
       {renderDifficultySelector()}
       {renderLoadingSpinner()}
-      {renderGameRound()}
+      {renderGameTurn()}
       {renderGameResult()}
     </div>
   );
