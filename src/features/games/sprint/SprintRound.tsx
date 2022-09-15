@@ -225,7 +225,7 @@ const SprintRound = (): JSX.Element => {
   };
 
   const renderCountDown = (): JSX.Element | undefined => {
-    if (ready && !finish) {
+    if (ready && correctWord && !finish) {
       return (
         <CountDown
           totalTime={ROUND_DURATION}
