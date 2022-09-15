@@ -173,17 +173,17 @@ const RenderFooter = ({
     }
   }
 
-  async function difficultCheckboxHandler() {
-    await changeWordState('isDifficult', !difficult);
-    if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
-    setDifficult(!difficult);
-  }
-
   async function learnedCheckboxHandler() {
     await changeWordState('isLearned', !learned);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     dispatch(fetchUserPages(userId));
     setLearned(!learned);
+  }
+  async function difficultCheckboxHandler() {
+    await changeWordState('isDifficult', !difficult);
+    if (difficultChapterUpdateHandler) await difficultChapterUpdateHandler();
+    setDifficult(!difficult);
+    if (!difficult && learned) await learnedCheckboxHandler();
   }
 
   return (
