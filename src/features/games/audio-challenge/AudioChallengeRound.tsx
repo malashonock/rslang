@@ -113,14 +113,16 @@ const AudioChallengeRound = (): JSX.Element => {
   }, [configured, authorizeStatus, userId, chapter, page, excludeLearnedWords]);
 
   // 3. Prepare for the next turn
-  useEffect(() => {
+  useEffect((): void => {
     if (!enoughWords) {
       return;
     }
 
     // Remove just played word from correct words
     const newCorrectWords =
-      turn === 1 ? [...availableWords] : correctWords.filter(({ id }) => id !== correctWord?.id);
+      turn === 1
+        ? [...availableWords]
+        : correctWords.filter(({ id }: Word): boolean => id !== correctWord?.id);
 
     if (newCorrectWords.length === 0) {
       setEnoughWords(false);
@@ -133,7 +135,9 @@ const AudioChallengeRound = (): JSX.Element => {
     const newCorrectWord = newCorrectWords[randomIndex];
 
     // Generate new set of incorrect words
-    const availableIncorrectWords = availableWords.filter(({ id }) => id !== newCorrectWord.id);
+    const availableIncorrectWords = availableWords.filter(
+      ({ id }: Word): boolean => id !== newCorrectWord.id
+    );
     const newIncorrectWords: Word[] = [];
     for (let i = 1; i < WORDS_PER_TURN && i <= availableIncorrectWords.length; i += 1) {
       randomIndex = Math.floor(Math.random() * (availableIncorrectWords.length - 1));
@@ -196,7 +200,7 @@ const AudioChallengeRound = (): JSX.Element => {
   };
 
   // 5. Show game results
-  useEffect(() => {
+  useEffect((): void => {
     if (finished && userId && authorizeStatus === true) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       saveGameResults(userId, new Date(), 'audio-challenge', gameResult);
