@@ -38,7 +38,7 @@
 }
 
 .cardBody {
-  padding: 0;
+  padding: 0.4rem;
 }
 
 .featureList {
@@ -60,7 +60,7 @@
   &::after {
     position: absolute;
     content: '';
-    background-color: black;
+    background-color: #0d6efd;
     width: 4px;
     height: 4px;
     border-radius: 50%;
@@ -74,16 +74,18 @@
   justify-content: end;
   align-items: flex-end;
 
-  padding: 0;
+  padding: 0.4rem;
 }
 
 .logoGitHub {
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   filter: invert(50%);
+  transition: filter 0.15s ease-in-out;
 
   &:hover {
     filter: invert(25%);
+    transition: filter 0.15s ease-in-out;
   }
 }
 
