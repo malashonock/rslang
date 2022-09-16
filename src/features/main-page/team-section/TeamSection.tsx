@@ -16,7 +16,9 @@ const TeamSection = (): JSX.Element => {
               <Card.Text>{role}</Card.Text>
               <ul className={styles.featureList}>
                 {contribution.map((feature: string) => (
-                  <li className={styles.featureItem}>{feature}</li>
+                  <li key={feature} className={styles.featureItem}>
+                    {feature}
+                  </li>
                 ))}
               </ul>
             </Card.Body>
