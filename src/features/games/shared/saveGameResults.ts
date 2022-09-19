@@ -37,7 +37,7 @@ const updateExistingUserWord = async (
       correctGuessCount: wasGuessed ? 1 : 0,
       wrongGuessCount: wasGuessed ? 0 : 1,
       isLearned: wasGuessed,
-      isDifficult,
+      isDifficult: isDifficult && !wasGuessed,
       optional,
     });
 
