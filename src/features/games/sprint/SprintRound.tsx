@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { useEffect, useMemo, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Stack } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import { getUserWords } from '../../../api/userWords';
 import { getWords } from '../../../api/words';
@@ -52,18 +52,52 @@ const SprintRound = (): JSX.Element => {
   const [availableWords, setAvailableWords] = useState<Word[]>([]);
   const [correctWords, setCorrectWords] = useState<Word[]>([]);
   const [correctWord, setCorrectWord] = useState<Word | null>(null);
+  const [translation, setTranslation] = useState('');
+
+  const [configured, setConfigured] = useState(false);
+  const [enoughWords, setEnoughWords] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
 
   const [level, setLevel] = useState(1);
   const [turn, setTurn] = useState(1);
   const [winsSinceLevelStart, setWinsSinceLevelStart] = useState(0);
   const [gameResult, setGameResult] = useState<GameTurnResult[]>([]);
   const [score, setScore] = useState(0);
-  const [ready, setReady] = useState(false);
-  const [finish, setFinish] = useState(false);
 
-  // Initialize available words
-  useEffect(() => {
-    const loadWords = async () => {
+  // 1. Prompt user to select difficulty level,
+  // unless chapter and page are specified
+  const renderDifficultySelector = (): JSX.Element | undefined => {
+    if (!configured) {
+      if (chapter === undefined && page === undefined) {
+        return <DifficultyLevelSelector show={!configured} onHide={() => setConfigured(true)} />;
+      }
+
+      setConfigured(true);
+    }
+  };
+
+  // Until available words are loaded, render loading spinner
+  const renderLoadingSpinner = (): JSX.Element | undefined => {
+    if (configured && !started) {
+      return (
+        <div className="d-flex flex-column align-items-center gap-2">
+          <Spinner animation="border" variant="primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <h5>Loading words...</h5>
+        </div>
+      );
+    }
+  };
+
+  // 2. Set available words
+  useEffect((): void => {
+    if (!configured) {
+      return;
+    }
+
+    const loadWords = async (): Promise<void> => {
       const allWords = await getWords(chapter, page);
       let freeWords: Word[];
 
@@ -76,50 +110,64 @@ const SprintRound = (): JSX.Element => {
             )
         );
       } else {
-        freeWords = allWords;
+        freeWords = [...allWords];
       }
 
       if (freeWords.length === 0) {
-        setFinish(true);
+        setEnoughWords(false);
+        setFinished(true);
       }
 
       setAvailableWords([...freeWords]);
-      setCorrectWords([...freeWords]);
+      setEnoughWords(true);
+      setStarted(true);
+      setTurn(1);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWords();
-  }, [authorizeStatus, chapter, excludeLearnedWords, page, userId]);
+  }, [configured, authorizeStatus, userId, chapter, page, excludeLearnedWords]);
 
-  // Set new correct word
-  useEffect(() => {
-    if (correctWords.length === 0) {
-      if (turn > 1) {
-        setFinish(true);
-      }
-
+  // 3. Prepare for the next turn
+  useEffect((): void => {
+    if (!enoughWords) {
       return;
     }
 
-    const randomIndex = Math.floor(Math.random() * correctWords.length);
-    setCorrectWord(correctWords[randomIndex]);
-  }, [correctWords, turn]);
+    // Remove just played word from correct words
+    const newCorrectWords =
+      turn === 1
+        ? [...availableWords]
+        : correctWords.filter(({ id }: Word): boolean => id !== correctWord?.id);
 
-  const updateCorrectWords = () => {
-    setCorrectWords(correctWords.filter(({ id }) => id !== correctWord?.id));
-  };
+    if (newCorrectWords.length === 0) {
+      setEnoughWords(false);
+      setFinished(true);
+      return;
+    }
 
-  const translation = useMemo((): string => {
-    const source = availableWords.filter((word) => word.id !== correctWord?.id);
-    const randomIndex = Math.floor(Math.random() * (source.length - 1));
-    const randomWord = source[randomIndex];
+    // Set new correct word
+    let randomIndex = Math.floor(Math.random() * newCorrectWords.length);
+    const newCorrectWord = newCorrectWords[randomIndex];
+
+    // Generate translation proposal
+    const availableIncorrectWords = availableWords.filter(
+      ({ id }: Word): boolean => id !== newCorrectWord.id
+    );
+    randomIndex = Math.floor(Math.random() * (availableIncorrectWords.length - 1));
+    const incorrectWord = availableIncorrectWords[randomIndex];
 
     const isTranslationCorrect = Boolean(Math.round(Math.random()));
 
-    return isTranslationCorrect
-      ? correctWord?.wordTranslate || ''
-      : randomWord?.wordTranslate || '';
-  }, [availableWords, correctWord?.id, correctWord?.wordTranslate]);
+    const newTranslation = isTranslationCorrect
+      ? newCorrectWord.wordTranslate || ''
+      : incorrectWord.wordTranslate || '';
+
+    // Update state
+    setCorrectWord(newCorrectWord);
+    setCorrectWords(newCorrectWords);
+    setTranslation(newTranslation);
+  }, [availableWords, enoughWords, turn]);
 
   const levelUp = (): void => {
     const maxLevel = Math.max(...Object.keys(LevelsConfig).map((key) => +key));
@@ -159,43 +207,18 @@ const SprintRound = (): JSX.Element => {
   const handleNextTurn = (isCorrect: boolean): void => {
     updateGameResult(isCorrect);
 
-    if (!finish) {
+    if (!finished) {
       setTurn(turn + 1);
-      updateCorrectWords();
     }
   };
 
   const handleQuit = (): void => {
-    setFinish(true);
+    setFinished(true);
   };
 
-  const renderDifficultySelector = (): JSX.Element | undefined => {
-    if (!ready) {
-      if (chapter === undefined && page === undefined) {
-        return <DifficultyLevelSelector show={!ready} onHide={() => setReady(true)} />;
-      }
-
-      setReady(true);
-    }
-  };
-
-  useEffect(() => {
-    if (finish && userId && authorizeStatus === true) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      saveGameResults(userId, new Date(), 'sprint', gameResult);
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      dispatch(fetchUserPages(userId));
-    }
-  }, [authorizeStatus, chapter, dispatch, finish, gameResult, page, userId]);
-
-  const renderGameResult = (): JSX.Element | undefined => {
-    if (finish) {
-      return <GameResult score={score} gameResult={gameResult} />;
-    }
-  };
-
-  const renderGameRound = (): JSX.Element | undefined => {
-    if (ready && correctWord && !finish) {
+  // 4. Render turn
+  const renderGameTurn = (): JSX.Element | undefined => {
+    if (started && correctWord && !finished) {
       return (
         <SprintTurn
           correctWord={correctWord}
@@ -211,26 +234,38 @@ const SprintRound = (): JSX.Element => {
     }
   };
 
-  const renderLoadingSpinner = (): JSX.Element | undefined => {
-    if (!finish && !correctWord) {
+  // 5. Show game results
+  useEffect((): void => {
+    if (finished && userId && authorizeStatus === true) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      saveGameResults(userId, new Date(), 'sprint', gameResult);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      dispatch(fetchUserPages(userId));
+    }
+  }, [authorizeStatus, chapter, dispatch, finished, gameResult, page, userId]);
+
+  const renderGameResult = (): JSX.Element | undefined => {
+    if (finished) {
       return (
-        <div className="d-flex flex-column align-items-center gap-2">
-          <Spinner animation="border" variant="primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-          <h5>Loading words...</h5>
-        </div>
+        <Stack className="col-sm-9 col-md-7 col-lg-5 my-3 mx-auto flex-grow-0">
+          <GameResult score={score} gameResult={gameResult} canPlayAgain={enoughWords} />
+          <h5 className={`${enoughWords ? 'd-none' : ''} p-2 text-success text-center`}>
+            Looks like you&apos;ve learned all words on this page.
+            <br />
+            Don&apos;t stop and practise further!
+          </h5>
+        </Stack>
       );
     }
   };
 
   const renderCountDown = (): JSX.Element | undefined => {
-    if (ready && !finish) {
+    if (started && correctWord && !finished) {
       return (
         <CountDown
           totalTime={ROUND_DURATION}
           tickFrequency={TICK_FREQUENCY}
-          onFinished={() => setFinish(true)}
+          onFinished={() => setFinished(true)}
           className="position-absolute top-0 start-0 m-3"
         />
       );
@@ -242,7 +277,7 @@ const SprintRound = (): JSX.Element => {
       {renderDifficultySelector()}
       {renderLoadingSpinner()}
       {renderCountDown()}
-      {renderGameRound()}
+      {renderGameTurn()}
       {renderGameResult()}
     </div>
   );
